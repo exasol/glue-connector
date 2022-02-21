@@ -1,0 +1,5 @@
+error-tags:
+  EGC:
+    packages:
+      - com.exasol.glue
+    highest-index: 1
