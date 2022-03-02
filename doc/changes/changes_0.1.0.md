@@ -4,7 +4,7 @@ Code name:
 
 ## Features
 
-* ISSUE_NUMBER: description
+* #5: Added initial project setup
 
 ## Dependency Updates
 
