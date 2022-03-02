@@ -346,6 +346,9 @@
                         <module>jar_artifact</module>
                         <module>integration_tests</module>
                     </modules>
+                    <excludedPlugins>
+                        <excludedPlugin>com.exasol:error-code-crawler-maven-plugin</excludedPlugin>
+                    </excludedPlugins>
                     <linkReplacements>
                         <linkReplacement>
                             LICENSE-exasol-jdbc.txt|https://docs.exasol.com/connect_exasol/drivers/jdbc.htm
@@ -374,6 +377,7 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>error-code-crawler-maven-plugin</artifactId>
@@ -386,6 +390,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
             <plugin>
                 <groupId>org.itsallcode</groupId>
                 <artifactId>openfasttrace-maven-plugin</artifactId>

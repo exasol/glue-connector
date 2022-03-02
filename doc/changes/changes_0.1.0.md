@@ -30,7 +30,6 @@ Code name:
 ### Plugin Dependency Updates
 
 * Added `com.exasol:artifact-reference-checker-maven-plugin:0.4.1`
-* Added `com.exasol:error-code-crawler-maven-plugin:1.0.0`
 * Added `com.exasol:project-keeper-maven-plugin:1.3.4`
 * Added `io.github.zlika:reproducible-build-maven-plugin:0.15`
 * Added `org.apache.maven.plugins:maven-assembly-plugin:3.3.0`
