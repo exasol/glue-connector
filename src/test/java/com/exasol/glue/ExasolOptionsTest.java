@@ -2,7 +2,9 @@ package com.exasol.glue;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -18,9 +20,14 @@ class ExasolOptionsTest {
     }
 
     @Test
-    void testHasS3Location() {
+    void testHasS3LocationFalse() {
         assertAll(() -> assertThat(ExasolOptions.builder().build().hasS3Location(), equalTo(false)),
-                () -> assertThat(ExasolOptions.builder().s3Location("s3").build().hasS3Location(), equalTo(true)));
+                () -> assertThat(ExasolOptions.builder().s3Location("").build().hasS3Location(), equalTo(false)));
+    }
+
+    @Test
+    void testHasS3LocationTrue() {
+        assertThat(ExasolOptions.builder().s3Location("s3").build().hasS3Location(), equalTo(true));
     }
 
     @Test
@@ -49,7 +56,8 @@ class ExasolOptionsTest {
 
     @Test
     void testHasTableFalse() {
-        assertThat(ExasolOptions.builder().build().hasTable(), equalTo(false));
+        assertAll(() -> assertThat(ExasolOptions.builder().build().hasTable(), equalTo(false)),
+                () -> assertThat(ExasolOptions.builder().table("").build().hasTable(), equalTo(false)));
     }
 
     @Test
@@ -64,7 +72,8 @@ class ExasolOptionsTest {
 
     @Test
     void testHasQueryFalse() {
-        assertThat(ExasolOptions.builder().build().hasQuery(), equalTo(false));
+        assertAll(() -> assertThat(ExasolOptions.builder().build().hasQuery(), equalTo(false)),
+                () -> assertThat(ExasolOptions.builder().query("").build().hasQuery(), equalTo(false)));
     }
 
     @Test
@@ -78,10 +87,33 @@ class ExasolOptionsTest {
     }
 
     @Test
-    void testToString() {
-        final ExasolOptions options = ExasolOptions.builder().build();
-        assertThat(options.toString(),
-                equalTo("ExasolOptions{jdbcUrl=\"jdbc:exa:localhost:8563\", username=\"sys\", password=\"*******\"}"));
+    void testGetTableOrQuery() {
+        assertAll(() -> assertThat(ExasolOptions.builder().table("table").build().getTableOrQuery(), equalTo("table")),
+                () -> assertThat(ExasolOptions.builder().query("query").build().getTableOrQuery(), equalTo("query")));
+    }
+
+    @Test
+    void testValidatesOnlyTableOrQueryExists() {
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> ExasolOptions.builder().table("table").query("query").build());
+        assertThat(exception.getMessage(), startsWith("E-EGC-7"));
+    }
+
+    @Test
+    void testToStringWithTable() {
+        final ExasolOptions options = ExasolOptions.builder().table("table").s3Location("s3").build();
+        final String expected = "ExasolOptions{"
+                + "jdbcUrl=\"jdbc:exa:localhost:8563\", username=\"sys\", password=\"*******\", "
+                + "s3Location=\"s3\", table=\"table\"}";
+        assertThat(options.toString(), equalTo(expected));
+    }
+
+    @Test
+    void testToStringWithQuery() {
+        final ExasolOptions options = ExasolOptions.builder().query("query").build();
+        final String expected = "ExasolOptions{jdbcUrl=\"jdbc:exa:localhost:8563\", username=\"sys\", "
+                + "password=\"*******\", query=\"query\"}";
+        assertThat(options.toString(), equalTo(expected));
     }
 
     @Test

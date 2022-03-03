@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
 
@@ -26,9 +27,11 @@ import org.apache.spark.sql.util.CaseInsensitiveStringMap;
  * An entry class for the connector.
  */
 public class DefaultSource implements TableProvider, DataSourceRegister {
+    private static final Logger LOGGER = Logger.getLogger(DefaultSource.class.getName());
 
     @Override
     public StructType inferSchema(final CaseInsensitiveStringMap options) {
+        LOGGER.fine(() -> "Running schema inference of the default source.");
         validateOptions(options);
         final StructType schema = getSchema(getExasolOptions(options));
         return schema;
@@ -47,6 +50,7 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
     }
 
     private void validateOptions(final CaseInsensitiveStringMap options) {
+        LOGGER.fine(() -> "Validating options of the default source.");
         if (!options.containsKey(TABLE) && !options.containsKey(QUERY)) {
             throw new IllegalArgumentException(
                     ExaError.messageBuilder("E-EGC-1").message("Missing 'query' or 'table' option.")
@@ -85,9 +89,12 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
 
     private StructType getSchema(final ExasolOptions options) {
         final String limitQuery = generateInferSchemaQuery(options);
+        LOGGER.info(() -> "Running schema inference using limited query '" + limitQuery + "' for the default source.");
         try (final Connection connection = getConnection(options)) {
             final Statement statement = connection.createStatement();
-            return getSparkSchema(statement.executeQuery(limitQuery));
+            final StructType schema = getSparkSchema(statement.executeQuery(limitQuery));
+            LOGGER.info(() -> "Inferred schema as '" + schema.toString() + "' for the default source.");
+            return schema;
         } catch (final SQLException exception) {
             throw new ExasolConnectionException(ExaError.messageBuilder("E-EGC-4")
                     .message("Could not run the limit query {{limitQuery}} to infer the schema.", limitQuery)
@@ -100,6 +107,7 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
         if (hasExasolJDBCDriverClass()) {
             final String address = options.getJdbcUrl();
             final String username = options.getUsername();
+            LOGGER.fine(() -> "Getting connection at '" + address + "' with username '" + username + "' and password.");
             try {
                 return DriverManager.getConnection(address, username, options.getPassword());
             } catch (final SQLException exception) {
@@ -120,9 +128,11 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
             Class.forName(driverClassName);
             return true;
         } catch (final ClassNotFoundException exception) {
-            throw new ExasolConnectionException(ExaError.messageBuilder("E-EGC-11")
-                    .message("Failed to find Exasol JDBC Driver class {{class}}.", driverClassName)
-                    .mitigation("Please make sure that Exasol JDBC Driver is installed.").toString());
+            throw new ExasolConnectionException(
+                    ExaError.messageBuilder("E-EGC-11")
+                            .message("Failed to find Exasol JDBC Driver class {{class}}.", driverClassName)
+                            .mitigation("Please make sure that Exasol JDBC Driver is installed.").toString(),
+                    exception);
         }
     }
 
@@ -154,7 +164,8 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
         } catch (final SQLException exception) {
             throw new ExasolConnectionException(ExaError.messageBuilder("E-EGC-6")
                     .message("Could not create Spark schema from provided Exasol SQL query or table name.")
-                    .mitigation("Please check make sure that Exasol SQL query or table have columns.").toString());
+                    .mitigation("Please check make sure that Exasol SQL query or table have columns.").toString(),
+                    exception);
         }
     }
 

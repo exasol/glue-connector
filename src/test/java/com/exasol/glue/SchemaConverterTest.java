@@ -10,6 +10,7 @@ import java.sql.Types;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
@@ -150,6 +151,7 @@ class SchemaConverterTest {
             "18,6", //
             "22,1", //
             "6,6", //
+            "3,0", //
     })
     void testDecimalConversion(final int precision, final int scale) {
         final DataType expectedSparkType = DataTypes.createDecimalType(precision, scale);
@@ -175,6 +177,16 @@ class SchemaConverterTest {
     })
     void testDecimalConversionWithExcessScale(final int precision, final int scale) {
         verifyDecimalExceptions(precision, scale, "E-EGC-14");
+    }
+
+    @Test
+    void testDecimalConversionWithScaleGreaterThanPrecision() {
+        final AnalysisException exception = assertThrows(AnalysisException.class,
+                () -> assertConversion(Types.DECIMAL, DataTypes.createDecimalType()) //
+                        .withPrecision(0) //
+                        .withScale(3) //
+                        .verify());
+        assertThat(exception.getMessage(), equalTo("Decimal scale (3) cannot be greater than precision (0)."));
     }
 
     private void verifyDecimalExceptions(final int precision, final int scale, final String errorCode) {

@@ -167,13 +167,13 @@ public final class ExasolOptions {
                 .append("\", username=\"").append(this.username) //
                 .append("\", password=\"*******\"");
         if (this.hasS3Location()) {
-            stringBuilder.append("s3Location=\"").append(this.s3Location).append("\"");
+            stringBuilder.append(", s3Location=\"").append(this.s3Location).append("\"");
         }
         if (this.hasTable()) {
-            stringBuilder.append("table=\"").append(this.table).append("\"");
+            stringBuilder.append(", table=\"").append(this.table).append("\"");
         }
         if (this.hasQuery()) {
-            stringBuilder.append("query=\"").append(this.query).append("\"");
+            stringBuilder.append(", query=\"").append(this.query).append("\"");
         }
         stringBuilder.append("}");
         return stringBuilder.toString();
