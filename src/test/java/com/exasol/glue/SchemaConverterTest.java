@@ -20,6 +20,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class SchemaConverterTest {
 
@@ -40,11 +41,31 @@ class SchemaConverterTest {
                 columnOf("col_date", Types.DATE) //
         );
         final StructType expectedSchema = new StructType() //
-                .add("col_integer", IntegerType) //
-                .add("col_double", DoubleType) //
-                .add("col_string", StringType) //
-                .add("col_date", DateType);
+                .add("col_integer", LongType, false) //
+                .add("col_double", DoubleType, false) //
+                .add("col_string", StringType, false) //
+                .add("col_date", DateType, false);
         assertThat(new SchemaConverter().convert(columns), equalTo(expectedSchema));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = { //
+            Types.ARRAY, //
+            Types.DATALINK, //
+            Types.DISTINCT, //
+            Types.JAVA_OBJECT, //
+            Types.NULL, //
+            Types.REF, //
+            Types.REF_CURSOR, //
+            Types.ROWID, //
+            Types.OTHER, //
+            Types.SQLXML, //
+            Types.STRUCT //
+    })
+    void testConvertColumnWithUnsupportedJDBCTypes(final int jdbcType) {
+        final UnsupportedOperationException exception = assertThrows(UnsupportedOperationException.class,
+                () -> new SchemaConverter().convertColumn(columnOf("c1", jdbcType)));
+        assertThat(exception.getMessage(), startsWith("E-EGC-12"));
     }
 
     private ColumnDescription columnOf(final String name, final int type) {
@@ -80,11 +101,7 @@ class SchemaConverterTest {
                 // Datetime
                 Arguments.of(Types.DATE, DateType), //
                 Arguments.of(Types.TIME, TimestampType), //
-                Arguments.of(Types.TIMESTAMP, TimestampType), //
-
-                // Others
-                Arguments.of(Types.ROWID, LongType), //
-                Arguments.of(Types.STRUCT, StringType));
+                Arguments.of(Types.TIMESTAMP, TimestampType));
     }
 
     @ParameterizedTest
@@ -101,22 +118,22 @@ class SchemaConverterTest {
 
     @Test
     void testIntegerConversion() {
-        assertConversion(Types.INTEGER, IntegerType).verify();
+        assertConversion(Types.INTEGER, LongType).verify();
     }
 
     @Test
     void testIntegerConversionWithSigned() {
-        assertConversion(Types.INTEGER, LongType).isSigned(true).verify();
+        assertConversion(Types.INTEGER, IntegerType).isSigned(true).verify();
     }
 
     @Test
     void testBigintConversion() {
-        assertConversion(Types.BIGINT, LongType).verify();
+        assertConversion(Types.BIGINT, LONG_DECIMAL_TYPE).verify();
     }
 
     @Test
     void testBigintConversionWithSigned() {
-        assertConversion(Types.BIGINT, LONG_DECIMAL_TYPE).isSigned(true).verify();
+        assertConversion(Types.BIGINT, LongType).isSigned(true).verify();
     }
 
     @Test
@@ -128,19 +145,46 @@ class SchemaConverterTest {
 
     @ParameterizedTest
     @CsvSource({ //
-            "38,4,  36,4", // Spark's max precision is 38, Exasol's is 36
-            "37,37, 36,36", //
-            "37,2,  36,2", //
-            "36,2,  36,2", //
-            "18,6,  18,6", //
-            "22,1,  22,1", //
-            "6,6,   6,6", //
+            "36,36", //
+            "36,2", //
+            "18,6", //
+            "22,1", //
+            "6,6", //
     })
-    void testDecimalWithPrecisionAndScaleConversion(final int givenPrecision, final int givenScale,
-            final int expectedPrecision, final int expectedScale) {
+    void testDecimalConversion(final int precision, final int scale) {
+        final DataType expectedSparkType = DataTypes.createDecimalType(precision, scale);
         for (final int jdbcType : List.of(Types.DECIMAL, Types.NUMERIC)) {
-            final DataType sparkType = DataTypes.createDecimalType(expectedPrecision, expectedScale);
-            assertConversion(jdbcType, sparkType).withPrecision(givenPrecision).withScale(givenScale).verify();
+            assertConversion(jdbcType, expectedSparkType).withPrecision(precision).withScale(scale).verify();
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource({ //
+            "39,4", // Spark's max precision is 38, Exasol's is 36
+            "39,2", //
+            "39,39", //
+    })
+    void testDecimalConversionWithExcessPrecision(final int precision, final int scale) {
+        verifyDecimalExceptions(precision, scale, "E-EGC-13");
+    }
+
+    @ParameterizedTest
+    @CsvSource({ //
+            "12,40", //
+            "20,39" //
+    })
+    void testDecimalConversionWithExcessScale(final int precision, final int scale) {
+        verifyDecimalExceptions(precision, scale, "E-EGC-14");
+    }
+
+    private void verifyDecimalExceptions(final int precision, final int scale, final String errorCode) {
+        for (final int jdbcType : List.of(Types.DECIMAL, Types.NUMERIC)) {
+            final IllegalStateException exception = assertThrows(IllegalStateException.class,
+                    () -> assertConversion(jdbcType, DataTypes.createDecimalType()) //
+                            .withPrecision(precision) //
+                            .withScale(scale) //
+                            .verify());
+            assertThat(exception.getMessage(), startsWith(errorCode));
         }
     }
 

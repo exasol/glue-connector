@@ -36,7 +36,7 @@ class SchemaInferenceIT extends BaseIntegrationTest {
                 List.of("VARCHAR(10)", "INTEGER", "DATE", "DOUBLE"));
         final StructType expectedSchema = new StructType() //
                 .add("c1", DataTypes.StringType, true) //
-                .add("c2", DataTypes.IntegerType, true) //
+                .add("c2", DataTypes.LongType, true) //
                 .add("c3", DataTypes.DateType, true) //
                 .add("c4", DataTypes.DoubleType, true);
         final StructType schema = spark.read() //
@@ -51,15 +51,15 @@ class SchemaInferenceIT extends BaseIntegrationTest {
     @ParameterizedTest
     @CsvSource(value = { //
             "BOOLEAN;        BOOLEAN", //
-            "INTEGER;        INT", //
+            "INTEGER;        LONG", //
             "DOUBLE;         DOUBLE", //
-            "FLOAT;          FLOAT", //
-            "SHORTINT;       SHORT", //
-            "SMALLINT;       SHORT", //
+            "FLOAT;          DOUBLE", //
+            "SHORTINT;       INT", //
+            "SMALLINT;       INT", //
             "TINYINT;        SHORT", //
-            "BIGINT;         LONG", //
+            "BIGINT;         DECIMAL(36,0)", //
+            "DECIMAL;        LONG", //
             "DEC(36);        DECIMAL(36,0)", //
-            "DECIMAL;        DECIMAL(18,0)", //
             "DECIMAL(3,2);   DECIMAL(3,2)", //
             "DECIMAL(36,36); DECIMAL(36,36)", //
             "CHAR(20);       STRING", //
