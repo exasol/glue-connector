@@ -5,6 +5,7 @@ Code name:
 ## Features
 
 * #5: Added initial project setup
+* #6: Added schema inference
 
 ## Dependency Updates
 
