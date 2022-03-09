@@ -25,7 +25,7 @@ Code name:
 * Added `org.apache.logging.log4j:log4j-core:2.17.2`
 * Added `org.hamcrest:hamcrest:2.2`
 * Added `org.junit.jupiter:junit-jupiter:5.8.2`
-* Added `org.mockito:mockito-core:4.3.1`
+* Added `org.mockito:mockito-core:4.4.0`
 * Added `org.testcontainers:junit-jupiter:1.16.3`
 
 ### Plugin Dependency Updates
