@@ -82,6 +82,8 @@ For example:
 - pushing down column selection, e.g, `.select(col("c1"))`
 - pushing down filters, e.g, `.where(col("c1") > 10)`
 
+Needs: req
+
 ## Functional Requirements
 
 This section lists functional requirements from a user's perspective. Each functional requirement belongs to a single feature.
@@ -112,6 +114,12 @@ Needs: dsn
 `req~reading-from-exasol-table~1`
 
 EGC reads data of the provided Exasol table.
+
+For example:
+
+```
+.option("table", "RETAIL.SALES")
+```
 
 Covers:
 

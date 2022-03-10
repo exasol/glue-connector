@@ -6,6 +6,7 @@ Code name:
 
 * #2: Added requirements and design documentation
 * #5: Added initial project setup
+* #6: Added schema inference
 
 ## Dependency Updates
 
@@ -25,13 +26,12 @@ Code name:
 * Added `org.apache.logging.log4j:log4j-core:2.17.2`
 * Added `org.hamcrest:hamcrest:2.2`
 * Added `org.junit.jupiter:junit-jupiter:5.8.2`
-* Added `org.mockito:mockito-core:4.3.1`
+* Added `org.mockito:mockito-core:4.4.0`
 * Added `org.testcontainers:junit-jupiter:1.16.3`
 
 ### Plugin Dependency Updates
 
 * Added `com.exasol:artifact-reference-checker-maven-plugin:0.4.1`
-* Added `com.exasol:error-code-crawler-maven-plugin:1.0.0`
 * Added `com.exasol:project-keeper-maven-plugin:1.3.4`
 * Added `io.github.zlika:reproducible-build-maven-plugin:0.15`
 * Added `org.apache.maven.plugins:maven-assembly-plugin:3.3.0`

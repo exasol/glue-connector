@@ -5,8 +5,8 @@
 ### Terms and Abbreviations
 
 <dl>
-    <dt>EGC</dt><dd>Exasol Glue Connector</dd>
-    <dt>Apache Spark</dt><dd>An open-source unified analytics engine for large-scale data processing that is used by AWS Glue Studio.</dd>
+<dt>EGC</dt><dd>Exasol Glue Connector</dd>
+<dt>Apache Spark</dt><dd>An open-source unified analytics engine for large-scale data processing that is used by AWS Glue Studio.</dd>
 </dl>
 
 ### Requirement Overview
@@ -34,6 +34,7 @@ The `SchemaConverter` is a building block that converts data types from Exasol J
 This section describes the runtime behavior of the software.
 
 ### `DefaultSource` infers schema
+`dsn~default-source-infers-schema~1`
 
 Covers:
 
@@ -42,12 +43,34 @@ Covers:
 Needs: impl, utest, itest
 
 ### `SchemaConverter` converts data types
+`dsn~schameconverter-converts-data-types~1`
 
 Covers:
 
 * `req~converting-exasol-datatype-to-spark-datatype~1`
 
 Needs: impl, utest
+
+### `ExasolTable` reads and writes data
+`dsn~exasoltable-reads-and-writes~1`
+
+Covers:
+
+* `req~reading-from-exasol-table~1`
+* `req~reading-from-exasol-query~1`
+* `req~saving-data-into-exasol-table~1`
+
+Needs: impl
+
+### `SourceScanBuilder` prunes columns and pushes filters
+`dsn~sourcescanbuilder-prunes-columns-and-pushes-filters~1`
+
+Covers:
+
+* `req~pruning-columns~1`
+* `req~pushing-filters~1`
+
+Needs: impl
 
 ## Acknowledgments
 

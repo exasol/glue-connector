@@ -112,7 +112,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>4.3.1</version>
+            <version>4.4.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -346,6 +346,9 @@
                         <module>jar_artifact</module>
                         <module>integration_tests</module>
                     </modules>
+                    <excludedPlugins>
+                        <excludedPlugin>com.exasol:error-code-crawler-maven-plugin</excludedPlugin>
+                    </excludedPlugins>
                     <linkReplacements>
                         <linkReplacement>
                             LICENSE-exasol-jdbc.txt|https://docs.exasol.com/connect_exasol/drivers/jdbc.htm
@@ -370,18 +373,6 @@
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.exasol</groupId>
-                <artifactId>error-code-crawler-maven-plugin</artifactId>
-                <version>1.0.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>verify</goal>
                         </goals>
                     </execution>
                 </executions>
