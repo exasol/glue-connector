@@ -103,29 +103,25 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
     }
 
     private Connection getConnection(final ExasolOptions options) {
-        if (hasExasolJDBCDriverClass()) {
-            final String address = options.getJdbcUrl();
-            final String username = options.getUsername();
-            LOGGER.fine(() -> "Getting connection at '" + address + "' with username '" + username + "' and password.");
-            try {
-                return DriverManager.getConnection(address, username, options.getPassword());
-            } catch (final SQLException exception) {
-                throw new ExasolConnectionException(ExaError.messageBuilder("E-EGC-5")
-                        .message("Could not connect to Exasol address on {{address}} with username {{username}}.")
-                        .parameter("address", address).parameter("username", username)
-                        .mitigation("Please check that connection address, username and password are correct.")
-                        .toString(), exception);
-            }
-        } else {
-            return null;
+        verifyExasolJDBCDriverAvailable();
+        final String address = options.getJdbcUrl();
+        final String username = options.getUsername();
+        LOGGER.fine(() -> "Getting connection at '" + address + "' with username '" + username + "' and password.");
+        try {
+            return DriverManager.getConnection(address, username, options.getPassword());
+        } catch (final SQLException exception) {
+            throw new ExasolConnectionException(ExaError.messageBuilder("E-EGC-5")
+                    .message("Could not connect to Exasol address on {{address}} with username {{username}}.")
+                    .parameter("address", address).parameter("username", username)
+                    .mitigation("Please check that connection address, username and password are correct.").toString(),
+                    exception);
         }
     }
 
-    private boolean hasExasolJDBCDriverClass() {
+    private void verifyExasolJDBCDriverAvailable() {
         final String driverClassName = "com.exasol.jdbc.EXADriver";
         try {
             Class.forName(driverClassName);
-            return true;
         } catch (final ClassNotFoundException exception) {
             throw new ExasolConnectionException(
                     ExaError.messageBuilder("E-EGC-11")
@@ -161,9 +157,10 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
             }
             return new SchemaConverter().convert(columns);
         } catch (final SQLException exception) {
-            throw new ExasolConnectionException(ExaError.messageBuilder("E-EGC-6")
-                    .message("Could not create Spark schema from provided Exasol SQL query or table name.")
-                    .mitigation("Please make sure that Exasol SQL query or table have columns.").toString(),
+            throw new ExasolConnectionException(
+                    ExaError.messageBuilder("E-EGC-6")
+                            .message("Could not create Spark schema from provided Exasol SQL query or table name.")
+                            .mitigation("Please make sure that Exasol SQL query or table have columns.").toString(),
                     exception);
         }
     }

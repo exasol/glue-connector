@@ -42,7 +42,7 @@ The following table shows the mapping of the Exasol alias types to Spark types:
 | `CHARACTER LARGE OBJECT(n)` | `VARCHAR(n)`       | `StringType`         |
 | `CLOB`                      | `VARCHAR(2000000)` | `StringType`         |
 | `CLOB(n)`                   | `VARCHAR(n)`       | `StringType`         |
-| `DEC`                       | `DECIMAL(18, 0)`    | `DecimalType`        |
+| `DEC`                       | `DECIMAL(18, 0)`   | `DecimalType`        |
 | `DEC(p)`                    | `DECIMAL(p, 0)`    | `DecimalType(p, 0)`  |
 | `DEC(p, s)`                 | `DECIMAL(p, s)`    | `DecimalType(p, s)`  |
 | `DECIMAL`                   | `DECIMAL(18, 0)`   | `DecimalType(18, 0)` |
@@ -50,7 +50,7 @@ The following table shows the mapping of the Exasol alias types to Spark types:
 | `DOUBLE`                    | `DOUBLE PRECISION` | `DoubleType`         |
 | `FLOAT`                     | `DOUBLE PRECISION` | `DoubleType`         |
 | `REAL`                      | `DOUBLE PRECISION` | `DoubleType`         |
-| `BIGINT`                    | `DECIMAL(36, 0)`    | `DecimalType`        |
+| `BIGINT`                    | `DECIMAL(36, 0)`   | `DecimalType`        |
 | `INT`                       | `DECIMAL(18, 0)`   | `LongType`           |
 | `INTEGER`                   | `DECIMAL(18, 0)`   | `LongType`           |
 | `SHORTINT`                  | `DECIMAL(9, 0)`    | `IntegerType`        |
