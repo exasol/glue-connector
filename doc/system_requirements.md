@@ -33,6 +33,7 @@ Software Engineers are users who implement, test and deploy AWS Glue Studio work
 The following list gives you an overview of terms and abbreviations commonly used in the EGC documents.
 
 <dl>
+<dt>EGC</dt><dd>Exasol Glue Connector</dd>
 <dt>ETL</dt><dd>Extraction, Transformation, Load &mdash; process of getting data from a source, converting the data and saving it into a sink.</dd>
 <dt>Schema</dt><dd>Data describing the structure of data in source or sink with name and type of columns.</dd>
 <dt>Apache Spark</dt><dd>An open-source unified analytics engine for large-scale data processing that is used by AWS Glue Studio.</dd>
