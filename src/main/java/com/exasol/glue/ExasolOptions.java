@@ -5,7 +5,7 @@ import java.util.Objects;
 import com.exasol.errorreporting.ExaError;
 
 /**
- * A configuration parameters for Exasol AWS Glue connector.
+ * Configuration parameters for Exasol AWS Glue connector.
  */
 public final class ExasolOptions {
     private final String jdbcUrl;

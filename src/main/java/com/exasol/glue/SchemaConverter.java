@@ -88,7 +88,6 @@ public final class SchemaConverter {
                     ExaError.messageBuilder("E-EGC-12").message("Unsupported JDBC type {{type}} for column {{column}}.",
                             column.getType(), column.getName()).ticketMitigation().toString());
         }
-
     }
 
     private DataType createDecimalDataType(int precision, int scale) {

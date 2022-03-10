@@ -15,7 +15,7 @@ public class ExasolTable implements SupportsRead {
 
     private final StructType schema;
     private final ExasolOptions options;
-    private Set<TableCapability> capabilities;
+    private final Set<TableCapability> capabilities;
 
     public ExasolTable(final StructType schema, final ExasolOptions options) {
         this.schema = schema;
