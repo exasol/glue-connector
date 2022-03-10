@@ -4,6 +4,7 @@ Code name:
 
 ## Features
 
+* #2: Added requirements and design documentation
 * #5: Added initial project setup
 * #6: Added schema inference
 
