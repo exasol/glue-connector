@@ -19,6 +19,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Tag("integration")
 @Testcontainers
+// [itest->dsn~default-source-infers-schema~1]
 class SchemaInferenceIT extends BaseIntegrationTest {
 
     @Test

@@ -11,6 +11,8 @@ import org.apache.spark.sql.util.CaseInsensitiveStringMap;
 /**
  * Represents an instance of {@link ExasolTable}.
  */
+// [impl->dsn~exasoltable-reads-and-writes~1]
+// [impl->dsn~sourcescanbuilder-prunes-columns-and-pushes-filters~1]
 public class ExasolTable implements SupportsRead {
 
     private final StructType schema;

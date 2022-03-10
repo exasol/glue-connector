@@ -15,6 +15,7 @@ import org.apache.spark.sql.types.StructType;
 /**
  * A class that converts JDBC result set into a Spark {@link StructType} schema.
  */
+// [impl->dsn~schameconverter-converts-data-types~1]
 public final class SchemaConverter {
 
     /**

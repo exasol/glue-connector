@@ -30,6 +30,7 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
     private static final Logger LOGGER = Logger.getLogger(DefaultSource.class.getName());
 
     @Override
+    // [impl->dsn~default-source-infers-schema~1]
     public StructType inferSchema(final CaseInsensitiveStringMap options) {
         LOGGER.fine(() -> "Running schema inference of the default source.");
         validateOptions(options);
