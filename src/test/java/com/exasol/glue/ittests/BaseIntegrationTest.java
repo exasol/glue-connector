@@ -2,6 +2,7 @@ package com.exasol.glue.ittests;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.exasol.containers.ExasolContainer;
@@ -58,6 +59,10 @@ public class BaseIntegrationTest {
 
     public String getPassword() {
         return EXASOL.getPassword();
+    }
+
+    public Map<String, String> getDefaultOptions() {
+        return Map.of("jdbc_url", getJdbcUrl(), "username", getUsername(), "password", getPassword());
     }
 
     private static void dropSchema() {
