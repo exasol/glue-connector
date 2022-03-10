@@ -12,7 +12,7 @@ The target audience are users, software engineers, data engineers and quality as
 
 ### Goal
 
-The goal of EGC is to provide connector so that users can integrate Exasol database into their AWS Glue Studio workflows. It enables reading data from Exasol as a source and loading data from other sources supported by AWS Glue Studio into an Exasol database.
+The goal of EGC is to provide a connector so that users can integrate Exasol database into their AWS Glue Studio workflows. It enables reading data from Exasol as a source and loading data from other sources supported by AWS Glue Studio into an Exasol database.
 
 ## Stakeholders
 
@@ -22,7 +22,7 @@ Data Engineers are users who create and maintain AWS Glue Studio workflows.
 
 ### Quality Assurance Engineers
 
-Quality Assurance (QA) Engineers are users who monitors and validate results of AWS Glue Studio workflows.
+Quality Assurance (QA) Engineers are users who monitor and validate results of AWS Glue Studio workflows.
 
 ### Software Engineers
 
@@ -49,21 +49,21 @@ EGC allows schema inference of an Exasol table or query.
 
 Rationale:
 
-Users of AWS Glue Studio should be able to define structure of an Exasol table or of a requested query.
+Users of AWS Glue Studio should be able to define the structure of an Exasol table or of a requested query.
 
 Needs: req
 
 ### Reading Data
 `feat~reading-data~1`
 
-EGC allows efficiently reading data from Exasol database.
+EGC allows efficiently reading data from an Exasol database.
 
 Needs: req
 
 ### Writing Data
 `feat~writing-data~1`
 
-EGC allows saving data from AWS Glue Studio into an Exasol tables.
+EGC allows saving data from AWS Glue Studio into Exasol tables.
 
 Needs: req
 
@@ -83,12 +83,12 @@ For example:
 
 ## Functional Requirements
 
-This section lists functional requirements from the user's perspective. Each functional requirement belongs to a single feature.
+This section lists functional requirements from a user's perspective. Each functional requirement belongs to a single feature.
 
 ### Inferring Schema of a Table or Query
 `req~inferring-schema-of-table-or-query~1`
 
-EGC converts table or query metadata into AWS Glue Studio schema.
+EGC converts table or query metadata into an AWS Glue Studio schema.
 
 Covers:
 
@@ -96,7 +96,7 @@ Covers:
 
 Needs: dsn
 
-### Converting Exasol Data Type into Spark Data Type
+### Converting Exasol Data Type to Spark Data Type
 `req~converting-exasol-datatype-to-spark-datatype~1`
 
 EGC converts Exasol datatypes into Apache Spark datatypes.
@@ -153,7 +153,7 @@ Needs: dsn
 ### Pruning Columns
 `req~pruning-columns~1`
 
-EGC pushes columns selections from ETL transformations into an Exasol database.
+EGC pushes column selections from ETL transformations into an Exasol database.
 
 Rationale:
 
