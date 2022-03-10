@@ -30,11 +30,11 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
     private static final Logger LOGGER = Logger.getLogger(DefaultSource.class.getName());
 
     @Override
+    // [impl->dsn~default-source-infers-schema~1]
     public StructType inferSchema(final CaseInsensitiveStringMap options) {
         LOGGER.fine(() -> "Running schema inference of the default source.");
         validateOptions(options);
-        final StructType schema = getSchema(getExasolOptions(options));
-        return schema;
+        return getSchema(getExasolOptions(options));
     }
 
     @Override
@@ -48,7 +48,7 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
     }
 
     private void validateOptions(final CaseInsensitiveStringMap options) {
-        LOGGER.fine(() -> "Validating options of the default source.");
+        LOGGER.finest(() -> "Validating options of the default source.");
         if (!options.containsKey(TABLE) && !options.containsKey(QUERY)) {
             throw new IllegalArgumentException(
                     ExaError.messageBuilder("E-EGC-1").message("Missing 'query' or 'table' option.")
@@ -102,29 +102,25 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
     }
 
     private Connection getConnection(final ExasolOptions options) {
-        if (hasExasolJDBCDriverClass()) {
-            final String address = options.getJdbcUrl();
-            final String username = options.getUsername();
-            LOGGER.fine(() -> "Getting connection at '" + address + "' with username '" + username + "' and password.");
-            try {
-                return DriverManager.getConnection(address, username, options.getPassword());
-            } catch (final SQLException exception) {
-                throw new ExasolConnectionException(ExaError.messageBuilder("E-EGC-5")
-                        .message("Could not connect to Exasol address on {{address}} with username {{username}}.")
-                        .parameter("address", address).parameter("username", username)
-                        .mitigation("Please check that connection address, username and password are correct.")
-                        .toString(), exception);
-            }
-        } else {
-            return null;
+        verifyExasolJDBCDriverAvailable();
+        final String address = options.getJdbcUrl();
+        final String username = options.getUsername();
+        LOGGER.fine(() -> "Getting connection at '" + address + "' with username '" + username + "' and password.");
+        try {
+            return DriverManager.getConnection(address, username, options.getPassword());
+        } catch (final SQLException exception) {
+            throw new ExasolConnectionException(ExaError.messageBuilder("E-EGC-5")
+                    .message("Could not connect to Exasol address on {{address}} with username {{username}}.")
+                    .parameter("address", address).parameter("username", username)
+                    .mitigation("Please check that connection address, username and password are correct.").toString(),
+                    exception);
         }
     }
 
-    private boolean hasExasolJDBCDriverClass() {
+    private void verifyExasolJDBCDriverAvailable() {
         final String driverClassName = "com.exasol.jdbc.EXADriver";
         try {
             Class.forName(driverClassName);
-            return true;
         } catch (final ClassNotFoundException exception) {
             throw new ExasolConnectionException(
                     ExaError.messageBuilder("E-EGC-11")
@@ -147,22 +143,23 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
             final ResultSetMetaData metadata = resultSet.getMetaData();
             final int numberOfColumns = metadata.getColumnCount();
             final List<ColumnDescription> columns = new ArrayList<>(numberOfColumns);
-            for (int i = 0; i < numberOfColumns; i++) {
+            for (int i = 1; i <= numberOfColumns; i++) {
                 columns.add(ColumnDescription.builder() //
-                        .name(metadata.getColumnLabel(i + 1)) //
-                        .type(metadata.getColumnType(i + 1)) //
-                        .precision(metadata.getPrecision(i + 1)) //
-                        .scale(metadata.getScale(i + 1)) //
-                        .isSigned(metadata.isSigned(i + 1)) //
-                        .isNullable(metadata.isNullable(i + 1) != columnNoNulls) //
+                        .name(metadata.getColumnLabel(i)) //
+                        .type(metadata.getColumnType(i)) //
+                        .precision(metadata.getPrecision(i)) //
+                        .scale(metadata.getScale(i)) //
+                        .isSigned(metadata.isSigned(i)) //
+                        .isNullable(metadata.isNullable(i) != columnNoNulls) //
                         .build());
 
             }
             return new SchemaConverter().convert(columns);
         } catch (final SQLException exception) {
-            throw new ExasolConnectionException(ExaError.messageBuilder("E-EGC-6")
-                    .message("Could not create Spark schema from provided Exasol SQL query or table name.")
-                    .mitigation("Please check make sure that Exasol SQL query or table have columns.").toString(),
+            throw new ExasolConnectionException(
+                    ExaError.messageBuilder("E-EGC-6")
+                            .message("Could not create Spark schema from provided Exasol SQL query or table name.")
+                            .mitigation("Please make sure that Exasol SQL query or table have columns.").toString(),
                     exception);
         }
     }

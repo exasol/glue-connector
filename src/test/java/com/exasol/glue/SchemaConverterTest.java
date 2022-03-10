@@ -23,6 +23,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+// [utest->dsn~default-source-infers-schema~1]
+// [utest->dsn~schameconverter-converts-data-types~1]
 class SchemaConverterTest {
 
     @ParameterizedTest

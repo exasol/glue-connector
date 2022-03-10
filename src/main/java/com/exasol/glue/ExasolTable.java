@@ -15,16 +15,13 @@ import org.apache.spark.sql.util.CaseInsensitiveStringMap;
 /**
  * Represents an instance of {@link ExasolTable}.
  */
+// [impl->dsn~exasoltable-reads-and-writes~1]
+// [impl->dsn~sourcescanbuilder-prunes-columns-and-pushes-filters~1]
 public class ExasolTable implements SupportsRead {
 
     private final StructType schema;
-    private Set<TableCapability> capabilities;
+    private final Set<TableCapability> capabilities;
 
-    /**
-     * Creates an instance of {@link ExasolTable}.
-     *
-     * @param schema schema of table or final query result
-     */
     public ExasolTable(final StructType schema) {
         this.schema = schema;
         this.capabilities = Set.of(TableCapability.BATCH_READ);

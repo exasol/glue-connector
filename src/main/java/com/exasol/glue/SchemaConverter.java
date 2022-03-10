@@ -15,6 +15,7 @@ import org.apache.spark.sql.types.StructType;
 /**
  * A class that converts JDBC result set into a Spark {@link StructType} schema.
  */
+// [impl->dsn~schameconverter-converts-data-types~1]
 public final class SchemaConverter {
 
     /**
@@ -88,7 +89,6 @@ public final class SchemaConverter {
                     ExaError.messageBuilder("E-EGC-12").message("Unsupported JDBC type {{type}} for column {{column}}.",
                             column.getType(), column.getName()).ticketMitigation().toString());
         }
-
     }
 
     private DataType createDecimalDataType(int precision, int scale) {
