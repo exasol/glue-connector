@@ -43,6 +43,11 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
     }
 
     @Override
+    public boolean supportsExternalMetadata() {
+        return true;
+    }
+
+    @Override
     public String shortName() {
         return "exasol";
     }
