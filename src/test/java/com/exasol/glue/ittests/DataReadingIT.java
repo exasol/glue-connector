@@ -56,6 +56,19 @@ class DataReadingIT extends BaseIntegrationTest {
     }
 
     @Test
+    void testProvidedSchema() {
+        final StructType expectedSchema = StructType.fromDDL("col_str STRING");
+        final StructType schema = spark.read() //
+                .schema(expectedSchema) //
+                .format("exasol") //
+                .option("table", table.getFullyQualifiedName()) //
+                .options(getDefaultOptions()) //
+                .load() //
+                .schema();
+        assertThat(schema, equalTo(expectedSchema));
+    }
+
+    @Test
     void testMapTransformation() {
         Dataset<Integer> df = loadTable().map((MapFunction<Row, Integer>) row -> {
             return row.getInt(0) * 2;
@@ -89,19 +102,6 @@ class DataReadingIT extends BaseIntegrationTest {
                 .filter((FilterFunction<Row>) row -> (row.getInt(0) % 2) == 0 ? true : false) //
                 .map((MapFunction<Row, Integer>) row -> row.getInt(0), Encoders.INT());
         assertThat(df.collectAsList(), contains(2, 4, 6));
-    }
-
-    @Test
-    void testProvidedSchema() {
-        final StructType expectedSchema = StructType.fromDDL("col_str STRING");
-        final StructType schema = spark.read() //
-                .schema(expectedSchema) //
-                .format("exasol") //
-                .option("table", table.getFullyQualifiedName()) //
-                .options(getDefaultOptions()) //
-                .load() //
-                .schema();
-        assertThat(schema, equalTo(expectedSchema));
     }
 
 }
