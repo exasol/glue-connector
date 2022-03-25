@@ -51,8 +51,7 @@ public class SourceBatch implements Batch {
     private static class SourcePartitionReader implements PartitionReader<InternalRow> {
         private static final Logger LOGGER = Logger.getLogger(SourcePartitionReader.class.getName());
         private final SourceInputPartition partition;
-
-        private Iterator<InternalRow> iterator;
+        private final Iterator<InternalRow> iterator;
         private InternalRow currentRow = null;
 
         public SourcePartitionReader(final SourceInputPartition partition) {

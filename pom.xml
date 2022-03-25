@@ -157,6 +157,10 @@
             <version>3.10</version>
             <scope>test</scope>
         </dependency>
+        <!--
+            Added Log4j for tests only. In tests we start Spark job, which depends on the this version of logging. Using
+            newer versions results in Java9 MDC issues.
+        -->
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
