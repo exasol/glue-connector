@@ -2,6 +2,7 @@ package com.exasol.glue.ittests;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.exasol.containers.ExasolContainer;
@@ -28,7 +29,7 @@ public class BaseIntegrationTest {
     protected static SparkSession spark;
 
     @BeforeAll
-    static void beforeAll() throws SQLException {
+    public static void beforeAll() throws SQLException {
         EXASOL.purgeDatabase();
         connection = EXASOL.createConnection();
         factory = new ExasolObjectFactory(connection);
@@ -37,7 +38,7 @@ public class BaseIntegrationTest {
     }
 
     @AfterAll
-    static void afterAll() throws SQLException {
+    public static void afterAll() throws SQLException {
         dropSchema();
         connection.close();
     }
@@ -60,8 +61,13 @@ public class BaseIntegrationTest {
         return EXASOL.getPassword();
     }
 
+    public Map<String, String> getDefaultOptions() {
+        return Map.of("jdbc_url", getJdbcUrl(), "username", getUsername(), "password", getPassword());
+    }
+
     private static void dropSchema() {
         if (schema != null) {
+            LOGGER.fine(() -> "Dropping schema '" + schema.getName() + '"');
             schema.drop();
             schema = null;
         }

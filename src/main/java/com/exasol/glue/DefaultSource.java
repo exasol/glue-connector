@@ -39,9 +39,12 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
 
     @Override
     public Table getTable(final StructType schema, final Transform[] partitioning, final Map<String, String> map) {
-        final CaseInsensitiveStringMap options = new CaseInsensitiveStringMap(map);
-        validateOptions(options);
-        return new ExasolTable(schema, getExasolOptions(options));
+        return new ExasolTable(schema);
+    }
+
+    @Override
+    public boolean supportsExternalMetadata() {
+        return true;
     }
 
     @Override
