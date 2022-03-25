@@ -158,7 +158,7 @@
             <scope>test</scope>
         </dependency>
         <!--
-            Added Log4j for tests only. In tests we start Spark job, which depends on the this version of logging. Using
+            Added Log4j for tests only. In tests we start Spark job, which depends on this version of log4j. Using
             newer versions results in Java9 MDC issues.
         -->
         <dependency>
