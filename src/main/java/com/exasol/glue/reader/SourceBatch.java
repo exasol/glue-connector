@@ -53,7 +53,7 @@ public class SourceBatch implements Batch {
         private final SourceInputPartition partition;
 
         private Iterator<InternalRow> iterator;
-        private InternalRow currentRow;
+        private InternalRow currentRow = null;
 
         public SourcePartitionReader(final SourceInputPartition partition) {
             this.partition = partition;
@@ -84,7 +84,7 @@ public class SourceBatch implements Batch {
         }
 
         @Override
-        public void close() throws IOException {
+        public void close() {
         }
     }
 

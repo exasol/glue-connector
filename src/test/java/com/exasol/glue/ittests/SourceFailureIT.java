@@ -85,7 +85,7 @@ class SourceFailureIT extends BaseIntegrationTest {
                         TaskRunnerStateCounter.totalTaskRuns += 1;
                         if (value == 1 && TaskRunnerStateCounter.totalTaskFailures == 0) {
                             TaskRunnerStateCounter.totalTaskFailures += 1;
-                            throw new RuntimeException("Intentionally fails currect task.");
+                            throw new RuntimeException("Intentionally fails current task.");
                         }
                     }
                     return value * value;
