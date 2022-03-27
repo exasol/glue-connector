@@ -13,7 +13,7 @@ public final class ExasolOptions {
     private final String password;
     private final String table;
     private final String query;
-    private final String s3Location;
+    private final String s3Bucket;
 
     private ExasolOptions(final Builder builder) {
         this.jdbcUrl = builder.jdbcUrl;
@@ -21,7 +21,7 @@ public final class ExasolOptions {
         this.password = builder.password;
         this.table = builder.table;
         this.query = builder.query;
-        this.s3Location = builder.s3Location;
+        this.s3Bucket = builder.s3Bucket;
     }
 
     /**
@@ -107,12 +107,12 @@ public final class ExasolOptions {
     }
 
     /**
-     * Checks if an S3 location parameter is available.
+     * Checks if an S3 bucket parameter is available.
      *
-     * @return {@code true} if S3 location is available
+     * @return {@code true} if S3 bucket is available
      */
-    public boolean hasS3Location() {
-        if (this.s3Location == null || this.s3Location.isEmpty()) {
+    public boolean hasS3Bucket() {
+        if (this.s3Bucket == null || this.s3Bucket.isEmpty()) {
             return false;
         } else {
             return true;
@@ -120,12 +120,12 @@ public final class ExasolOptions {
     }
 
     /**
-     * Gets the S3 bucket location.
+     * Gets the S3 bucket path.
      *
-     * @return an S3 location
+     * @return an S3 bucket path
      */
-    public String getS3Location() {
-        return this.s3Location;
+    public String getS3Bucket() {
+        return this.s3Bucket;
     }
 
     /**
@@ -151,23 +151,22 @@ public final class ExasolOptions {
                 && Objects.equals(this.password, options.password) //
                 && Objects.equals(this.table, options.table) //
                 && Objects.equals(this.query, options.query) //
-                && Objects.equals(this.s3Location, options.s3Location); //
+                && Objects.equals(this.s3Bucket, options.s3Bucket);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.jdbcUrl, this.username, this.password, this.table, this.query,
-                this.s3Location);
+        return Objects.hash(this.jdbcUrl, this.username, this.password, this.table, this.query, this.s3Bucket);
     }
 
     @Override
     public String toString() {
         final StringBuilder stringBuilder = new StringBuilder("ExasolOptions{") //
-        .append("jdbcUrl=\"").append(this.jdbcUrl) //
+                .append("jdbcUrl=\"").append(this.jdbcUrl) //
                 .append("\", username=\"").append(this.username) //
                 .append("\", password=\"*******\"");
-        if (this.hasS3Location()) {
-            stringBuilder.append(", s3Location=\"").append(this.s3Location).append("\"");
+        if (this.hasS3Bucket()) {
+            stringBuilder.append(", s3Bucket=\"").append(this.s3Bucket).append("\"");
         }
         if (this.hasTable()) {
             stringBuilder.append(", table=\"").append(this.table).append("\"");
@@ -188,7 +187,7 @@ public final class ExasolOptions {
         private String password = "exasol";
         private String table = null;
         private String query = null;
-        private String s3Location = null;
+        private String s3Bucket = null;
 
         /**
          * Sets the JDBC connection URL.
@@ -248,11 +247,11 @@ public final class ExasolOptions {
         /**
          * Sets the S3 bucket location.
          *
-         * @param s3Location S3 bucket location
+         * @param s3Bucket S3 bucket location
          * @return builder instance for fluent programming
          */
-        public Builder s3Location(final String s3Location) {
-            this.s3Location = s3Location;
+        public Builder s3Bucket(final String s3Bucket) {
+            this.s3Bucket = s3Bucket;
             return this;
         }
 

@@ -21,19 +21,19 @@ class ExasolOptionsTest {
 
     @Test
     void testHasS3LocationFalse() {
-        assertAll(() -> assertThat(ExasolOptions.builder().build().hasS3Location(), equalTo(false)),
-                () -> assertThat(ExasolOptions.builder().s3Location("").build().hasS3Location(), equalTo(false)));
+        assertAll(() -> assertThat(ExasolOptions.builder().build().hasS3Bucket(), equalTo(false)),
+                () -> assertThat(ExasolOptions.builder().s3Bucket("").build().hasS3Bucket(), equalTo(false)));
     }
 
     @Test
     void testHasS3LocationTrue() {
-        assertThat(ExasolOptions.builder().s3Location("s3").build().hasS3Location(), equalTo(true));
+        assertThat(ExasolOptions.builder().s3Bucket("s3").build().hasS3Bucket(), equalTo(true));
     }
 
     @Test
     void testGetS3Location() {
-        final ExasolOptions options = ExasolOptions.builder().s3Location("bucket").build();
-        assertThat(options.getS3Location(), equalTo("bucket"));
+        final ExasolOptions options = ExasolOptions.builder().s3Bucket("bucket").build();
+        assertThat(options.getS3Bucket(), equalTo("bucket"));
     }
 
     @Test
@@ -101,10 +101,10 @@ class ExasolOptionsTest {
 
     @Test
     void testToStringWithTable() {
-        final ExasolOptions options = ExasolOptions.builder().table("table").s3Location("s3").build();
+        final ExasolOptions options = ExasolOptions.builder().table("table").s3Bucket("s3").build();
         final String expected = "ExasolOptions{"
                 + "jdbcUrl=\"jdbc:exa:localhost:8563\", username=\"sys\", password=\"*******\", "
-                + "s3Location=\"s3\", table=\"table\"}";
+                + "s3Bucket=\"s3\", table=\"table\"}";
         assertThat(options.toString(), equalTo(expected));
     }
 
