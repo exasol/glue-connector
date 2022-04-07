@@ -1,5 +1,8 @@
 package com.exasol.glue;
 
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 import com.exasol.errorreporting.ExaError;
@@ -14,6 +17,7 @@ public final class ExasolOptions {
     private final String table;
     private final String query;
     private final String s3Bucket;
+    private final Map<String, String> optionsMap;
 
     private ExasolOptions(final Builder builder) {
         this.jdbcUrl = builder.jdbcUrl;
@@ -22,6 +26,7 @@ public final class ExasolOptions {
         this.table = builder.table;
         this.query = builder.query;
         this.s3Bucket = builder.s3Bucket;
+        this.optionsMap = builder.optionsMap;
     }
 
     /**
@@ -129,6 +134,48 @@ public final class ExasolOptions {
     }
 
     /**
+     * Checks if a parameter key is available.
+     *
+     * @return {@code true} if parameter key is available
+     */
+    public boolean containsKey(final String key) {
+        return this.optionsMap.containsKey(toLowerCase(key));
+    }
+
+    /**
+     * Gets the value for a key.
+     *
+     * @param key key of a map
+     * @return value of the key
+     */
+    public String get(final String key) {
+        if (!containsKey(key)) {
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-EGC-17")
+                    .message("Key is '" + key.toString() + "' is not found in the options map.")
+                    .mitigation("Please make sure it is correct and set previously.").toString());
+        }
+        return this.optionsMap.get(toLowerCase(key));
+    }
+
+    /**
+     * Checks if parameter key is set to {@code true}.
+     *
+     * @param key key of a map
+     * @return {@code true} if parameter key is available and set to {@true} value
+     */
+    public boolean hasEnabled(final String key) {
+        if (!containsKey(key)) {
+            return false;
+        }
+        final String value = get(key);
+        return value.equalsIgnoreCase("true") ? true : false;
+    }
+
+    private String toLowerCase(final Object key) {
+        return key.toString().toLowerCase(Locale.ROOT);
+    }
+
+    /**
      * Creates a new builder for {@link ExasolOptions}.
      *
      * @return builder instance
@@ -151,12 +198,14 @@ public final class ExasolOptions {
                 && Objects.equals(this.password, options.password) //
                 && Objects.equals(this.table, options.table) //
                 && Objects.equals(this.query, options.query) //
-                && Objects.equals(this.s3Bucket, options.s3Bucket);
+                && Objects.equals(this.s3Bucket, options.s3Bucket) //
+                && Objects.equals(this.optionsMap, options.optionsMap);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.jdbcUrl, this.username, this.password, this.table, this.query, this.s3Bucket);
+        return Objects.hash(this.jdbcUrl, this.username, this.password, this.table, this.query, this.s3Bucket,
+                this.optionsMap);
     }
 
     @Override
@@ -174,6 +223,9 @@ public final class ExasolOptions {
         if (this.hasQuery()) {
             stringBuilder.append(", query=\"").append(this.query).append("\"");
         }
+        if (!this.optionsMap.isEmpty()) {
+            stringBuilder.append(", map=\"").append(this.optionsMap.toString()).append("\"");
+        }
         stringBuilder.append("}");
         return stringBuilder.toString();
     }
@@ -188,6 +240,7 @@ public final class ExasolOptions {
         private String table = null;
         private String query = null;
         private String s3Bucket = null;
+        private Map<String, String> optionsMap = new HashMap<>(0);
 
         /**
          * Sets the JDBC connection URL.
@@ -256,6 +309,32 @@ public final class ExasolOptions {
         }
 
         /**
+         * Sets key-value map.
+         *
+         * @param map key-value map
+         * @return builder instance for fluent programming
+         */
+        public Builder withOptionsMap(final Map<String, String> map) {
+            this.optionsMap = getCaseInsensitiveMap(map);
+            return this;
+        }
+
+        private Map<String, String> getCaseInsensitiveMap(final Map<String, String> map) {
+            final Map<String, String> caseInsensitiveMap = new HashMap<>(map.size());
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                final String lowerCaseKey = entry.getKey().toString().toLowerCase(Locale.ROOT);
+                if (caseInsensitiveMap.containsKey(lowerCaseKey)) {
+                    throw new IllegalArgumentException(ExaError.messageBuilder("E-EGC-18")
+                            .message("Found case sensitive duplicate key {{KEY}}.", entry.getKey())
+                            .mitigation("Please remove case sensitive duplicate options, and set only one of them.")
+                            .toString());
+                }
+                caseInsensitiveMap.put(lowerCaseKey, entry.getValue());
+            }
+            return caseInsensitiveMap;
+        }
+
+        /**
          * Builds a new instance of {@link ExasolOptions}.
          *
          * @return new instance of {@link ExasolOptins}
@@ -271,7 +350,6 @@ public final class ExasolOptions {
                         .message("It is not possible to set both 'query' and 'table' options.")
                         .mitigation("Please set only one of the them.").toString());
             }
-
         }
 
     }
