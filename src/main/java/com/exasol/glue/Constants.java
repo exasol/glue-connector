@@ -18,6 +18,7 @@ public final class Constants {
     public static final String AWS_REGION = "awsRegion";
     public static final String S3_BUCKET = "s3Bucket";
     public static final String S3_ENDPOINT_OVERRIDE = "awsEndpointOverride";
+    public static final String S3_PATH_STYLE_ACCESS = "s3PathStyleAccess";
     public static final List<String> REQUIRED_OPTIONS = List.of(JDBC_URL, USERNAME, PASSWORD);
 
     private Constants() {

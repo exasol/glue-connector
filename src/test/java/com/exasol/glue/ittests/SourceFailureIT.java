@@ -37,6 +37,8 @@ class SourceFailureIT extends BaseIntegrationTest {
                 .format("exasol") //
                 .option("table", table.getFullyQualifiedName()) //
                 .options(getDefaultOptions()) //
+                .option("delimiter", ",") //
+                .option("header", "true") //
                 .load();
     }
 
@@ -48,7 +50,7 @@ class SourceFailureIT extends BaseIntegrationTest {
                 .bulkInsert(Stream.of(1, 2, 3, 4, 5, 6).map(n -> List.of(n)));
         spark.stop();
         final SparkConf conf = new SparkConf() //
-                .setMaster("local[2,2]") //
+                .setMaster("local[2,3]") //
                 .setAppName("FailureTests") //
                 .set("spark.ui.enabled", "false") //
                 .set("spark.driver.host", "localhost");
