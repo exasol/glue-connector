@@ -63,19 +63,7 @@ public class ExasolTable implements SupportsRead {
                 JavaConverters.asScalaIteratorConverter(path.iterator()).asScala().toSeq(), //
                 Option.apply(this.schema), //
                 null);
-        return csvTable.newScanBuilder(map);
-    }
-
-    private void setupSparkContextForS3(final SparkSession sparkSession, final ExasolOptions options) {
-        sparkSession.sparkContext().hadoopConfiguration().set("fs.s3a.access.key", options.get(AWS_ACCESS_KEY_ID));
-        sparkSession.sparkContext().hadoopConfiguration().set("fs.s3a.secret.key", options.get(AWS_SECRET_ACCESS_KEY));
-        if (options.containsKey(S3_ENDPOINT_OVERRIDE)) {
-            sparkSession.sparkContext().hadoopConfiguration().set("fs.s3a.endpoint",
-                    "http://" + options.get(S3_ENDPOINT_OVERRIDE));
-        }
-        if (options.hasEnabled(S3_PATH_STYLE_ACCESS)) {
-            sparkSession.sparkContext().hadoopConfiguration().set("fs.s3a.path.style.access", "true");
-        }
+        return csvTable.newScanBuilder(updateMapWithCSVOptions(map));
     }
 
     private String getS3Path(final String s3Bucket, final String s3BucketKey) {
@@ -113,6 +101,18 @@ public class ExasolTable implements SupportsRead {
         }
     }
 
+    private void setupSparkContextForS3(final SparkSession sparkSession, final ExasolOptions options) {
+        sparkSession.sparkContext().hadoopConfiguration().set("fs.s3a.access.key", options.get(AWS_ACCESS_KEY_ID));
+        sparkSession.sparkContext().hadoopConfiguration().set("fs.s3a.secret.key", options.get(AWS_SECRET_ACCESS_KEY));
+        if (options.containsKey(S3_ENDPOINT_OVERRIDE)) {
+            sparkSession.sparkContext().hadoopConfiguration().set("fs.s3a.endpoint",
+                    "http://" + options.get(S3_ENDPOINT_OVERRIDE));
+        }
+        if (options.hasEnabled(S3_PATH_STYLE_ACCESS)) {
+            sparkSession.sparkContext().hadoopConfiguration().set("fs.s3a.path.style.access", "true");
+        }
+    }
+
     private ExasolOptions getExasolOptions(final CaseInsensitiveStringMap options) {
         final ExasolOptions.Builder builder = ExasolOptions.builder() //
                 .jdbcUrl(options.get(JDBC_URL)) //
@@ -125,6 +125,13 @@ public class ExasolTable implements SupportsRead {
             builder.query(options.get(QUERY));
         }
         return builder.withOptionsMap(options.asCaseSensitiveMap()).build();
+    }
+
+    private CaseInsensitiveStringMap updateMapWithCSVOptions(final CaseInsensitiveStringMap map) {
+        final Map<String, String> updatedMap = new HashMap<>(map.asCaseSensitiveMap());
+        updatedMap.put("header", "true");
+        updatedMap.put("delimiter", ",");
+        return new CaseInsensitiveStringMap(updatedMap);
     }
 
     @Override

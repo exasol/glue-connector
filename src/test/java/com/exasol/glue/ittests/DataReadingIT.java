@@ -34,8 +34,6 @@ class DataReadingIT extends BaseIntegrationTest {
                 .format("exasol") //
                 .option("table", table.getFullyQualifiedName()) //
                 .options(getDefaultOptions()) //
-                .option("delimiter", ",") //
-                .option("header", "true") //
                 .load();
     }
 
