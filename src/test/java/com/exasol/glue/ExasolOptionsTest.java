@@ -1,5 +1,6 @@
 package com.exasol.glue;
 
+import static com.exasol.glue.Constants.NUMBER_OF_PARTITIONS;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.startsWith;
@@ -92,6 +93,17 @@ class ExasolOptionsTest {
     void testGetTableOrQuery() {
         assertAll(() -> assertThat(ExasolOptions.builder().table("table").build().getTableOrQuery(), equalTo("table")),
                 () -> assertThat(ExasolOptions.builder().query("query").build().getTableOrQuery(), equalTo("query")));
+    }
+
+    @Test
+    void testNumberOfPartitionsDefault() {
+        assertThat(ExasolOptions.builder().query("query").build().getNumberOfPartitions(), equalTo(8));
+    }
+
+    @Test
+    void testNumberOfPartitionsProvided() {
+        assertThat(ExasolOptions.builder().query("query").withOptionsMap(Map.of(NUMBER_OF_PARTITIONS, "3")).build()
+                .getNumberOfPartitions(), equalTo(3));
     }
 
     @Test

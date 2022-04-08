@@ -55,7 +55,6 @@ public class ExasolTable implements SupportsRead {
         validateS3BucketExists(s3ClientFactory, s3Bucket);
         runExportQuery(options, s3BucketKey);
         setupSparkContextForS3(sparkSession, options);
-        // final Seq<String> paths = JavaConverters.asScalaIteratorConverter(l.iterator()).asScala().toSeq();
         final List<String> path = List.of(getS3Path(s3Bucket, s3BucketKey));
         final CSVTable csvTable = new CSVTable("", //
                 sparkSession, //
@@ -85,8 +84,7 @@ public class ExasolTable implements SupportsRead {
     }
 
     private int runExportQuery(final ExasolOptions options, final String s3BucketKey) {
-        // final int numberOfPartitions = options.getNumberOfPartitions();
-        final int numberOfPartitions = 3;
+        final int numberOfPartitions = options.getNumberOfPartitions();
         final String exportQuery = new ExportQueryGenerator(options).generateExportQuery(s3BucketKey,
                 numberOfPartitions);
         try (final Connection connection = new ExasolConnectionFactory(options).getConnection()) {

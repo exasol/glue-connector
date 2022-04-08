@@ -101,6 +101,7 @@ public class BaseIntegrationTest {
                 "s3PathStyleAccess", "true", //
                 "awsEndpointOverride", "localhost:" + S3.getMappedPort(4566)));
         map.put("useSsl", "false");
+        map.put("numPartitions", "3");
         map.put("exasol-ci", "true");
         return map;
     }

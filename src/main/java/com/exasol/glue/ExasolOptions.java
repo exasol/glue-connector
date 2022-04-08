@@ -133,6 +133,19 @@ public final class ExasolOptions {
     }
 
     /**
+     * Gets the number of partitions for Spark dataframe.
+     *
+     * @return number of partitions
+     */
+    public int getNumberOfPartitions() {
+        if (!containsKey(NUMBER_OF_PARTITIONS)) {
+            return DEFAULT_NUMBER_OF_PARTITIONS;
+        } else {
+            return Integer.parseInt(get(NUMBER_OF_PARTITIONS));
+        }
+    }
+
+    /**
      * Checks if a parameter key is available.
      *
      * @return {@code true} if parameter key is available
