@@ -1,6 +1,6 @@
 package com.exasol.glue.reader;
 
-import static com.exasol.glue.Constants.S3_ENDPOINT_OVERRIDE;
+import static com.exasol.glue.Constants.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.containsString;
@@ -12,7 +12,8 @@ import com.exasol.glue.ExasolOptions;
 import org.junit.jupiter.api.Test;
 
 class ExportQueryGeneratorTest {
-    final ExasolOptions.Builder builder = ExasolOptions.builder().s3Bucket("bucket");
+    final ExasolOptions.Builder builder = ExasolOptions.builder().s3Bucket("bucket")
+            .withOptionsMap(Map.of(AWS_ACCESS_KEY_ID, "user", AWS_SECRET_ACCESS_KEY, "pass"));
 
     @Test
     void testGeneratesExportQueryWithTable() {
@@ -49,15 +50,16 @@ class ExportQueryGeneratorTest {
 
     @Test
     void testGeneratesExportQueryWithS3EndpointOverride() {
-        final ExasolOptions options = builder.table("table")
-                .withOptionsMap(Map.of(S3_ENDPOINT_OVERRIDE, "localstack.dev:4566")).build();
+        final Map<String, String> map = Map.of(AWS_ACCESS_KEY_ID, "name", AWS_SECRET_ACCESS_KEY, "key",
+                S3_ENDPOINT_OVERRIDE, "localstack.dev:4566");
+        final ExasolOptions options = builder.table("table").withOptionsMap(map).build();
         final ExportQueryGenerator generator = new ExportQueryGenerator(options);
         final String result = generator.generateExportQuery("a", 1);
         final String expected = "EXPORT (\n" //
                 + "SELECT * FROM table\n" //
                 + ") INTO CSV\n" //
                 + "AT 'https://bucket.s3.localstack.dev:4566'\n" //
-                + "USER 'user' IDENTIFIED BY 'pass'\n" //
+                + "USER 'name' IDENTIFIED BY 'key'\n" //
                 + "FILE 'a/part-001.csv'\n" //
                 + "WITH COLUMN NAMES";
         assertThat(result, equalTo(expected));
@@ -65,8 +67,9 @@ class ExportQueryGeneratorTest {
 
     @Test
     void testGeneratesExportQueryWithS3EndpointOverrideReplacedForCITrue() {
-        final ExasolOptions options = builder.table("table")
-                .withOptionsMap(Map.of(S3_ENDPOINT_OVERRIDE, "localhost:1777", "exasol-ci", "true")).build();
+        final Map<String, String> map = Map.of(AWS_ACCESS_KEY_ID, "user", AWS_SECRET_ACCESS_KEY, "pass",
+                S3_ENDPOINT_OVERRIDE, "localhost:1777", "exasol-ci", "true");
+        final ExasolOptions options = builder.table("table").withOptionsMap(map).build();
         final ExportQueryGenerator generator = new ExportQueryGenerator(options);
         final String result = generator.generateExportQuery("a", 1);
         assertThat(result, containsString("AT 'https://bucket.s3.amazonaws.com:1777'"));
@@ -74,8 +77,9 @@ class ExportQueryGeneratorTest {
 
     @Test
     void testGeneratesExportQueryWithS3EndpointOverrideReplacedForCIFalse() {
-        final ExasolOptions options = builder.table("table")
-                .withOptionsMap(Map.of(S3_ENDPOINT_OVERRIDE, "localhost:1337", "exasol-ci", "false")).build();
+        final Map<String, String> map = Map.of(AWS_ACCESS_KEY_ID, "user", AWS_SECRET_ACCESS_KEY, "pass",
+                S3_ENDPOINT_OVERRIDE, "localhost:1337", "exasol-ci", "false");
+        final ExasolOptions options = builder.table("table").withOptionsMap(map).build();
         final ExportQueryGenerator generator = new ExportQueryGenerator(options);
         final String result = generator.generateExportQuery("a", 1);
         assertThat(result, containsString("AT 'https://bucket.s3.localhost:1337'"));

@@ -9,16 +9,12 @@ import java.util.logging.Logger;
 
 import scala.Option;
 import scala.collection.JavaConverters;
-import scala.collection.Seq;
-import scala.collection.JavaConverters.*;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.glue.connection.ExasolConnectionFactory;
 import com.exasol.glue.reader.ExportQueryGenerator;
 import com.exasol.glue.reader.ExportQueryRunner;
 
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
 import org.apache.spark.SparkContext;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.connector.catalog.SupportsRead;

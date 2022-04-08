@@ -16,6 +16,7 @@ public final class Constants {
     public static final String AWS_SECRET_ACCESS_KEY = "awsSecretAccessKey";
     public static final String AWS_SESSION_TOKEN = "awsSessionToken";
     public static final String AWS_REGION = "awsRegion";
+    public static final String AWS_USE_SSL = "useSsl";
     public static final String S3_BUCKET = "s3Bucket";
     public static final String S3_ENDPOINT_OVERRIDE = "awsEndpointOverride";
     public static final String S3_PATH_STYLE_ACCESS = "s3PathStyleAccess";

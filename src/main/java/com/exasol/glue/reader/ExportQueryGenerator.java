@@ -1,6 +1,6 @@
 package com.exasol.glue.reader;
 
-import static com.exasol.glue.Constants.S3_ENDPOINT_OVERRIDE;
+import static com.exasol.glue.Constants.*;
 
 import com.exasol.glue.ExasolOptions;
 
@@ -47,8 +47,10 @@ public final class ExportQueryGenerator {
     }
 
     private String getIdentifiedPart() {
-        return "AT 'https://" + this.options.getS3Bucket() + ".s3." + getS3Endpoint() + "'\n"
-                + "USER 'user' IDENTIFIED BY 'pass'\n";
+        final String awsAccessKeyId = this.options.get(AWS_ACCESS_KEY_ID);
+        final String awsSecretAccessKey = this.options.get(AWS_SECRET_ACCESS_KEY);
+        return "AT 'https://" + this.options.getS3Bucket() + ".s3." + getS3Endpoint() + "'\n" + "USER '"
+                + awsAccessKeyId + "' IDENTIFIED BY '" + awsSecretAccessKey + "'\n";
     }
 
     private String getS3Endpoint() {

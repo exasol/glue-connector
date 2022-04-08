@@ -3,6 +3,7 @@ package com.exasol.glue.ittests;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -90,16 +91,18 @@ public class BaseIntegrationTest {
     }
 
     public Map<String, String> getDefaultOptions() {
-        return Map.of( //
+        final Map<String, String> map = new HashMap<>(Map.of( //
                 "jdbc_url", getJdbcUrl(), //
                 "username", getUsername(), //
                 "password", getPassword(), //
                 "awsAccessKeyId", S3.getAccessKey(), //
                 "awsSecretAccessKey", S3.getSecretKey(), //
-                "awsEndpointOverride", "localhost:" + S3.getMappedPort(4566), //
-                "s3Bucket", DEFAULT_BUCKET_NAME, //
+                "awsRegion", S3.getRegion(), "s3Bucket", DEFAULT_BUCKET_NAME, //
                 "s3PathStyleAccess", "true", //
-                "exasol-ci", "true");
+                "awsEndpointOverride", "localhost:" + S3.getMappedPort(4566)));
+        map.put("useSsl", "false");
+        map.put("exasol-ci", "true");
+        return map;
     }
 
     private static void dropSchema() {

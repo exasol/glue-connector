@@ -1,9 +1,8 @@
 package com.exasol.glue;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
+import static com.exasol.glue.Constants.*;
+
+import java.util.*;
 
 import com.exasol.errorreporting.ExaError;
 
@@ -152,7 +151,7 @@ public final class ExasolOptions {
         if (!containsKey(key)) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-EGC-17")
                     .message("Key is '" + key.toString() + "' is not found in the options map.")
-                    .mitigation("Please make sure it is correct and set previously.").toString());
+                    .mitigation("Please make sure it is set and correct.").toString());
         }
         return this.optionsMap.get(toLowerCase(key));
     }
