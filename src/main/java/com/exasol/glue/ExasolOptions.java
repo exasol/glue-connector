@@ -124,9 +124,9 @@ public final class ExasolOptions {
     }
 
     /**
-     * Gets the S3 bucket path.
+     * Gets the S3 bucket name.
      *
-     * @return an S3 bucket path
+     * @return an S3 bucket name
      */
     public String getS3Bucket() {
         return this.s3Bucket;
@@ -159,11 +159,12 @@ public final class ExasolOptions {
      *
      * @param key key of a map
      * @return value of the key
+     * @throws IllegalArgumentException in case no value exists for the key
      */
     public String get(final String key) {
         if (!containsKey(key)) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-EGC-17")
-                    .message("Key is '" + key.toString() + "' is not found in the options map.")
+                    .message("Key {{key name}} not found in the options map.", key.toString())
                     .mitigation("Please make sure it is set and correct.").toString());
         }
         return this.optionsMap.get(toLowerCase(key));
@@ -310,9 +311,9 @@ public final class ExasolOptions {
         }
 
         /**
-         * Sets the S3 bucket location.
+         * Sets the S3 bucket name.
          *
-         * @param s3Bucket S3 bucket location
+         * @param s3Bucket S3 bucket name
          * @return builder instance for fluent programming
          */
         public Builder s3Bucket(final String s3Bucket) {

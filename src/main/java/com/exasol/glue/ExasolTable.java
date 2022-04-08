@@ -51,7 +51,7 @@ public class ExasolTable implements SupportsRead {
         final SparkContext sparkContext = sparkSession.sparkContext();
         final String s3Bucket = options.getS3Bucket();
         final String s3BucketKey = UUID.randomUUID() + "-" + sparkContext.applicationId();
-        LOGGER.info(() -> "Creating bucket '" + s3Bucket + "' with folder '" + s3BucketKey + "' for job data.");
+        LOGGER.info(() -> "Using bucket '" + s3Bucket + "' with folder '" + s3BucketKey + "' for job data.");
         validateS3BucketExists(s3ClientFactory, s3Bucket);
         runExportQuery(options, s3BucketKey);
         setupSparkContextForS3(sparkSession, options);
@@ -91,9 +91,9 @@ public class ExasolTable implements SupportsRead {
             return new ExportQueryRunner(connection).runExportQuery(exportQuery);
         } catch (final SQLException exception) {
             throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-16")
-                    .message("Failed to run export query {{exportQuery}} into S3 bucket {{bucket}} location.")
+                    .message("Failed to run export query {{exportQuery}} into S3 path {{s3Path}} location.")
                     .parameter("exportQuery", exportQuery)
-                    .parameter("bucket", options.getS3Bucket() + "/" + s3BucketKey)
+                    .parameter("s3Path", options.getS3Bucket() + "/" + s3BucketKey)
                     .mitigation("Please make sure that the query or table name is correct and obeys SQL syntax rules.")
                     .toString(), exception);
         }

@@ -26,7 +26,7 @@ public final class ExasolConnectionFactory {
     }
 
     /**
-     * Creates a JDBC connection to an Exasol database.
+     * Creates a JDBC connection to an Exasol database if none exists yet.
      *
      * @return JDBC connection
      * @throws SQLException if the connection cannot be established

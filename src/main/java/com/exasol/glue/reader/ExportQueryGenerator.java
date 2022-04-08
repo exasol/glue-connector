@@ -13,7 +13,7 @@ public final class ExportQueryGenerator {
     /**
      * Creates a new instance of {@link ExportQueryGenerator}.
      *
-     * @param options an user provided options
+     * @param options user provided options
      */
     public ExportQueryGenerator(final ExasolOptions options) {
         this.options = options;

@@ -90,11 +90,10 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
     private StructType getSchema(final ExasolOptions options) {
         final String limitQuery = generateInferSchemaQuery(options);
         LOGGER.info(() -> "Running schema inference using limited query '" + limitQuery + "' for the default source.");
-        try (final Connection connection = new ExasolConnectionFactory(options).getConnection()) {
-            final Statement statement = connection.createStatement();
+        try (final Connection connection = new ExasolConnectionFactory(options).getConnection();
+                final Statement statement = connection.createStatement()) {
             final StructType schema = getSparkSchema(statement.executeQuery(limitQuery));
             LOGGER.info(() -> "Inferred schema as '" + schema.toString() + "' for the default source.");
-            statement.close();
             return schema;
         } catch (final SQLException exception) {
             throw new ExasolConnectionException(ExaError.messageBuilder("E-EGC-4")

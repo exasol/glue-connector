@@ -28,9 +28,9 @@ public final class S3ClientFactory {
     }
 
     /**
-     * Returns an AWS S3 client.
+     * Creates a new AWS S3 client.
      *
-     * @return an S3 client
+     * @return a new S3 client
      */
     public S3Client getS3Client() {
         final S3ClientBuilder builder = S3Client.builder() //

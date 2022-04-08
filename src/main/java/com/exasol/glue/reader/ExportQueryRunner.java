@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * A class that runs Exasol {@code EXPORT} query.
+ * A class that runs an Exasol {@code EXPORT} query.
  */
 public final class ExportQueryRunner {
     private final Connection connection;
@@ -20,7 +20,7 @@ public final class ExportQueryRunner {
     }
 
     /**
-     * Runs given export query.
+     * Runs the given export query.
      *
      * @param query an export query string
      * @return the number of rows exported
