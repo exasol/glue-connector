@@ -154,7 +154,7 @@ public class BaseIntegrationTest {
     }
 
     private static String getS3ContainerInternalIp() {
-        return S3.getContainerInfo().getNetworkSettings().getNetworks().values().iterator().next().getIpAddress();
+        return S3.getContainerInfo().getNetworkSettings().getNetworks().values().iterator().next().getGateway();
     }
 
 }
