@@ -23,7 +23,7 @@ public final class ExportQueryGenerator {
      * Generates an Exasol CSV export query.
      *
      * @param bucketFolder  a folder in the S3 bucket location
-     * @param numberOfFiles a number of files to export the data
+     * @param numberOfFiles the number of files the exported data will be splitted into
      * @return generated export query
      */
     public String generateExportQuery(final String bucketFolder, final int numberOfFiles) {
@@ -73,8 +73,8 @@ public final class ExportQueryGenerator {
     private String getFilesPart(final String folder, final int numberOfFiles) {
         final StringBuilder builder = new StringBuilder();
         final String prefix = "FILE '" + folder + "/";
-        for (int i = 1; i <= numberOfFiles; i++) {
-            builder.append(prefix).append("part-00").append(i).append(".csv'\n");
+        for (int fileIndex = 1; fileIndex <= numberOfFiles; fileIndex++) {
+            builder.append(prefix).append(String.format("part-%03d", fileIndex)).append(".csv'\n");
         }
         return builder.toString();
     }

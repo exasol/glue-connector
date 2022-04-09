@@ -14,7 +14,6 @@ import com.exasol.errorreporting.ExaError;
 public final class ExasolConnectionFactory {
     private static final Logger LOGGER = Logger.getLogger(ExasolConnectionFactory.class.getName());
     private final ExasolOptions options;
-    private Connection connection = null;
 
     /**
      * Creates an instance of a {@link ExasolConnectionFactory}.
@@ -32,13 +31,6 @@ public final class ExasolConnectionFactory {
      * @throws SQLException if the connection cannot be established
      */
     public synchronized Connection getConnection() throws SQLException {
-        if (this.connection == null) {
-            this.connection = createConnection();
-        }
-        return this.connection;
-    }
-
-    private Connection createConnection() {
         verifyExasolJDBCDriverAvailable();
         final String address = options.getJdbcUrl();
         final String username = options.getUsername();

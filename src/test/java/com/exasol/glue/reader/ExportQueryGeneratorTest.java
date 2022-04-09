@@ -3,6 +3,7 @@ package com.exasol.glue.reader;
 import static com.exasol.glue.Constants.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.hamcrest.Matchers.containsString;
 
 import java.util.Map;
@@ -46,6 +47,18 @@ class ExportQueryGeneratorTest {
                 + "FILE 'a/part-003.csv'\n" //
                 + "WITH COLUMN NAMES";
         assertThat(result, equalTo(expected));
+    }
+
+    @Test
+    void testGeneratesExportQueryWithNumberOfPartitions() {
+        final ExasolOptions options = builder.table("table").build();
+        final ExportQueryGenerator generator = new ExportQueryGenerator(options);
+        final String result = generator.generateExportQuery("a", 13);
+        assertAll(() -> assertThat(result, containsString("FILE 'a/part-009.csv'")),
+                () -> assertThat(result, containsString("FILE 'a/part-010.csv'")),
+                () -> assertThat(result, containsString("FILE 'a/part-011.csv'")),
+                () -> assertThat(result, containsString("FILE 'a/part-012.csv'")),
+                () -> assertThat(result, containsString("FILE 'a/part-013.csv'")));
     }
 
     @Test

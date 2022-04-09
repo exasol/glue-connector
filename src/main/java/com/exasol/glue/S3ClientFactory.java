@@ -47,7 +47,7 @@ public final class S3ClientFactory {
         if (this.options.containsKey(AWS_REGION)) {
             return this.options.get(AWS_REGION);
         } else {
-            return "us-east-1";
+            return DEFAULT_AWS_REGION;
         }
     }
 
