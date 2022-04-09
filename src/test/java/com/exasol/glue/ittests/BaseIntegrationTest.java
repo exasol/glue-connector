@@ -29,7 +29,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 
 public class BaseIntegrationTest {
     private static final Logger LOGGER = Logger.getLogger(BaseIntegrationTest.class.getName());
-    private static final String DEFAULT_DOCKER_IMAGE = "7.1.8";
+    private static final String DEFAULT_DOCKER_IMAGE = "7.1.9";
     private static final String DEFAULT_BUCKET_NAME = "csvtest";
 
     @Container
