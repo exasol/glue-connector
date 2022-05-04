@@ -4,7 +4,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.util.List;
-import java.util.Map;
 
 import com.exasol.dbbuilder.dialects.Table;
 
@@ -139,10 +138,6 @@ class SchemaInferenceIT extends BaseIntegrationTest {
                 .options(getDefaultOptions()) //
                 .load() //
                 .schema();
-    }
-
-    private Map<String, String> getDefaultOptions() {
-        return Map.of("jdbc_url", getJdbcUrl(), "username", getUsername(), "password", getPassword());
     }
 
 }

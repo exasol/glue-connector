@@ -1,7 +1,11 @@
 package com.exasol.glue.ittests;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.exasol.containers.ExasolContainer;
@@ -12,34 +16,62 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.sql.SparkSession;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.testcontainers.DockerClientFactory;
+import org.testcontainers.containers.Container.ExecResult;
+import org.testcontainers.containers.localstack.LocalStackContainer.Service;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.utility.DockerImageName;
+
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
 
 public class BaseIntegrationTest {
     private static final Logger LOGGER = Logger.getLogger(BaseIntegrationTest.class.getName());
-    private static final String DEFAULT_DOCKER_IMAGE = "7.1.6";
+    private static final String DEFAULT_DOCKER_IMAGE = "7.1.9";
+    private static final String DEFAULT_BUCKET_NAME = "csvtest";
 
     @Container
     private static final ExasolContainer<? extends ExasolContainer<?>> EXASOL = new ExasolContainer<>(
             getExasolDockerImage()).withReuse(true);
+    @Container
+    private static final S3LocalStackContainerWithReuse S3 = new S3LocalStackContainerWithReuse(
+            DockerImageName.parse("localstack/localstack:0.14"));
 
     protected static Connection connection;
     protected static ExasolObjectFactory factory;
     protected static ExasolSchema schema;
     protected static SparkSession spark;
+    private static S3Client s3Client;
 
     @BeforeAll
-    static void beforeAll() throws SQLException {
+    public static void beforeAll() throws SQLException {
         EXASOL.purgeDatabase();
         connection = EXASOL.createConnection();
         factory = new ExasolObjectFactory(connection);
         schema = factory.createSchema("DEFAULT_SCHEMA");
         spark = SparkSessionProvider.getSparkSession(getSparkConf());
+        s3Client = S3Client.builder() //
+                .endpointOverride(S3.getEndpointOverride(Service.S3)) //
+                .credentialsProvider(StaticCredentialsProvider
+                        .create(AwsBasicCredentials.create(S3.getAccessKey(), S3.getSecretKey()))) //
+                .region(Region.of(S3.getRegion())) //
+                .build();
+        LOGGER.info(() -> "Created localstack S3 client with region '" + S3.getRegion() + "'.");
+        updateExasolContainerHostsFile();
+        createBucket(DEFAULT_BUCKET_NAME);
     }
 
     @AfterAll
-    static void afterAll() throws SQLException {
+    public static void afterAll() throws SQLException {
         dropSchema();
         connection.close();
+    }
+
+    public static void createBucket(final String bucketName) {
+        LOGGER.info(() -> "Creating S3 bucket '" + bucketName + "'.");
+        s3Client.createBucket(b -> b.bucket(bucketName));
     }
 
     public void createSchema(final String schemaName) {
@@ -60,8 +92,28 @@ public class BaseIntegrationTest {
         return EXASOL.getPassword();
     }
 
+    public Map<String, String> getDefaultOptions() {
+        final String endpointOverride = DockerClientFactory.instance().dockerHostIpAddress() + ":"
+                + S3.getMappedPort(4566);
+        final Map<String, String> map = new HashMap<>(Map.of( //
+                "jdbc_url", getJdbcUrl(), //
+                "username", getUsername(), //
+                "password", getPassword(), //
+                "awsAccessKeyId", S3.getAccessKey(), //
+                "awsSecretAccessKey", S3.getSecretKey(), //
+                "awsRegion", S3.getRegion(), //
+                "s3Bucket", DEFAULT_BUCKET_NAME, //
+                "s3PathStyleAccess", "true", //
+                "awsEndpointOverride", endpointOverride));
+        map.put("useSsl", "false");
+        map.put("numPartitions", "3");
+        map.put("exasol-ci", "true");
+        return map;
+    }
+
     private static void dropSchema() {
         if (schema != null) {
+            LOGGER.fine(() -> "Dropping schema '" + schema.getName() + '"');
             schema.drop();
             schema = null;
         }
@@ -82,6 +134,27 @@ public class BaseIntegrationTest {
 
     private static String getRandomAppId() {
         return "SparkAppID" + (int) (Math.random() * 1000 + 1);
+    }
+
+    private static void updateExasolContainerHostsFile() {
+        final List<String> commands = List.of( //
+                "sed -i '/amazonaws/d' /etc/hosts", //
+                "echo '" + getS3ContainerInternalIp() + " csvtest.s3.amazonaws.com' >> /etc/hosts");
+        commands.forEach(command -> {
+            try {
+                final ExecResult exitCode = EXASOL.execInContainer("/bin/sh", "-c", command);
+                if (exitCode.getExitCode() != 0) {
+                    throw new RuntimeException(
+                            "Command to update Exasol container `/etc/hosts` file returned non-zero result.");
+                }
+            } catch (final InterruptedException | IOException exception) {
+                throw new RuntimeException("Failed to update Exasol container `/etc/hosts`.", exception);
+            }
+        });
+    }
+
+    private static String getS3ContainerInternalIp() {
+        return S3.getContainerInfo().getNetworkSettings().getNetworks().values().iterator().next().getGateway();
     }
 
 }

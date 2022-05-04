@@ -3,17 +3,14 @@ package com.exasol.glue;
 import static java.sql.ResultSetMetaData.columnNoNulls;
 import static com.exasol.glue.Constants.*;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.exasol.glue.connection.ExasolConnectionException;
+import com.exasol.glue.connection.ExasolConnectionFactory;
 import com.exasol.errorreporting.ExaError;
 
 import org.apache.spark.sql.connector.catalog.Table;
@@ -39,9 +36,12 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
 
     @Override
     public Table getTable(final StructType schema, final Transform[] partitioning, final Map<String, String> map) {
-        final CaseInsensitiveStringMap options = new CaseInsensitiveStringMap(map);
-        validateOptions(options);
-        return new ExasolTable(schema, getExasolOptions(options));
+        return new ExasolTable(schema);
+    }
+
+    @Override
+    public boolean supportsExternalMetadata() {
+        return true;
     }
 
     @Override
@@ -90,8 +90,8 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
     private StructType getSchema(final ExasolOptions options) {
         final String limitQuery = generateInferSchemaQuery(options);
         LOGGER.info(() -> "Running schema inference using limited query '" + limitQuery + "' for the default source.");
-        try (final Connection connection = getConnection(options)) {
-            final Statement statement = connection.createStatement();
+        try (final Connection connection = new ExasolConnectionFactory(options).getConnection();
+                final Statement statement = connection.createStatement()) {
             final StructType schema = getSparkSchema(statement.executeQuery(limitQuery));
             LOGGER.info(() -> "Inferred schema as '" + schema.toString() + "' for the default source.");
             return schema;
@@ -99,35 +99,6 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
             throw new ExasolConnectionException(ExaError.messageBuilder("E-EGC-4")
                     .message("Could not run the limit query {{limitQuery}} to infer the schema.", limitQuery)
                     .mitigation("Please check that connection properties and original query are correct.").toString(),
-                    exception);
-        }
-    }
-
-    private Connection getConnection(final ExasolOptions options) {
-        verifyExasolJDBCDriverAvailable();
-        final String address = options.getJdbcUrl();
-        final String username = options.getUsername();
-        LOGGER.fine(() -> "Getting connection at '" + address + "' with username '" + username + "' and password.");
-        try {
-            return DriverManager.getConnection(address, username, options.getPassword());
-        } catch (final SQLException exception) {
-            throw new ExasolConnectionException(ExaError.messageBuilder("E-EGC-5")
-                    .message("Could not connect to Exasol address on {{address}} with username {{username}}.")
-                    .parameter("address", address).parameter("username", username)
-                    .mitigation("Please check that connection address, username and password are correct.").toString(),
-                    exception);
-        }
-    }
-
-    private void verifyExasolJDBCDriverAvailable() {
-        final String driverClassName = "com.exasol.jdbc.EXADriver";
-        try {
-            Class.forName(driverClassName);
-        } catch (final ClassNotFoundException exception) {
-            throw new ExasolConnectionException(
-                    ExaError.messageBuilder("E-EGC-11")
-                            .message("Failed to find Exasol JDBC Driver class {{class}}.", driverClassName)
-                            .mitigation("Please make sure that Exasol JDBC Driver is installed.").toString(),
                     exception);
         }
     }

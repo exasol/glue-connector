@@ -1,6 +1,8 @@
 package com.exasol.glue;
 
-import java.util.Objects;
+import static com.exasol.glue.Constants.*;
+
+import java.util.*;
 
 import com.exasol.errorreporting.ExaError;
 
@@ -13,7 +15,8 @@ public final class ExasolOptions {
     private final String password;
     private final String table;
     private final String query;
-    private final String s3Location;
+    private final String s3Bucket;
+    private final Map<String, String> optionsMap;
 
     private ExasolOptions(final Builder builder) {
         this.jdbcUrl = builder.jdbcUrl;
@@ -21,7 +24,8 @@ public final class ExasolOptions {
         this.password = builder.password;
         this.table = builder.table;
         this.query = builder.query;
-        this.s3Location = builder.s3Location;
+        this.s3Bucket = builder.s3Bucket;
+        this.optionsMap = builder.optionsMap;
     }
 
     /**
@@ -107,12 +111,12 @@ public final class ExasolOptions {
     }
 
     /**
-     * Checks if an S3 location parameter is available.
+     * Checks if an S3 bucket parameter is available.
      *
-     * @return {@code true} if S3 location is available
+     * @return {@code true} if S3 bucket is available
      */
-    public boolean hasS3Location() {
-        if (this.s3Location == null || this.s3Location.isEmpty()) {
+    public boolean hasS3Bucket() {
+        if (this.s3Bucket == null || this.s3Bucket.isEmpty()) {
             return false;
         } else {
             return true;
@@ -120,12 +124,68 @@ public final class ExasolOptions {
     }
 
     /**
-     * Gets the S3 bucket location.
+     * Gets the S3 bucket name.
      *
-     * @return an S3 location
+     * @return an S3 bucket name
      */
-    public String getS3Location() {
-        return this.s3Location;
+    public String getS3Bucket() {
+        return this.s3Bucket;
+    }
+
+    /**
+     * Gets the number of partitions for Spark dataframe.
+     *
+     * @return number of partitions
+     */
+    public int getNumberOfPartitions() {
+        if (!containsKey(NUMBER_OF_PARTITIONS)) {
+            return DEFAULT_NUMBER_OF_PARTITIONS;
+        } else {
+            return Integer.parseInt(get(NUMBER_OF_PARTITIONS));
+        }
+    }
+
+    /**
+     * Checks if a parameter key is available.
+     *
+     * @return {@code true} if parameter key is available
+     */
+    public boolean containsKey(final String key) {
+        return this.optionsMap.containsKey(toLowerCase(key));
+    }
+
+    /**
+     * Gets the value for a key.
+     *
+     * @param key key of a map
+     * @return value of the key
+     * @throws IllegalArgumentException in case no value exists for the key
+     */
+    public String get(final String key) {
+        if (!containsKey(key)) {
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-EGC-17")
+                    .message("Key {{key name}} not found in the options map.", key.toString())
+                    .mitigation("Please make sure it is set and correct.").toString());
+        }
+        return this.optionsMap.get(toLowerCase(key));
+    }
+
+    /**
+     * Checks if parameter key is set to {@code true}.
+     *
+     * @param key key of a map
+     * @return {@code true} if parameter key is available and set to {@true} value
+     */
+    public boolean hasEnabled(final String key) {
+        if (!containsKey(key)) {
+            return false;
+        }
+        final String value = get(key);
+        return value.equalsIgnoreCase("true") ? true : false;
+    }
+
+    private String toLowerCase(final Object key) {
+        return key.toString().toLowerCase(Locale.ROOT);
     }
 
     /**
@@ -151,29 +211,33 @@ public final class ExasolOptions {
                 && Objects.equals(this.password, options.password) //
                 && Objects.equals(this.table, options.table) //
                 && Objects.equals(this.query, options.query) //
-                && Objects.equals(this.s3Location, options.s3Location); //
+                && Objects.equals(this.s3Bucket, options.s3Bucket) //
+                && Objects.equals(this.optionsMap, options.optionsMap);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.jdbcUrl, this.username, this.password, this.table, this.query,
-                this.s3Location);
+        return Objects.hash(this.jdbcUrl, this.username, this.password, this.table, this.query, this.s3Bucket,
+                this.optionsMap);
     }
 
     @Override
     public String toString() {
         final StringBuilder stringBuilder = new StringBuilder("ExasolOptions{") //
-        .append("jdbcUrl=\"").append(this.jdbcUrl) //
+                .append("jdbcUrl=\"").append(this.jdbcUrl) //
                 .append("\", username=\"").append(this.username) //
                 .append("\", password=\"*******\"");
-        if (this.hasS3Location()) {
-            stringBuilder.append(", s3Location=\"").append(this.s3Location).append("\"");
+        if (this.hasS3Bucket()) {
+            stringBuilder.append(", s3Bucket=\"").append(this.s3Bucket).append("\"");
         }
         if (this.hasTable()) {
             stringBuilder.append(", table=\"").append(this.table).append("\"");
         }
         if (this.hasQuery()) {
             stringBuilder.append(", query=\"").append(this.query).append("\"");
+        }
+        if (!this.optionsMap.isEmpty()) {
+            stringBuilder.append(", map=\"").append(this.optionsMap.toString()).append("\"");
         }
         stringBuilder.append("}");
         return stringBuilder.toString();
@@ -188,7 +252,8 @@ public final class ExasolOptions {
         private String password = "exasol";
         private String table = null;
         private String query = null;
-        private String s3Location = null;
+        private String s3Bucket = null;
+        private Map<String, String> optionsMap = new HashMap<>(0);
 
         /**
          * Sets the JDBC connection URL.
@@ -246,14 +311,40 @@ public final class ExasolOptions {
         }
 
         /**
-         * Sets the S3 bucket location.
+         * Sets the S3 bucket name.
          *
-         * @param s3Location S3 bucket location
+         * @param s3Bucket S3 bucket name
          * @return builder instance for fluent programming
          */
-        public Builder s3Location(final String s3Location) {
-            this.s3Location = s3Location;
+        public Builder s3Bucket(final String s3Bucket) {
+            this.s3Bucket = s3Bucket;
             return this;
+        }
+
+        /**
+         * Sets key-value map.
+         *
+         * @param map key-value map
+         * @return builder instance for fluent programming
+         */
+        public Builder withOptionsMap(final Map<String, String> map) {
+            this.optionsMap = getCaseInsensitiveMap(map);
+            return this;
+        }
+
+        private Map<String, String> getCaseInsensitiveMap(final Map<String, String> map) {
+            final Map<String, String> caseInsensitiveMap = new HashMap<>(map.size());
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                final String lowerCaseKey = entry.getKey().toString().toLowerCase(Locale.ROOT);
+                if (caseInsensitiveMap.containsKey(lowerCaseKey)) {
+                    throw new IllegalArgumentException(ExaError.messageBuilder("E-EGC-18")
+                            .message("Found case sensitive duplicate key {{KEY}}.", entry.getKey())
+                            .mitigation("Please remove case sensitive duplicate options, and set only one of them.")
+                            .toString());
+                }
+                caseInsensitiveMap.put(lowerCaseKey, entry.getValue());
+            }
+            return caseInsensitiveMap;
         }
 
         /**
@@ -272,7 +363,6 @@ public final class ExasolOptions {
                         .message("It is not possible to set both 'query' and 'table' options.")
                         .mitigation("Please set only one of the them.").toString());
             }
-
         }
 
     }
