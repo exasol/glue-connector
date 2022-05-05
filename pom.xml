@@ -59,8 +59,8 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-sql_2.13</artifactId>
-            <version>3.2.1</version>
+            <artifactId>spark-sql_2.12</artifactId>
+            <version>3.1.1</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -79,18 +79,25 @@
                     <groupId>io.netty</groupId>
                     <artifactId>netty-all</artifactId>
                 </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-common</artifactId>
-            <version>3.3.2</version>
-            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-client</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>org.codehaus.jackson</groupId>
                     <artifactId>jackson-mapper-asl</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client</artifactId>
+            <version>3.3.2</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
@@ -111,13 +118,19 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.75.Final</version>
+            <version>4.1.76.Final</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.10.5.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
-            <version>2.17.165</version>
+            <version>2.17.184</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -138,13 +151,13 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>4.4.0</version>
+            <version>4.5.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>4.4.0</version>
+            <version>4.5.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -162,13 +175,13 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>1.16.3</version>
+            <version>1.17.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>1.16.3</version>
+            <version>1.17.1</version>
             <scope>test</scope>
         </dependency>
         <!-- Issue with Localstack S3
@@ -177,7 +190,7 @@
          <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.12.194</version>
+            <version>1.12.213</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -189,7 +202,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>test-db-builder-java</artifactId>
-            <version>3.3.1</version>
+            <version>3.3.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -339,6 +352,9 @@
                         <exclude>e6e4ebea-da12-4bde-8f24-6272925ad093</exclude>
                         <exclude>4a7955ac-037c-42bc-a83e-b51efe2490af</exclude>
                         <exclude>d3477f9c-032a-44a7-a5e1-02ae35e4737c</exclude>
+                        <exclude>c998ada9-b8ca-4da9-ab6c-e863d6ef80e5</exclude>
+                        <exclude>fb558ee6-6701-41b7-bc85-b298e2e2c0e0</exclude>
+                        <exclude>8923f062-a77b-48ca-80a2-d3af45919229</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
                 <executions>
@@ -401,6 +417,8 @@
                         <module>integration_tests</module>
                     </modules>
                     <excludedPlugins>
+                        <excludedPlugin>org.apache.maven.plugins:maven-jar-plugin</excludedPlugin>
+                        <excludedPlugin>org.apache.maven.plugins:maven-assembly-plugin</excludedPlugin>
                         <excludedPlugin>com.exasol:error-code-crawler-maven-plugin</excludedPlugin>
                     </excludedPlugins>
                     <linkReplacements>
@@ -411,23 +429,49 @@
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
                 <groupId>org.apache.maven.plugins</groupId>
-                <version>3.3.0</version>
-                <configuration>
-                    <descriptors>
-                        <descriptor>src/assembly/all-dependencies.xml</descriptor>
-                    </descriptors>
-                    <finalName>exasol-aws-glue-connector</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                </configuration>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.2</version>
                 <executions>
                     <execution>
-                        <id>make-assembly</id>
+                        <id>default-jar</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>single</goal>
+                            <goal>jar</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>exasol-${project.artifactId}-${project.version}-assembly</finalName>
+                            <shadedArtifactAttached>false</shadedArtifactAttached>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>reference.conf</resource>
+                                </transformer>
+                            </transformers>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -458,17 +502,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.2</version>
-                <executions>
-                    <execution>
-                        <id>default-jar</id>
-                        <phase>none</phase>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
@@ -486,7 +519,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.11.0</version>
+                    <version>3.12.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>

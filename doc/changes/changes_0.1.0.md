@@ -17,30 +17,28 @@ Code name:
 * Added `com.exasol:sql-statement-builder-java8:4.5.0`
 * Added `com.thoughtworks.paranamer:paranamer:2.8`
 * Added `org.apache.hadoop:hadoop-aws:3.3.2`
-* Added `org.apache.hadoop:hadoop-common:3.3.2`
-* Added `software.amazon.awssdk:s3:2.17.165`
+* Added `software.amazon.awssdk:s3:2.17.184`
 
 ### Test Dependency Updates
 
-* Added `com.amazonaws:aws-java-sdk-s3:1.12.194`
+* Added `com.amazonaws:aws-java-sdk-s3:1.12.213`
 * Added `com.exasol:exasol-testcontainers:6.1.1`
 * Added `com.exasol:hamcrest-resultset-matcher:1.5.1`
-* Added `com.exasol:test-db-builder-java:3.3.1`
+* Added `com.exasol:test-db-builder-java:3.3.2`
 * Added `log4j:log4j:1.2.17`
 * Added `nl.jqno.equalsverifier:equalsverifier:3.10`
 * Added `org.hamcrest:hamcrest:2.2`
 * Added `org.junit.jupiter:junit-jupiter:5.8.2`
-* Added `org.mockito:mockito-core:4.4.0`
-* Added `org.mockito:mockito-junit-jupiter:4.4.0`
-* Added `org.testcontainers:junit-jupiter:1.16.3`
-* Added `org.testcontainers:localstack:1.16.3`
+* Added `org.mockito:mockito-core:4.5.1`
+* Added `org.mockito:mockito-junit-jupiter:4.5.1`
+* Added `org.testcontainers:junit-jupiter:1.17.1`
+* Added `org.testcontainers:localstack:1.17.1`
 
 ### Plugin Dependency Updates
 
 * Added `com.exasol:artifact-reference-checker-maven-plugin:0.4.1`
 * Added `com.exasol:project-keeper-maven-plugin:1.3.4`
 * Added `io.github.zlika:reproducible-build-maven-plugin:0.15`
-* Added `org.apache.maven.plugins:maven-assembly-plugin:3.3.0`
 * Added `org.apache.maven.plugins:maven-clean-plugin:3.2.0`
 * Added `org.apache.maven.plugins:maven-compiler-plugin:3.10.1`
 * Added `org.apache.maven.plugins:maven-deploy-plugin:2.8.2`
@@ -49,7 +47,8 @@ Code name:
 * Added `org.apache.maven.plugins:maven-install-plugin:2.5.2`
 * Added `org.apache.maven.plugins:maven-jar-plugin:3.2.2`
 * Added `org.apache.maven.plugins:maven-resources-plugin:3.2.0`
-* Added `org.apache.maven.plugins:maven-site-plugin:3.11.0`
+* Added `org.apache.maven.plugins:maven-shade-plugin:3.3.0`
+* Added `org.apache.maven.plugins:maven-site-plugin:3.12.0`
 * Added `org.apache.maven.plugins:maven-surefire-plugin:3.0.0-M3`
 * Added `org.codehaus.mojo:versions-maven-plugin:2.10.0`
 * Added `org.itsallcode:openfasttrace-maven-plugin:1.5.0`
