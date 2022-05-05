@@ -70,8 +70,7 @@ public class ExasolTable implements SupportsRead {
     }
 
     private void validateS3BucketExists(final S3ClientFactory s3ClientFactory, final String s3Bucket) {
-        final S3Client s3Client = s3ClientFactory.getS3Client();
-        try {
+        try (final S3Client s3Client = s3ClientFactory.getDefaultS3Client()) {
             s3Client.headBucket(HeadBucketRequest.builder().bucket(s3Bucket).build());
         } catch (final NoSuchBucketException exception) {
             throw new ExasolValidationException(
