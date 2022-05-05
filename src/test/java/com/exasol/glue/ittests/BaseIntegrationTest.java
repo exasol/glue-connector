@@ -1,5 +1,7 @@
 package com.exasol.glue.ittests;
 
+import static com.exasol.glue.Constants.CI_ENABLED;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -107,7 +109,7 @@ public class BaseIntegrationTest {
                 "awsEndpointOverride", endpointOverride));
         map.put("useSsl", "false");
         map.put("numPartitions", "3");
-        map.put("exasol-ci", "true");
+        map.put(CI_ENABLED, "true");
         return map;
     }
 

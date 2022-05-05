@@ -24,6 +24,7 @@ public final class Constants {
     public static final String S3_PATH_STYLE_ACCESS = "s3PathStyleAccess";
     public static final String NUMBER_OF_PARTITIONS = "numPartitions";
     public static final int DEFAULT_NUMBER_OF_PARTITIONS = 8;
+    public static final String CI_ENABLED = "exasol-ci";
 
     public static final List<String> REQUIRED_OPTIONS = Arrays.asList(JDBC_URL, USERNAME, PASSWORD);
 

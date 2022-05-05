@@ -35,7 +35,14 @@ public final class S3ClientFactory {
                 .credentialsProvider(DefaultCredentialsProvider.create());
         setPathStyleAccessIfEnabled(builder);
         setEndpointOverrideIfEnabled(builder);
+        setRegionInCI(builder);
         return builder.build();
+    }
+
+    private void setRegionInCI(final S3BaseClientBuilder<?, ?> builder) {
+        if (this.options.hasEnabled(CI_ENABLED)) {
+            builder.region(Region.of(getRegion()));
+        }
     }
 
     /**
