@@ -40,7 +40,7 @@ public final class S3ClientFactory {
     }
 
     private void setRegionIfEnabled(final S3BaseClientBuilder<?, ?> builder) {
-        if (this.options.hasEnabled(AWS_REGION)) {
+        if (this.options.containsKey(AWS_REGION)) {
             builder.region(Region.of(this.options.get(AWS_REGION)));
         }
     }
