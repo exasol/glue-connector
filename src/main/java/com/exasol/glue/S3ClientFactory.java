@@ -4,7 +4,9 @@ import static com.exasol.glue.Constants.*;
 
 import java.net.URI;
 
-import software.amazon.awssdk.auth.credentials.*;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.*;
 
@@ -24,48 +26,22 @@ public final class S3ClientFactory {
     }
 
     /**
-     * Creates a default AWS S3 client.
-     *
-     * This client will be used inside the AWS Glue service that uses default credencials chain and region.
-     *
-     * @return a new S3 client
-     */
-    public S3Client getDefaultS3Client() {
-        final S3ClientBuilder builder = S3Client.builder() //
-                .credentialsProvider(DefaultCredentialsProvider.create());
-        setPathStyleAccessIfEnabled(builder);
-        setEndpointOverrideIfEnabled(builder);
-        setRegionInCI(builder);
-        return builder.build();
-    }
-
-    private void setRegionInCI(final S3BaseClientBuilder<?, ?> builder) {
-        if (this.options.hasEnabled(CI_ENABLED)) {
-            builder.region(Region.of(getRegion()));
-        }
-    }
-
-    /**
      * Creates a new AWS S3 client.
-     *
-     * This is client is used outside of the AWS services that uses user provided credentials and S3 region.
      *
      * @return a new S3 client
      */
     public S3Client getS3Client() {
         final S3ClientBuilder builder = S3Client.builder() //
-                .region(Region.of(getRegion())) //
                 .credentialsProvider(getCredentialsProvider());
+        setRegionIfEnabled(builder);
         setPathStyleAccessIfEnabled(builder);
         setEndpointOverrideIfEnabled(builder);
         return builder.build();
     }
 
-    private String getRegion() {
-        if (this.options.containsKey(AWS_REGION)) {
-            return this.options.get(AWS_REGION);
-        } else {
-            return DEFAULT_AWS_REGION;
+    private void setRegionIfEnabled(final S3BaseClientBuilder<?, ?> builder) {
+        if (this.options.hasEnabled(AWS_REGION)) {
+            builder.region(Region.of(this.options.get(AWS_REGION)));
         }
     }
 
