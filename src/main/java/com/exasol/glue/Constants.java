@@ -1,5 +1,6 @@
 package com.exasol.glue;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,7 +25,7 @@ public final class Constants {
     public static final String NUMBER_OF_PARTITIONS = "numPartitions";
     public static final int DEFAULT_NUMBER_OF_PARTITIONS = 8;
 
-    public static final List<String> REQUIRED_OPTIONS = List.of(JDBC_URL, USERNAME, PASSWORD);
+    public static final List<String> REQUIRED_OPTIONS = Arrays.asList(JDBC_URL, USERNAME, PASSWORD);
 
     private Constants() {
         // prevent instantiation
