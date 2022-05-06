@@ -501,6 +501,9 @@
                         <excludedPlugin>org.apache.maven.plugins:maven-assembly-plugin</excludedPlugin>
                         <excludedPlugin>com.exasol:error-code-crawler-maven-plugin</excludedPlugin>
                     </excludedPlugins>
+                    <excludedFiles>
+                        <excludeFile>.github/workflows/ci-build-next-java.yml</excludeFile>
+                    </excludedFiles>
                     <linkReplacements>
                         <linkReplacement>
                             LICENSE-exasol-jdbc.txt|https://docs.exasol.com/connect_exasol/drivers/jdbc.htm
