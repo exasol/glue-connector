@@ -128,7 +128,6 @@ class GlueLocalValidationIT extends BaseIntegrationTest {
     private <T> Dataset<T> getDynamicFrameAsDataset(final DynamicFrame dyf, final Encoder<T> encoder) {
         final Seq<ResolveSpec> emptySpec = JavaConverters.asScalaBuffer(Arrays.asList());
         return dyf.toDF(emptySpec).as(encoder);
-
     }
 
 }
