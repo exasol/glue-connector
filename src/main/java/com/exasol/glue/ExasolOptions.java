@@ -61,11 +61,7 @@ public final class ExasolOptions {
      * @return {@code true} if table parameter is available
      */
     public boolean hasTable() {
-        if (this.table == null || this.table.isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
+        return this.table == null || this.table.isEmpty() ? false : true;
     }
 
     /**
@@ -83,11 +79,7 @@ public final class ExasolOptions {
      * @return {@code true} if query parameter is available
      */
     public boolean hasQuery() {
-        if (this.query == null || this.query.isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
+        return this.query == null || this.query.isEmpty() ? false : true;
     }
 
     /**
@@ -116,11 +108,7 @@ public final class ExasolOptions {
      * @return {@code true} if S3 bucket is available
      */
     public boolean hasS3Bucket() {
-        if (this.s3Bucket == null || this.s3Bucket.isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
+        return this.s3Bucket == null || this.s3Bucket.isEmpty() ? false : true;
     }
 
     /**
@@ -163,9 +151,9 @@ public final class ExasolOptions {
      */
     public String get(final String key) {
         if (!containsKey(key)) {
-            throw new IllegalArgumentException(ExaError.messageBuilder("E-EGC-17")
-                    .message("Key {{key name}} not found in the options map.", key.toString())
-                    .mitigation("Please make sure it is set and correct.").toString());
+            throw new IllegalArgumentException(
+                    ExaError.messageBuilder("E-EGC-17").message("Key {{key name}} not found in the options map.", key)
+                            .mitigation("Please make sure it is set and correct.").toString());
         }
         return this.optionsMap.get(toLowerCase(key));
     }
@@ -181,7 +169,7 @@ public final class ExasolOptions {
             return false;
         }
         final String value = get(key);
-        return value.equalsIgnoreCase("true") ? true : false;
+        return value.equalsIgnoreCase("true");
     }
 
     private String toLowerCase(final Object key) {
@@ -249,7 +237,7 @@ public final class ExasolOptions {
     public static class Builder {
         private String jdbcUrl = "jdbc:exa:localhost:8563";
         private String username = "sys";
-        private String password = "exasol";
+        private String password = getDefaultPassword();
         private String table = null;
         private String query = null;
         private String s3Bucket = null;
@@ -335,7 +323,7 @@ public final class ExasolOptions {
         private Map<String, String> getCaseInsensitiveMap(final Map<String, String> map) {
             final Map<String, String> caseInsensitiveMap = new HashMap<>(map.size());
             for (Map.Entry<String, String> entry : map.entrySet()) {
-                final String lowerCaseKey = entry.getKey().toString().toLowerCase(Locale.ROOT);
+                final String lowerCaseKey = entry.getKey().toLowerCase(Locale.ROOT);
                 if (caseInsensitiveMap.containsKey(lowerCaseKey)) {
                     throw new IllegalArgumentException(ExaError.messageBuilder("E-EGC-18")
                             .message("Found case sensitive duplicate key {{KEY}}.", entry.getKey())
@@ -363,6 +351,10 @@ public final class ExasolOptions {
                         .message("It is not possible to set both 'query' and 'table' options.")
                         .mitigation("Please set only one of the them.").toString());
             }
+        }
+
+        private String getDefaultPassword() {
+            return "exasol";
         }
 
     }
