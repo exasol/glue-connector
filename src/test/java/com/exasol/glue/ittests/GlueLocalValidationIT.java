@@ -31,7 +31,7 @@ import scala.collection.Seq;
 
 @Tag("integration")
 @Testcontainers
-class GlueLocalValidationIT extends BaseIntegrationTest {
+class GlueLocalValidationIT extends BaseIntegrationTestSetup {
 
     private static Table table;
     private static GlueContext glueContext;

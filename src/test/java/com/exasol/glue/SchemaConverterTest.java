@@ -26,12 +26,13 @@ import org.junit.jupiter.params.provider.ValueSource;
 // [utest->dsn~default-source-infers-schema~1]
 // [utest->dsn~schameconverter-converts-data-types~1]
 class SchemaConverterTest {
+    private final SchemaConverter schemaConverter = new SchemaConverter();
 
     @ParameterizedTest
     @NullAndEmptySource
     void testConvertNullAndEmptyThrows(final List<ColumnDescription> columns) {
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> new SchemaConverter().convert(columns));
+                () -> schemaConverter.convert(columns));
         assertThat(exception.getMessage(), startsWith("E-EGC-10"));
     }
 
@@ -48,7 +49,7 @@ class SchemaConverterTest {
                 .add("col_double", DoubleType, false) //
                 .add("col_string", StringType, false) //
                 .add("col_date", DateType, false);
-        assertThat(new SchemaConverter().convert(columns), equalTo(expectedSchema));
+        assertThat(schemaConverter.convert(columns), equalTo(expectedSchema));
     }
 
     @ParameterizedTest
@@ -66,8 +67,9 @@ class SchemaConverterTest {
             Types.STRUCT //
     })
     void testConvertColumnWithUnsupportedJDBCTypes(final int jdbcType) {
+        final ColumnDescription column = columnOf("c1", jdbcType);
         final UnsupportedOperationException exception = assertThrows(UnsupportedOperationException.class,
-                () -> new SchemaConverter().convertColumn(columnOf("c1", jdbcType)));
+                () -> schemaConverter.convertColumn(column));
         assertThat(exception.getMessage(), startsWith("E-EGC-12"));
     }
 
@@ -193,11 +195,11 @@ class SchemaConverterTest {
 
     private void verifyDecimalExceptions(final int precision, final int scale, final String errorCode) {
         for (final int jdbcType : List.of(Types.DECIMAL, Types.NUMERIC)) {
+            final FieldConversionChecker conversionChecker = assertConversion(jdbcType, DataTypes.createDecimalType()) //
+                    .withPrecision(precision) //
+                    .withScale(scale);
             final IllegalStateException exception = assertThrows(IllegalStateException.class,
-                    () -> assertConversion(jdbcType, DataTypes.createDecimalType()) //
-                            .withPrecision(precision) //
-                            .withScale(scale) //
-                            .verify());
+                    () -> conversionChecker.verify());
             assertThat(exception.getMessage(), startsWith(errorCode));
         }
     }
