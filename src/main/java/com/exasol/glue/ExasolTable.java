@@ -7,9 +7,6 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Logger;
 
-import scala.Option;
-import scala.collection.JavaConverters;
-
 import com.exasol.errorreporting.ExaError;
 import com.exasol.glue.connection.ExasolConnectionFactory;
 import com.exasol.glue.reader.ExportQueryGenerator;
@@ -24,8 +21,11 @@ import org.apache.spark.sql.execution.datasources.v2.csv.CSVTable;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.sql.util.CaseInsensitiveStringMap;
 
+import scala.Option;
+import scala.collection.JavaConverters;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.*;
+import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
+import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
 
 /**
  * Represents an instance of {@link ExasolTable}.
@@ -40,7 +40,7 @@ public class ExasolTable implements SupportsRead {
 
     public ExasolTable(final StructType schema) {
         this.schema = schema;
-        this.capabilities = Set.of(TableCapability.BATCH_READ);
+        this.capabilities = new HashSet<>(Arrays.asList(TableCapability.BATCH_READ));
     }
 
     @Override
@@ -55,7 +55,7 @@ public class ExasolTable implements SupportsRead {
         validateS3BucketExists(s3ClientFactory, s3Bucket);
         runExportQuery(options, s3BucketKey);
         setupSparkContextForS3(sparkSession, options);
-        final List<String> path = List.of(getS3Path(s3Bucket, s3BucketKey));
+        final List<String> path = Arrays.asList(getS3Path(s3Bucket, s3BucketKey));
         final CSVTable csvTable = new CSVTable("", //
                 sparkSession, //
                 map, //
@@ -70,8 +70,7 @@ public class ExasolTable implements SupportsRead {
     }
 
     private void validateS3BucketExists(final S3ClientFactory s3ClientFactory, final String s3Bucket) {
-        final S3Client s3Client = s3ClientFactory.getS3Client();
-        try {
+        try (final S3Client s3Client = s3ClientFactory.getS3Client()) {
             s3Client.headBucket(HeadBucketRequest.builder().bucket(s3Bucket).build());
         } catch (final NoSuchBucketException exception) {
             throw new ExasolValidationException(

@@ -63,7 +63,7 @@ public final class ExportQueryGenerator {
     }
 
     private String replaceInCITests(final String endpoint) {
-        if (this.options.hasEnabled("exasol-ci")) {
+        if (this.options.hasEnabled(CI_ENABLED)) {
             return endpoint.replaceAll("localhost", "amazonaws.com");
         } else {
             return endpoint;

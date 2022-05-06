@@ -8,9 +8,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.S3ClientBuilder;
-import software.amazon.awssdk.services.s3.S3Configuration;
+import software.amazon.awssdk.services.s3.*;
 
 /**
  * A factory class that creates S3 clients.
@@ -34,20 +32,16 @@ public final class S3ClientFactory {
      */
     public S3Client getS3Client() {
         final S3ClientBuilder builder = S3Client.builder() //
-                .region(Region.of(getRegion())) //
-                .credentialsProvider(getCredentialsProvider()) //
-                .endpointOverride(URI.create(getEndpointOverride()));
-        if (this.options.hasEnabled(S3_PATH_STYLE_ACCESS)) {
-            builder.serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build());
-        }
+                .credentialsProvider(getCredentialsProvider());
+        setRegionIfEnabled(builder);
+        setPathStyleAccessIfEnabled(builder);
+        setEndpointOverrideIfEnabled(builder);
         return builder.build();
     }
 
-    private String getRegion() {
+    private void setRegionIfEnabled(final S3BaseClientBuilder<?, ?> builder) {
         if (this.options.containsKey(AWS_REGION)) {
-            return this.options.get(AWS_REGION);
-        } else {
-            return DEFAULT_AWS_REGION;
+            builder.region(Region.of(this.options.get(AWS_REGION)));
         }
     }
 
@@ -57,13 +51,21 @@ public final class S3ClientFactory {
         return StaticCredentialsProvider.create(AwsBasicCredentials.create(awsAccessKeyId, awsSecretAccessKey));
     }
 
+    private void setPathStyleAccessIfEnabled(final S3BaseClientBuilder<?, ?> builder) {
+        if (this.options.hasEnabled(S3_PATH_STYLE_ACCESS)) {
+            builder.serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build());
+        }
+    }
+
+    private void setEndpointOverrideIfEnabled(final S3BaseClientBuilder<?, ?> builder) {
+        if (this.options.containsKey(S3_ENDPOINT_OVERRIDE)) {
+            builder.endpointOverride(URI.create(getEndpointOverride()));
+        }
+    }
+
     private String getEndpointOverride() {
         final String protocol = getProtocol();
-        if (this.options.containsKey(S3_ENDPOINT_OVERRIDE)) {
-            return protocol + "://s3." + this.options.get(S3_ENDPOINT_OVERRIDE);
-        } else {
-            return protocol + "://s3.amazonaws.com";
-        }
+        return protocol + "://s3." + this.options.get(S3_ENDPOINT_OVERRIDE);
     }
 
     private String getProtocol() {
