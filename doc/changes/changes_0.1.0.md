@@ -13,7 +13,7 @@ Code name:
 ### Compile Dependency Updates
 
 * Added `com.exasol:error-reporting-java8:0.4.1`
-* Added `com.exasol:exasol-jdbc:7.1.7`
+* Added `com.exasol:exasol-jdbc:7.1.10`
 * Added `com.exasol:sql-statement-builder-java8:4.5.0`
 * Added `com.thoughtworks.paranamer:paranamer:2.8`
 * Added `org.apache.hadoop:hadoop-aws:3.3.2`
