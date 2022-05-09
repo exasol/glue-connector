@@ -28,5 +28,5 @@ jobs:
             ${{ runner.os }}-maven-
       - name: Run tests and build with Maven
         run: |
-          mvn --batch-mode --update-snapshots clean compile -DtrimStackTrace=false \
+          mvn --batch-mode --update-snapshots clean compile javadoc:javadoc -DtrimStackTrace=false \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
