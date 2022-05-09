@@ -237,7 +237,8 @@ public final class ExasolOptions {
     public static class Builder {
         private String jdbcUrl = "jdbc:exa:localhost:8563";
         private String username = "sys";
-        private String password = DEFAULT_PASSWORD;
+        @SuppressWarnings("java:S2068") // Default password used for CI
+        private String password = "exasol";
         private String table = null;
         private String query = null;
         private String s3Bucket = null;
