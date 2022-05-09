@@ -10,6 +10,7 @@ public final class Constants {
     public static final String JDBC_URL = "JDBC_URL";
     public static final String USERNAME = "USERNAME";
     public static final String PASSWORD = "PASSWORD";
+    public static final String DEFAULT_PASSWORD = "exasol";
     public static final String AWS_ACCESS_KEY_ID = "awsAccessKeyId";
     public static final String AWS_SECRET_ACCESS_KEY = "awsSecretAccessKey";
     public static final String AWS_SESSION_TOKEN = "awsSessionToken";

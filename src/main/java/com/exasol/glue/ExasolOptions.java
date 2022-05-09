@@ -61,7 +61,7 @@ public final class ExasolOptions {
      * @return {@code true} if table parameter is available
      */
     public boolean hasTable() {
-        return this.table == null || this.table.isEmpty() ? false : true;
+        return this.table != null && !this.table.isEmpty();
     }
 
     /**
@@ -79,7 +79,7 @@ public final class ExasolOptions {
      * @return {@code true} if query parameter is available
      */
     public boolean hasQuery() {
-        return this.query == null || this.query.isEmpty() ? false : true;
+        return this.query != null && !this.query.isEmpty();
     }
 
     /**
@@ -108,7 +108,7 @@ public final class ExasolOptions {
      * @return {@code true} if S3 bucket is available
      */
     public boolean hasS3Bucket() {
-        return this.s3Bucket == null || this.s3Bucket.isEmpty() ? false : true;
+        return this.s3Bucket != null && !this.s3Bucket.isEmpty();
     }
 
     /**
@@ -237,7 +237,7 @@ public final class ExasolOptions {
     public static class Builder {
         private String jdbcUrl = "jdbc:exa:localhost:8563";
         private String username = "sys";
-        private String password = getDefaultPassword();
+        private String password = DEFAULT_PASSWORD;
         private String table = null;
         private String query = null;
         private String s3Bucket = null;
@@ -351,10 +351,6 @@ public final class ExasolOptions {
                         .message("It is not possible to set both 'query' and 'table' options.")
                         .mitigation("Please set only one of the them.").toString());
             }
-        }
-
-        private String getDefaultPassword() {
-            return "exasol";
         }
 
     }
