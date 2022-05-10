@@ -38,6 +38,11 @@ public class ExasolTable implements SupportsRead {
     private final StructType schema;
     private final Set<TableCapability> capabilities;
 
+    /**
+     * Creates a new instance of {@link ExasolOptions}.
+     *
+     * @param schema a user provided schema
+     */
     public ExasolTable(final StructType schema) {
         this.schema = schema;
         this.capabilities = new HashSet<>(Arrays.asList(TableCapability.BATCH_READ));

@@ -148,6 +148,7 @@ public final class ExasolOptions {
     /**
      * Checks if a parameter key is available.
      *
+     * @param key parameter name to check
      * @return {@code true} if parameter key is available
      */
     public boolean containsKey(final String key) {
@@ -174,7 +175,7 @@ public final class ExasolOptions {
      * Checks if parameter key is set to {@code true}.
      *
      * @param key key of a map
-     * @return {@code true} if parameter key is available and set to {@true} value
+     * @return {@code true} if parameter key is available and set to {code @true} value
      */
     public boolean hasEnabled(final String key) {
         if (!containsKey(key)) {
@@ -258,7 +259,7 @@ public final class ExasolOptions {
         /**
          * Sets the JDBC connection URL.
          *
-         * @param JDBC connection URL
+         * @param jdbcUrl {@code JDBC} connection URL
          * @return builder instance for fluent programming
          */
         public Builder jdbcUrl(final String jdbcUrl) {
@@ -350,7 +351,7 @@ public final class ExasolOptions {
         /**
          * Builds a new instance of {@link ExasolOptions}.
          *
-         * @return new instance of {@link ExasolOptins}
+         * @return new instance of {@link ExasolOptions}
          */
         public ExasolOptions build() {
             validate();
