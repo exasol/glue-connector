@@ -12,7 +12,7 @@ import com.exasol.glue.connection.ExasolConnectionFactory;
 import com.exasol.glue.reader.ExportQueryGenerator;
 import com.exasol.glue.reader.ExportQueryRunner;
 
-import org.apache.spark.SparkContext;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.connector.catalog.SupportsRead;
 import org.apache.spark.sql.connector.catalog.TableCapability;
@@ -38,6 +38,11 @@ public class ExasolTable implements SupportsRead {
     private final StructType schema;
     private final Set<TableCapability> capabilities;
 
+    /**
+     * Creates a new instance of {@link ExasolOptions}.
+     *
+     * @param schema a user provided schema
+     */
     public ExasolTable(final StructType schema) {
         this.schema = schema;
         this.capabilities = new HashSet<>(Arrays.asList(TableCapability.BATCH_READ));
@@ -48,9 +53,8 @@ public class ExasolTable implements SupportsRead {
         final ExasolOptions options = getExasolOptions(map);
         final S3ClientFactory s3ClientFactory = new S3ClientFactory(options);
         final SparkSession sparkSession = SparkSession.active();
-        final SparkContext sparkContext = sparkSession.sparkContext();
         final String s3Bucket = options.getS3Bucket();
-        final String s3BucketKey = UUID.randomUUID() + "-" + sparkContext.applicationId();
+        final String s3BucketKey = UUID.randomUUID() + "-" + sparkSession.sparkContext().applicationId();
         LOGGER.info(() -> "Using bucket '" + s3Bucket + "' with folder '" + s3BucketKey + "' for job data.");
         validateS3BucketExists(s3ClientFactory, s3Bucket);
         runExportQuery(options, s3BucketKey);
@@ -99,14 +103,17 @@ public class ExasolTable implements SupportsRead {
     }
 
     private void setupSparkContextForS3(final SparkSession sparkSession, final ExasolOptions options) {
-        sparkSession.sparkContext().hadoopConfiguration().set("fs.s3a.access.key", options.get(AWS_ACCESS_KEY_ID));
-        sparkSession.sparkContext().hadoopConfiguration().set("fs.s3a.secret.key", options.get(AWS_SECRET_ACCESS_KEY));
+        final Configuration conf = sparkSession.sparkContext().hadoopConfiguration();
+        if (options.hasEnabled(CI_ENABLED)) {
+            conf.set("fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider");
+            conf.set("fs.s3a.access.key", options.get(AWS_ACCESS_KEY_ID));
+            conf.set("fs.s3a.secret.key", options.get(AWS_SECRET_ACCESS_KEY));
+        }
         if (options.containsKey(S3_ENDPOINT_OVERRIDE)) {
-            sparkSession.sparkContext().hadoopConfiguration().set("fs.s3a.endpoint",
-                    "http://" + options.get(S3_ENDPOINT_OVERRIDE));
+            conf.set("fs.s3a.endpoint", "http://" + options.get(S3_ENDPOINT_OVERRIDE));
         }
         if (options.hasEnabled(S3_PATH_STYLE_ACCESS)) {
-            sparkSession.sparkContext().hadoopConfiguration().set("fs.s3a.path.style.access", "true");
+            conf.set("fs.s3a.path.style.access", "true");
         }
     }
 

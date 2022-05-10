@@ -21,6 +21,7 @@ Code name:
 
 ### Test Dependency Updates
 
+* Added `com.amazonaws:AWSGlueETL:3.0.0`
 * Added `com.amazonaws:aws-java-sdk-s3:1.12.213`
 * Added `com.exasol:exasol-testcontainers:6.1.1`
 * Added `com.exasol:hamcrest-resultset-matcher:1.5.1`
