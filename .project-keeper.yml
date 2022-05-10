@@ -1,0 +1,13 @@
+sources:
+  - type: maven
+    path: pom.xml
+    modules:
+      - jar_artifact
+      - integration_tests
+excludes:
+  - "E-PK-CORE-17: Missing required file: '.github/workflows/ci-build-next-java.yml'."
+  - "E-PK-CORE-15: Missing maven plugin org.apache.maven.plugins:maven-jar-plugin."
+  - "E-PK-CORE-15: Missing maven plugin org.apache.maven.plugins:maven-assembly-plugin."
+  - "E-PK-CORE-15: Missing maven plugin com.exasol:error-code-crawler-maven-plugin."
+linkReplacements:
+  - LICENSE-exasol-jdbc.txt|https://docs.exasol.com/connect_exasol/drivers/jdbc.htm
