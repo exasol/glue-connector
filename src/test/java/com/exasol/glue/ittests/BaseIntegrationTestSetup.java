@@ -27,8 +27,8 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
-public class BaseIntegrationTest {
-    private static final Logger LOGGER = Logger.getLogger(BaseIntegrationTest.class.getName());
+public class BaseIntegrationTestSetup {
+    private static final Logger LOGGER = Logger.getLogger(BaseIntegrationTestSetup.class.getName());
     private static final String DEFAULT_DOCKER_IMAGE = "7.1.9";
     private static final String DEFAULT_BUCKET_NAME = "csvtest";
 

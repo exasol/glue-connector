@@ -1,17 +1,15 @@
 package com.exasol.glue;
 
-import static java.sql.ResultSetMetaData.columnNoNulls;
 import static com.exasol.glue.Constants.*;
+import static java.sql.ResultSetMetaData.columnNoNulls;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
+import com.exasol.errorreporting.ExaError;
 import com.exasol.glue.connection.ExasolConnectionException;
 import com.exasol.glue.connection.ExasolConnectionFactory;
-import com.exasol.errorreporting.ExaError;
 
 import org.apache.spark.sql.connector.catalog.Table;
 import org.apache.spark.sql.connector.catalog.TableProvider;
@@ -25,6 +23,7 @@ import org.apache.spark.sql.util.CaseInsensitiveStringMap;
  */
 public class DefaultSource implements TableProvider, DataSourceRegister {
     private static final Logger LOGGER = Logger.getLogger(DefaultSource.class.getName());
+    private static final List<String> REQUIRED_OPTIONS = Arrays.asList(JDBC_URL, USERNAME, PASSWORD);
 
     @Override
     // [impl->dsn~default-source-infers-schema~1]

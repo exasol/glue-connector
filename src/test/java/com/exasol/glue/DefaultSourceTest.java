@@ -1,6 +1,8 @@
 package com.exasol.glue;
 
-import static com.exasol.glue.Constants.*;
+import static com.exasol.glue.Constants.QUERY;
+import static com.exasol.glue.Constants.TABLE;
+import static com.exasol.glue.Constants.USERNAME;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.startsWith;
@@ -13,6 +15,7 @@ import org.apache.spark.sql.util.CaseInsensitiveStringMap;
 import org.junit.jupiter.api.Test;
 
 class DefaultSourceTest {
+    private final DefaultSource source = new DefaultSource();
 
     @Test
     void testShortName() {
@@ -21,24 +24,27 @@ class DefaultSourceTest {
 
     @Test
     void testInferSchemaThrowsWhenNoQueryOrTableOption() {
+        final CaseInsensitiveStringMap emptyOptions = new CaseInsensitiveStringMap(Collections.emptyMap());
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> new DefaultSource().inferSchema(new CaseInsensitiveStringMap(Collections.emptyMap())));
+                () -> source.inferSchema(emptyOptions));
         assertThat(exception.getMessage(), startsWith("E-EGC-1"));
     }
 
     @Test
     void testInferSchemaThrowsWhenBothQueryOrTableOption() {
-        final Map<String, String> options = Map.of(TABLE, "db_table", QUERY, "db_query");
+        final CaseInsensitiveStringMap options = new CaseInsensitiveStringMap(
+                Map.of(TABLE, "db_table", QUERY, "db_query"));
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> new DefaultSource().inferSchema(new CaseInsensitiveStringMap(options)));
+                () -> source.inferSchema(options));
         assertThat(exception.getMessage(), startsWith("E-EGC-2"));
     }
 
     @Test
     void testInferSchemaThrowsIfRequiredParametersMissing() {
-        final Map<String, String> options = Map.of(QUERY, "db_query", USERNAME, "sys");
+        final CaseInsensitiveStringMap options = new CaseInsensitiveStringMap(
+                Map.of(QUERY, "db_query", USERNAME, "sys"));
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> new DefaultSource().inferSchema(new CaseInsensitiveStringMap(options)));
+                () -> source.inferSchema(options));
         assertThat(exception.getMessage(), startsWith("E-EGC-3"));
     }
 
