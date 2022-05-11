@@ -8,6 +8,7 @@ import com.exasol.glue.ExasolOptions;
  * A class that generates an Exasol export query.
  */
 public final class ExportQueryGenerator {
+    private static final String EXPORT_QUERY_FOOTER = "WITH COLUMN NAMES";
     private final ExasolOptions options;
 
     /**
@@ -34,7 +35,7 @@ public final class ExportQueryGenerator {
                 .append(" INTO CSV\n") //
                 .append(getIdentifiedPart()) //
                 .append(getFilesPart(bucketFolder, numberOfFiles)) //
-                .append(getFooterPart());
+                .append(EXPORT_QUERY_FOOTER);
         return builder.toString();
     }
 
@@ -64,7 +65,7 @@ public final class ExportQueryGenerator {
 
     private String replaceInCITests(final String endpoint) {
         if (this.options.hasEnabled(CI_ENABLED)) {
-            return endpoint.replaceAll("localhost", "amazonaws.com");
+            return endpoint.replace("localhost", "amazonaws.com");
         } else {
             return endpoint;
         }
@@ -77,9 +78,5 @@ public final class ExportQueryGenerator {
             builder.append(prefix).append(String.format("part-%03d", fileIndex)).append(".csv'\n");
         }
         return builder.toString();
-    }
-
-    private String getFooterPart() {
-        return "WITH COLUMN NAMES";
     }
 }

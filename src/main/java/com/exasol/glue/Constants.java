@@ -1,8 +1,5 @@
 package com.exasol.glue;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * A class that contains common constant variables.
  */
@@ -42,9 +39,6 @@ public final class Constants {
     public static final int DEFAULT_NUMBER_OF_PARTITIONS = 8;
     /** Boolean parameter name to indicate local and CI environment. */
     public static final String CI_ENABLED = "exasol-ci";
-
-    /** List of required parameter names. */
-    public static final List<String> REQUIRED_OPTIONS = Arrays.asList(JDBC_URL, USERNAME, PASSWORD);
 
     private Constants() {
         // prevent instantiation

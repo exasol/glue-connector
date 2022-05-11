@@ -25,7 +25,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Tag("integration")
 @Testcontainers
-class DataReadingIT extends BaseIntegrationTest {
+class DataReadingIT extends BaseIntegrationTestSetup {
 
     private static Table table;
 
@@ -47,12 +47,13 @@ class DataReadingIT extends BaseIntegrationTest {
 
     @Test
     void testDataFrameShow() {
-        spark.read() //
+        final Dataset<Row> df = spark.read() //
                 .format("exasol") //
                 .option("query", "SELECT * FROM " + table.getFullyQualifiedName()) //
                 .options(getDefaultOptions()) //
-                .load() //
-                .show();
+                .load();
+        df.show();
+        assertThat(df.count(), equalTo(6L));
     }
 
     @Test

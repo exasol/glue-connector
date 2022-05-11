@@ -28,7 +28,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Tag("integration")
 @Testcontainers
-class SourceFailureIT extends BaseIntegrationTest {
+class SourceFailureIT extends BaseIntegrationTestSetup {
 
     private static Table table;
 

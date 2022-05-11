@@ -10,15 +10,15 @@ class ColumnDescriptionTest {
 
     @Test
     void testValidateName() {
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> ColumnDescription.builder().type(-1).build());
+        final ColumnDescription.Builder builder = ColumnDescription.builder().type(-1);
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> builder.build());
         assertThat(exception.getMessage(), startsWith("E-EGC-8"));
     }
 
     @Test
     void testValidateType() {
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> ColumnDescription.builder().name("c1").build());
+        final ColumnDescription.Builder builder = ColumnDescription.builder().name("c1");
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> builder.build());
         assertThat(exception.getMessage(), startsWith("E-EGC-9"));
     }
 

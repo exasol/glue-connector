@@ -7,6 +7,8 @@ import java.util.List;
 
 import com.exasol.dbbuilder.dialects.Table;
 
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
@@ -19,14 +21,16 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Tag("integration")
 @Testcontainers
 // [itest->dsn~default-source-infers-schema~1]
-class SchemaInferenceIT extends BaseIntegrationTest {
+class SchemaInferenceIT extends BaseIntegrationTestSetup {
 
     @Test
     void testSparkSanityCheck() {
         final StructType schema = new StructType() //
                 .add("col_str", DataTypes.StringType, false) //
                 .add("col_int", DataTypes.IntegerType, false);
-        spark.createDataFrame(List.of(RowFactory.create("value", 10)), schema).show();
+        final Dataset<Row> df = spark.createDataFrame(List.of(RowFactory.create("value", 10)), schema);
+        df.show();
+        assertThat(df.count(), equalTo(1L));
     }
 
     @Test

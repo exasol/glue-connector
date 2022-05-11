@@ -108,8 +108,8 @@ class ExasolOptionsTest {
 
     @Test
     void testValidatesOnlyTableOrQueryExists() {
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> ExasolOptions.builder().table("table").query("query").build());
+        final ExasolOptions.Builder builder = ExasolOptions.builder().table("table").query("query");
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> builder.build());
         assertThat(exception.getMessage(), startsWith("E-EGC-7"));
     }
 
@@ -130,8 +130,9 @@ class ExasolOptionsTest {
 
     @Test
     void testGetEmptyMap() {
+        final ExasolOptions options = ExasolOptions.builder().build();
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> ExasolOptions.builder().build().get("key"));
+                () -> options.get("key"));
         assertThat(exception.getMessage(), startsWith("E-EGC-17"));
     }
 
@@ -142,8 +143,9 @@ class ExasolOptionsTest {
 
     @Test
     void testDuplicateKeyValuesThrows() {
+        final ExasolOptions.Builder builder = ExasolOptions.builder();
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> ExasolOptions.builder().withOptionsMap(Map.of("k1", "v1", "K1", "v2")).build());
+                () -> builder.withOptionsMap(Map.of("k1", "v1", "K1", "v2")));
         assertThat(exception.getMessage(), startsWith("E-EGC-18"));
     }
 
