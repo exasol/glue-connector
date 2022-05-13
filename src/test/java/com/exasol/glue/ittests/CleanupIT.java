@@ -114,6 +114,7 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
         long size = cachedDF.count();
         assertThat(size, equalTo(1L));
         // Should stay the same size = cachedDF.count();
+        size = cachedDF.count();
         assertThat(size, equalTo(1L));
     }
 
