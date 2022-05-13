@@ -29,19 +29,19 @@ public class ExasolJobEndListener extends SparkListener {
 
     @Override
     public void onJobEnd(final SparkListenerJobEnd jobEnd) {
-        LOGGER.info("Cleaning up the bucket '" + this.options.getS3Bucket() + "' with key '" + bucketKey + "' in job '"
-                + jobEnd.jobId() + "'.");
-        deleteObjects(this.options, this.bucketKey);
+        LOGGER.info("Cleaning up the bucket '" + this.options.getS3Bucket() + "' with key '" + this.bucketKey
+                + "' in job '" + jobEnd.jobId() + "'.");
+        deleteObjects();
         super.onJobEnd(jobEnd);
     }
 
-    private void deleteObjects(final ExasolOptions options, final String bucketKey) {
-        final String bucketName = options.getS3Bucket();
+    private void deleteObjects() {
+        final String bucketName = this.options.getS3Bucket();
         final S3ClientFactory s3ClientFactory = new S3ClientFactory(options);
         try (final S3Client s3Client = s3ClientFactory.getS3Client()) {
-            final List<S3Object> objects = listObject(s3Client, bucketName, bucketKey);
+            final List<S3Object> objects = listObject(s3Client, bucketName, this.bucketKey);
             List<ObjectIdentifier> objectIds = objects.stream() //
-                    .map(obj -> ObjectIdentifier.builder().key(obj.key()).build()) //
+                    .map(object -> ObjectIdentifier.builder().key(object.key()).build()) //
                     .collect(Collectors.toList());
             DeleteObjectsRequest deleteObjectsRequest = DeleteObjectsRequest.builder() //
                     .bucket(bucketName) //
@@ -51,13 +51,14 @@ public class ExasolJobEndListener extends SparkListener {
         } catch (final SdkClientException exception) {
             throw new ExasolConnectionException(
                     ExaError.messageBuilder("E-EGC-19")
-                            .message("Failed to delete objects in {{BUCKET}} with key {{KEY}}.", bucketName, bucketKey)
+                            .message("Failed to delete objects in {{BUCKET}} with key {{KEY}}.", bucketName,
+                                    this.bucketKey)
                             .mitigation("Please check that credentials and bucket name are correct.").toString(),
                     exception);
         } catch (final S3Exception exception) {
             throw new ExasolConnectionException(ExaError.messageBuilder("E-EGC-20")
                     .message("Failed to delete objects in {{BUCKET}} with key {{KEY}} because of unknown S3 exception.")
-                    .parameter("BUCKET", bucketName).parameter("KEY", bucketKey).ticketMitigation().toString(),
+                    .parameter("BUCKET", bucketName).parameter("KEY", this.bucketKey).ticketMitigation().toString(),
                     exception);
         }
     }
