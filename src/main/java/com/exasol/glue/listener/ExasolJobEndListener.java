@@ -29,7 +29,7 @@ public class ExasolJobEndListener extends SparkListener {
 
     @Override
     public void onJobEnd(final SparkListenerJobEnd jobEnd) {
-        LOGGER.info("Cleaning up the bucket '" + this.options.getS3Bucket() + "' with key '" + this.bucketKey
+        LOGGER.info(() -> "Cleaning up the bucket '" + this.options.getS3Bucket() + "' with key '" + this.bucketKey
                 + "' in job '" + jobEnd.jobId() + "'.");
         deleteObjects();
         super.onJobEnd(jobEnd);
