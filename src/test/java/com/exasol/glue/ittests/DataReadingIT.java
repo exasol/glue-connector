@@ -2,18 +2,18 @@ package com.exasol.glue.ittests;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 import com.exasol.dbbuilder.dialects.Table;
+import com.exasol.glue.ExasolValidationException;
 
-import org.apache.spark.api.java.function.FilterFunction;
-import org.apache.spark.api.java.function.FlatMapFunction;
-import org.apache.spark.api.java.function.MapFunction;
-import org.apache.spark.api.java.function.MapPartitionsFunction;
+import org.apache.spark.api.java.function.*;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
@@ -30,11 +30,7 @@ class DataReadingIT extends BaseIntegrationTestSetup {
     private static Table table;
 
     private Dataset<Row> loadTable() {
-        return spark.read() //
-                .format("exasol") //
-                .option("table", table.getFullyQualifiedName()) //
-                .options(getDefaultOptions()) //
-                .load();
+        return loadTable(table.getFullyQualifiedName());
     }
 
     @BeforeAll
@@ -103,6 +99,19 @@ class DataReadingIT extends BaseIntegrationTestSetup {
                 .filter((FilterFunction<Row>) row -> (row.getInt(0) % 2) == 0 ? true : false) //
                 .map((MapFunction<Row, Integer>) row -> row.getInt(0), Encoders.INT());
         assertThat(df.collectAsList(), contains(2, 4, 6));
+    }
+
+    @Test
+    void testThrowsIfNumberOfPartitionsExceedsMaximumAllowed() {
+        Dataset<Row> df = spark.read() //
+                .format("exasol") //
+                .option("table", table.getFullyQualifiedName()) //
+                .options(getDefaultOptions()) //
+                .option("numPartitions", "1001") //
+                .load();
+        final ExasolValidationException exception = assertThrows(ExasolValidationException.class,
+                () -> df.collectAsList());
+        assertThat(exception.getMessage(), containsString("is larger than maximum allowed '1000' value."));
     }
 
 }

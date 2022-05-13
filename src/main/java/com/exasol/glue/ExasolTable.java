@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.glue.connection.ExasolConnectionFactory;
+import com.exasol.glue.listener.ExasolJobEndListener;
 import com.exasol.glue.reader.ExportQueryGenerator;
 import com.exasol.glue.reader.ExportQueryRunner;
 
@@ -34,6 +35,7 @@ import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
 // [impl->dsn~sourcescanbuilder-prunes-columns-and-pushes-filters~1]
 public class ExasolTable implements SupportsRead {
     private static final Logger LOGGER = Logger.getLogger(ExasolTable.class.getName());
+    private static final int MAX_ALLOWED_NUMBER_OF_PARTITIONS = 1000;
 
     private final StructType schema;
     private final Set<TableCapability> capabilities;
@@ -59,6 +61,7 @@ public class ExasolTable implements SupportsRead {
         validateS3BucketExists(s3ClientFactory, s3Bucket);
         runExportQuery(options, s3BucketKey);
         setupSparkContextForS3(sparkSession, options);
+        setupSparkContextForJobListener(sparkSession, options, s3BucketKey);
         final List<String> path = Arrays.asList(getS3Path(s3Bucket, s3BucketKey));
         final CSVTable csvTable = new CSVTable("", //
                 sparkSession, //
@@ -88,6 +91,7 @@ public class ExasolTable implements SupportsRead {
 
     private int runExportQuery(final ExasolOptions options, final String s3BucketKey) {
         final int numberOfPartitions = options.getNumberOfPartitions();
+        validateNumberOfPartitions(numberOfPartitions);
         final String exportQuery = new ExportQueryGenerator(options).generateExportQuery(s3BucketKey,
                 numberOfPartitions);
         try (final Connection connection = new ExasolConnectionFactory(options).getConnection()) {
@@ -99,6 +103,16 @@ public class ExasolTable implements SupportsRead {
                     .parameter("s3Path", options.getS3Bucket() + "/" + s3BucketKey)
                     .mitigation("Please make sure that the query or table name is correct and obeys SQL syntax rules.")
                     .toString(), exception);
+        }
+    }
+
+    private void validateNumberOfPartitions(final int numberOfPartitions) {
+        if (numberOfPartitions > MAX_ALLOWED_NUMBER_OF_PARTITIONS) {
+            throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-21")
+                    .message("The number of partitions is larger than maximum allowed {{MAXPARTITIONS}} value.",
+                            String.valueOf(MAX_ALLOWED_NUMBER_OF_PARTITIONS))
+                    .mitigation("Please set the number of partitions parameter to lower value.").toString());
+
         }
     }
 
@@ -115,6 +129,11 @@ public class ExasolTable implements SupportsRead {
         if (options.hasEnabled(S3_PATH_STYLE_ACCESS)) {
             conf.set("fs.s3a.path.style.access", "true");
         }
+    }
+
+    private void setupSparkContextForJobListener(final SparkSession sparkSession, final ExasolOptions options,
+            final String bucketKey) {
+        sparkSession.sparkContext().addSparkListener(new ExasolJobEndListener(options, bucketKey));
     }
 
     private ExasolOptions getExasolOptions(final CaseInsensitiveStringMap options) {
@@ -152,4 +171,5 @@ public class ExasolTable implements SupportsRead {
     public Set<TableCapability> capabilities() {
         return capabilities;
     }
+
 }
