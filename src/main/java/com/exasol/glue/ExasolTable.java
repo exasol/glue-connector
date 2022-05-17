@@ -10,20 +10,25 @@ import java.util.logging.Logger;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.glue.connection.ExasolConnectionFactory;
 import com.exasol.glue.listener.ExasolJobEndListener;
-import com.exasol.glue.reader.ExportQueryGenerator;
 import com.exasol.glue.reader.ExportQueryRunner;
+import com.exasol.glue.writer.DelegatingWriteBuilder;
+import com.exasol.glue.query.ExportQueryGenerator;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.connector.catalog.SupportsRead;
+import org.apache.spark.sql.connector.catalog.SupportsWrite;
 import org.apache.spark.sql.connector.catalog.TableCapability;
 import org.apache.spark.sql.connector.read.ScanBuilder;
+import org.apache.spark.sql.connector.write.LogicalWriteInfo;
+import org.apache.spark.sql.connector.write.WriteBuilder;
 import org.apache.spark.sql.execution.datasources.v2.csv.CSVTable;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.sql.util.CaseInsensitiveStringMap;
 
 import scala.Option;
 import scala.collection.JavaConverters;
+import scala.collection.Seq;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
 import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
@@ -32,8 +37,7 @@ import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
  * Represents an instance of {@link ExasolTable}.
  */
 // [impl->dsn~exasoltable-reads-and-writes~1]
-// [impl->dsn~sourcescanbuilder-prunes-columns-and-pushes-filters~1]
-public class ExasolTable implements SupportsRead {
+public class ExasolTable implements SupportsRead, SupportsWrite {
     private static final Logger LOGGER = Logger.getLogger(ExasolTable.class.getName());
     private static final int MAX_ALLOWED_NUMBER_OF_PARTITIONS = 1000;
 
@@ -47,10 +51,11 @@ public class ExasolTable implements SupportsRead {
      */
     public ExasolTable(final StructType schema) {
         this.schema = schema;
-        this.capabilities = new HashSet<>(Arrays.asList(TableCapability.BATCH_READ));
+        this.capabilities = new HashSet<>(Arrays.asList(TableCapability.BATCH_READ, TableCapability.BATCH_WRITE));
     }
 
     @Override
+    // [impl->dsn~sourcescanbuilder-prunes-columns-and-pushes-filters~1]
     public ScanBuilder newScanBuilder(final CaseInsensitiveStringMap map) {
         final ExasolOptions options = getExasolOptions(map);
         final S3ClientFactory s3ClientFactory = new S3ClientFactory(options);
@@ -92,8 +97,7 @@ public class ExasolTable implements SupportsRead {
     private int runExportQuery(final ExasolOptions options, final String s3BucketKey) {
         final int numberOfPartitions = options.getNumberOfPartitions();
         validateNumberOfPartitions(numberOfPartitions);
-        final String exportQuery = new ExportQueryGenerator(options).generateExportQuery(s3BucketKey,
-                numberOfPartitions);
+        final String exportQuery = new ExportQueryGenerator(options, s3BucketKey, numberOfPartitions).generateQuery();
         try (final Connection connection = new ExasolConnectionFactory(options).getConnection()) {
             return new ExportQueryRunner(connection).runExportQuery(exportQuery);
         } catch (final SQLException exception) {
@@ -154,6 +158,58 @@ public class ExasolTable implements SupportsRead {
         updatedMap.put("header", "true");
         updatedMap.put("delimiter", ",");
         return new CaseInsensitiveStringMap(updatedMap);
+    }
+
+    @Override
+    public WriteBuilder newWriteBuilder(final LogicalWriteInfo defaultInfo) {
+        final SparkSession sparkSession = SparkSession.active();
+        final LogicalWriteInfo info = getUpdatedLogicalWriteInfo(defaultInfo);
+        final ExasolOptions options = getExasolOptions(info.options());
+        final Seq<String> paths = getPathAsScalaSeq(options.get(PATH));
+        LOGGER.info(() -> "Writing intermediate data to the '" + paths.toString() + "' path.");
+        final CSVTable csvTable = new CSVTable("", sparkSession, info.options(), paths, Option.apply(this.schema),
+                null);
+        return new DelegatingWriteBuilder(options, csvTable.newWriteBuilder(info));
+    }
+
+    private LogicalWriteInfo getUpdatedLogicalWriteInfo(final LogicalWriteInfo defaultInfo) {
+        final Map<String, String> options = new HashMap<>(defaultInfo.options().asCaseSensitiveMap());
+        options.put("header", "true");
+        options.put("delimiter", ",");
+        options.put("mapreduce.fileoutputcommitter.marksuccessfuljobs", "false");
+        final SparkSession sparkSession = SparkSession.active();
+        final String s3Bucket = getExasolOptions(defaultInfo.options()).getS3Bucket();
+        final String s3BucketKey = UUID.randomUUID() + "-" + sparkSession.sparkContext().applicationId();
+        final String tempDir = getS3PathForWrite(s3Bucket, s3BucketKey);
+        if (tempDir.endsWith("/")) {
+            options.put(PATH, tempDir + defaultInfo.queryId());
+        } else {
+            options.put(PATH, tempDir + "/" + defaultInfo.queryId());
+        }
+        return new LogicalWriteInfo() {
+            @Override
+            public String queryId() {
+                return defaultInfo.queryId();
+            }
+
+            @Override
+            public StructType schema() {
+                return defaultInfo.schema();
+            }
+
+            @Override
+            public CaseInsensitiveStringMap options() {
+                return new CaseInsensitiveStringMap(options);
+            }
+        };
+    }
+
+    private String getS3PathForWrite(final String s3Bucket, final String s3BucketKey) {
+        return "s3a://" + s3Bucket + "/" + s3BucketKey + "/";
+    }
+
+    private Seq<String> getPathAsScalaSeq(final String path) {
+        return JavaConverters.asScalaIteratorConverter(Arrays.asList(path).iterator()).asScala().toSeq();
     }
 
     @Override
