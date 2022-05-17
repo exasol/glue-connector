@@ -33,11 +33,7 @@ class SourceFailureIT extends BaseIntegrationTestSetup {
     private static Table table;
 
     private Dataset<Row> loadTable() {
-        return spark.read() //
-                .format("exasol") //
-                .option("table", table.getFullyQualifiedName()) //
-                .options(getDefaultOptions()) //
-                .load();
+        return loadTable(table.getFullyQualifiedName());
     }
 
     @BeforeAll

@@ -13,6 +13,8 @@ import com.exasol.dbbuilder.dialects.exasol.ExasolObjectFactory;
 import com.exasol.dbbuilder.dialects.exasol.ExasolSchema;
 
 import org.apache.spark.SparkConf;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -29,8 +31,8 @@ import software.amazon.awssdk.services.s3.S3Client;
 
 public class BaseIntegrationTestSetup {
     private static final Logger LOGGER = Logger.getLogger(BaseIntegrationTestSetup.class.getName());
-    private static final String DEFAULT_DOCKER_IMAGE = "7.1.9";
-    private static final String DEFAULT_BUCKET_NAME = "csvtest";
+    private static final String DEFAULT_DOCKER_IMAGE = "7.1.10";
+    protected static final String DEFAULT_BUCKET_NAME = "csvtest";
 
     @Container
     private static final ExasolContainer<? extends ExasolContainer<?>> EXASOL = new ExasolContainer<>(
@@ -43,7 +45,7 @@ public class BaseIntegrationTestSetup {
     protected static ExasolObjectFactory factory;
     protected static ExasolSchema schema;
     protected static SparkSession spark;
-    private static S3Client s3Client;
+    protected static S3Client s3Client;
 
     @BeforeAll
     public static void beforeAll() throws SQLException {
@@ -109,6 +111,14 @@ public class BaseIntegrationTestSetup {
         map.put("numPartitions", "3");
         map.put("exasol-ci", "true");
         return map;
+    }
+
+    public Dataset<Row> loadTable(final String tableName) {
+        return spark.read() //
+                .format("exasol") //
+                .option("table", tableName) //
+                .options(getDefaultOptions()) //
+                .load();
     }
 
     private static void dropSchema() {
