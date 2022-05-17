@@ -111,7 +111,7 @@ public class ExasolTable implements SupportsRead {
             throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-21")
                     .message("The number of partitions is larger than maximum allowed {{MAXPARTITIONS}} value.",
                             String.valueOf(MAX_ALLOWED_NUMBER_OF_PARTITIONS))
-                    .mitigation("Please set the number of partitions parameter to lower value.").toString());
+                    .mitigation("Please set the number of partitions parameter to a lower value.").toString());
         }
     }
 
