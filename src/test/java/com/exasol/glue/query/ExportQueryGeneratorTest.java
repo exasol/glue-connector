@@ -1,4 +1,4 @@
-package com.exasol.glue.reader;
+package com.exasol.glue.query;
 
 import static com.exasol.glue.Constants.AWS_ACCESS_KEY_ID;
 import static com.exasol.glue.Constants.AWS_SECRET_ACCESS_KEY;

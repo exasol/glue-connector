@@ -43,6 +43,9 @@ public class ExasolJobEndListener extends SparkListener {
             List<ObjectIdentifier> objectIds = objects.stream() //
                     .map(object -> ObjectIdentifier.builder().key(object.key()).build()) //
                     .collect(Collectors.toList());
+            if (objectIds.isEmpty()) {
+                return;
+            }
             DeleteObjectsRequest deleteObjectsRequest = DeleteObjectsRequest.builder() //
                     .bucket(bucketName) //
                     .delete(Delete.builder().objects(objectIds).build()) //
