@@ -1,9 +1,12 @@
 package com.exasol.glue.ittests;
 
+import static com.exasol.matcher.ResultSetStructureMatcher.table;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -18,9 +21,9 @@ import org.apache.spark.SparkException;
 import org.apache.spark.api.java.function.FilterFunction;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.api.java.function.MapGroupsFunction;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Encoders;
-import org.apache.spark.sql.Row;
+import org.apache.spark.sql.*;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructType;
 import org.junit.jupiter.api.*;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -73,14 +76,14 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
     }
 
     @Test
-    void testDataSourceSuccessJobEndCleanup() {
+    void testSourceSuccessJobEndCleanup() {
         final Dataset<String> df = loadTable() //
                 .map((MapFunction<Row, String>) row -> row.getString(0), Encoders.STRING());
         assertThat(df.collectAsList(), contains("1", "2", "3"));
     }
 
     @Test
-    void testSingleMapTaskFailureJobEndCleanup() {
+    void testSourceSingleMapTaskFailureJobEndCleanup() {
         final Dataset<Integer> df = loadTable() //
                 .map((MapFunction<Row, Integer>) row -> {
                     final int value = Integer.valueOf(row.getString(0));
@@ -97,7 +100,7 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
     }
 
     @Test
-    void testMultiStageMapWithCacheFailureJobEndCleanup() {
+    void testSourceMultiStageMapWithCacheFailureJobEndCleanup() {
         final Dataset<Row> cachedDF = loadTable() //
                 .filter((FilterFunction<Row>) row -> {
                     final int value = Integer.valueOf(row.getString(0));
@@ -119,7 +122,7 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
     }
 
     @Test
-    void testMapReduceFailureJobEndCleanup() {
+    void testSourceMapReduceFailureJobEndCleanup() {
         final Dataset<String> df = loadTable() //
                 .map((MapFunction<Row, Long>) row -> {
                     final int value = Integer.valueOf(row.getString(0));
@@ -143,7 +146,7 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
     }
 
     @Test
-    void testJobAlwaysFailsJobEndCleanup() {
+    void testSourceJobAlwaysFailsJobEndCleanup() {
         final Dataset<Integer> df = loadTable() //
                 .map((MapFunction<Row, Integer>) row -> {
                     throw new RuntimeException("Intentionally fails all tasks.");
@@ -153,12 +156,57 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
         assertThat(exception.getMessage(), containsString("Intentionally fails all tasks."));
     }
 
+    @Test
+    void testSinkSuccessJobEndCleanup() throws SQLException {
+        final Table table = schema.createTableBuilder("table_cleanup_save") //
+                .column("c_str", "VARCHAR(3)") //
+                .column("c_int", "DECIMAL(9,0)") //
+                .column("c_double", "DOUBLE") //
+                .column("c_bool", "BOOLEAN") //
+                .build();
+        getSampleDataset() //
+                .write() //
+                .mode("append") //
+                .format("exasol") //
+                .options(getDefaultOptions()) //
+                .option("table", table.getFullyQualifiedName()) //
+                .save();
+        final String query = "SELECT * FROM " + table.getFullyQualifiedName() + " ORDER BY \"c_int\" ASC";
+        try (final ResultSet result = connection.createStatement().executeQuery(query)) {
+            assertThat(result, table().row("str", 10, 3.14, true).row("abc", 20, 2.72, false).matches());
+        }
+    }
+
+    @Test
+    void testSinkJobAlwaysFailsJobEndCleanup() {
+        final DataFrameWriter<Row> df = getSampleDataset() //
+                .write() //
+                .mode("append") //
+                .format("exasol") //
+                .options(getDefaultOptions()) //
+                .option("table", "non_existent_table");
+        final SparkException exception = assertThrows(SparkException.class, () -> df.save());
+        assertThat(exception.getMessage(), containsString("Writing job aborted."));
+    }
+
     private static class TaskFailureStateCounter {
         private static int totalTaskFailures = 0;
 
         public static synchronized void clear() {
             totalTaskFailures = 0;
         }
+    }
+
+    private Dataset<Row> getSampleDataset() {
+        final StructType schema = new StructType() //
+                .add("c_str", DataTypes.StringType, false) //
+                .add("c_int", DataTypes.IntegerType, false) //
+                .add("c_double", DataTypes.DoubleType, false) //
+                .add("c_bool", DataTypes.BooleanType, false);
+        return spark.createDataFrame(List.of( //
+                RowFactory.create("str", 10, 3.14, true), //
+                RowFactory.create("abc", 20, 2.72, false) //
+        ), schema);
     }
 
 }

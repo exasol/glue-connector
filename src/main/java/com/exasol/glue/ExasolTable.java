@@ -165,6 +165,7 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
         final SparkSession sparkSession = SparkSession.active();
         final LogicalWriteInfo info = getUpdatedLogicalWriteInfo(defaultInfo);
         final ExasolOptions options = getExasolOptions(info.options());
+        setupSparkContextForS3(sparkSession, options);
         final Seq<String> paths = getPathAsScalaSeq(options.get(PATH));
         LOGGER.info(() -> "Writing intermediate data to the '" + paths.toString() + "' path.");
         final CSVTable csvTable = new CSVTable("", sparkSession, info.options(), paths, Option.apply(this.schema),
@@ -181,11 +182,13 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
         final String s3Bucket = getExasolOptions(defaultInfo.options()).getS3Bucket();
         final String s3BucketKey = UUID.randomUUID() + "-" + sparkSession.sparkContext().applicationId();
         final String tempDir = getS3PathForWrite(s3Bucket, s3BucketKey);
+        options.put("tempdir", tempDir);
         if (tempDir.endsWith("/")) {
             options.put(PATH, tempDir + defaultInfo.queryId());
         } else {
             options.put(PATH, tempDir + "/" + defaultInfo.queryId());
         }
+
         return new LogicalWriteInfo() {
             @Override
             public String queryId() {

@@ -3,8 +3,12 @@ package com.exasol.glue.writer;
 import static com.exasol.glue.Constants.PASSWORD;
 import static com.exasol.glue.Constants.PATH;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.*;
+import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
@@ -13,7 +17,9 @@ import com.exasol.glue.ExasolValidationException;
 import com.exasol.glue.connection.ExasolConnectionException;
 import com.exasol.glue.query.ImportQueryGenerator;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
+import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.connector.write.*;
 
 public class ExasolBatchWrite implements BatchWrite {
@@ -95,33 +101,58 @@ public class ExasolBatchWrite implements BatchWrite {
     private void cleanup() {
         final String path = this.options.get(PATH);
         LOGGER.info(() -> "Running cleanup process for directory '" + path + "'.");
-        // final SparkSession sparkSession = SparkSession.active();
-        // final Configuration conf = sparkSession.sparkContext().hadoopConfiguration();
-        // final URI tmpDirectoryURI = getPathURI(path);
-        // try (final FileSystem fileSystem = FileSystem.get(tmpDirectoryURI, conf)) {
-        // final RemoteIterator<LocatedFileStatus> listFiles = getFileStatuses(path, fileSystem);
-        // while (listFiles.hasNext()) {
-        // final LocatedFileStatus fileStatus = listFiles.next();
-        // fileSystem.delete(fileStatus.getPath(), false);
-        // }
-        // fileSystem.delete(new Path(this.options.get("tempdir")), true);
-        // } catch (final IOException exception) {
-        // throw new ExasolValidationException(ExaError.messageBuilder("E-ESC-5")
-        // .message("Failed to list files in the path {{path}}.", path)
-        // .mitigation("Please make sure the path is correct file system (hdfs, s3a, etc) path.").toString(),
-        // exception);
-        // }
+        final SparkSession sparkSession = SparkSession.active();
+        final Configuration conf = sparkSession.sparkContext().hadoopConfiguration();
+        final URI tmpDirectoryURI = getPathURI(path);
+        try (final FileSystem fileSystem = FileSystem.get(tmpDirectoryURI, conf)) {
+            final RemoteIterator<LocatedFileStatus> listFiles = getFileStatuses(path, fileSystem);
+            while (listFiles.hasNext()) {
+                final LocatedFileStatus fileStatus = listFiles.next();
+                fileSystem.delete(fileStatus.getPath(), false);
+            }
+            fileSystem.delete(new Path(this.options.get("tempdir")), true);
+        } catch (final IOException exception) {
+            throw new ExasolValidationException(ExaError.messageBuilder("E-ESC-5")
+                    .message("Failed to list files in the path {{path}}.", path)
+                    .mitigation("Please make sure the path is correct file system (hdfs, s3a, etc) path.").toString(),
+                    exception);
+        }
 
+    }
+
+    private URI getPathURI(final String path) {
+        try {
+            return new URI(path);
+        } catch (final URISyntaxException exception) {
+            throw new ExasolValidationException(ExaError.messageBuilder("E-ESC-3")
+                    .message("Provided path {{path}} cannot be converted to URI systax.", path)
+                    .mitigation("Please make sure the path is correct file system (hdfs, s3a, etc) path.").toString(),
+                    exception);
+        }
     }
 
     private RemoteIterator<LocatedFileStatus> getFileStatuses(final String path, final FileSystem fs) {
         try {
             return fs.listFiles(new Path(path), false);
+        } catch (final FileNotFoundException exception) {
+            return new EmptyRemoteIterator<LocatedFileStatus>();
         } catch (final IOException exception) {
             throw new ExasolValidationException(ExaError.messageBuilder("E-ESC-4")
                     .message("Provided path {{path}} does not exist or the path does not allow listing files.", path)
                     .mitigation("Please make sure the path is correct file system (hdfs, s3a, etc) path.").toString(),
                     exception);
+        }
+    }
+
+    private static class EmptyRemoteIterator<E> implements RemoteIterator<E> {
+        @Override
+        public boolean hasNext() {
+            return false;
+        }
+
+        @Override
+        public E next() {
+            throw new NoSuchElementException();
         }
     }
 

@@ -36,7 +36,7 @@ public final class ImportQueryGenerator extends AbstractQueryGenerator {
     public String getHeader() {
         final String table = this.options.getTable();
         final StringBuilder builder = new StringBuilder();
-        builder.append("IMPORT INTO").append(table).append(" FROM CSV\n");
+        builder.append("IMPORT INTO ").append(table).append(" FROM CSV\n");
         return builder.toString();
     }
 
