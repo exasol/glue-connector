@@ -58,6 +58,7 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
     public WriteBuilder newWriteBuilder(final LogicalWriteInfo defaultInfo) {
         final ExasolOptions options = getExasolOptions(defaultInfo.options());
         validate(options);
+        validateHasTable(options);
         updateSparkConfigurationForS3(options);
         return new ExasolWriteBuilderProvider(options).createWriteBuilder(this.schema, defaultInfo);
     }
@@ -94,6 +95,16 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
     private void validate(final ExasolOptions options) {
         validateS3BucketExists(options);
         validateNumberOfPartitions(options);
+    }
+
+    private void validateHasTable(final ExasolOptions options) {
+        if (!options.hasTable()) {
+            throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-22")
+                    .message("Missing 'table' option when writing into Exasol database.")
+                    .mitigation("Please set 'table' property with fully qualified "
+                            + "(e.g. 'schema_name.table_name') Exasol table name.")
+                    .toString());
+        }
     }
 
     private void validateS3BucketExists(final ExasolOptions options) {
