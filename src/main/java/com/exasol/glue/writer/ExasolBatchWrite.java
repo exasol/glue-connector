@@ -1,13 +1,14 @@
 package com.exasol.glue.writer;
 
-import static com.exasol.glue.Constants.PASSWORD;
 import static com.exasol.glue.Constants.PATH;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
@@ -15,6 +16,7 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.glue.ExasolOptions;
 import com.exasol.glue.ExasolValidationException;
 import com.exasol.glue.connection.ExasolConnectionException;
+import com.exasol.glue.connection.ExasolConnectionFactory;
 import com.exasol.glue.query.ImportQueryGenerator;
 
 import org.apache.hadoop.conf.Configuration;
@@ -47,6 +49,17 @@ public class ExasolBatchWrite implements BatchWrite {
     public void commit(final WriterCommitMessage[] messages) {
         LOGGER.info("Committing the file writing stage of the job.");
         delegate.commit(messages);
+        importIntermediateData();
+    }
+
+    @Override
+    public void abort(final WriterCommitMessage[] messages) {
+        LOGGER.info("Running abort stage of the job.");
+        cleanup();
+        delegate.abort(messages);
+    }
+
+    private void importIntermediateData() {
         final long start = System.currentTimeMillis();
         final String table = this.options.getTable();
         final String query = new ImportQueryGenerator(this.options).generateQuery();
@@ -65,36 +78,13 @@ public class ExasolBatchWrite implements BatchWrite {
         }
     }
 
-    @Override
-    public void abort(final WriterCommitMessage[] messages) {
-        LOGGER.info("Running abort stage of the job.");
-        cleanup();
-        delegate.abort(messages);
-    }
-
     private int runImportQuery(final String query) throws SQLException {
-        try (final Connection connection = getConnection(); final Statement stmt = connection.createStatement()) {
+        try (final Connection connection = new ExasolConnectionFactory(this.options).getConnection();
+                final Statement stmt = connection.createStatement()) {
             connection.setAutoCommit(false);
             final int rows = stmt.executeUpdate(query);
             connection.commit();
             return rows;
-        }
-
-    }
-
-    public Connection getConnection() {
-        final String address = this.options.getJdbcUrl();
-        final String username = this.options.getUsername();
-        LOGGER.fine(() -> "Getting connection at '" + address + "' with username '" + username + "' and password.");
-        try {
-            final Connection connection = DriverManager.getConnection(address, username, this.options.get(PASSWORD));
-            return connection;
-        } catch (final SQLException exception) {
-            throw new ExasolConnectionException(ExaError.messageBuilder("E-ESC-6")
-                    .message("Could not connect to Exasol address on {{address}} with username {{username}}.")
-                    .parameter("address", address).parameter("username", username)
-                    .mitigation("Please check that connection address, username and password are correct.").toString(),
-                    exception);
         }
     }
 

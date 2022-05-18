@@ -312,6 +312,25 @@ public final class ExasolOptions {
         }
 
         /**
+         * Sets values from another {@link ExasolOptions} options.
+         *
+         * @param options ExasolOptions options
+         * @return builder instance for fluent programming
+         */
+        public Builder from(final ExasolOptions options) {
+            this.jdbcUrl = options.get(JDBC_URL);
+            this.username = options.get(USERNAME);
+            this.password = options.get(PASSWORD);
+            this.s3Bucket = options.get(S3_BUCKET);
+            if (options.containsKey(TABLE)) {
+                this.table = options.get(TABLE);
+            } else if (options.containsKey(QUERY)) {
+                this.query = options.get(QUERY);
+            }
+            return this;
+        }
+
+        /**
          * Sets key-value map.
          *
          * @param map key-value map
