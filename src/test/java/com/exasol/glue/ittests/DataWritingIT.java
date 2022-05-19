@@ -5,16 +5,17 @@ import static com.exasol.matcher.TypeMatchMode.NO_JAVA_TYPE_CHECK;
 import static org.apache.spark.sql.functions.col;
 import static org.apache.spark.sql.functions.date_format;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.startsWith;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.List;
 
 import com.exasol.dbbuilder.dialects.Table;
+import com.exasol.glue.ExasolValidationException;
 
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Encoder;
-import org.apache.spark.sql.Encoders;
+import org.apache.spark.sql.*;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,31 @@ class DataWritingIT extends BaseIntegrationTestSetup {
     private static final int INTEGER_MAX = 2147483647;
     private static final long LONG_MIN = -9223372036854775808L;
     private static final long LONG_MAX = 9223372036854775807L;
+
+    @Test
+    void testThrowsWhenSavingIfNumberOfPartitionsExceedsMaximumAllowed() {
+        final Table table = schema.createTable("table_write_integer_throws", "c1", "INTEGER");
+        final DataFrameWriter<Integer> df = getDataset(List.of(1, 2), Encoders.INT()) //
+                .write() //
+                .mode("append") //
+                .format("exasol") //
+                .options(getDefaultOptions()) //
+                .option("numPartitions", "1001") //
+                .option("table", table.getFullyQualifiedName());
+        final ExasolValidationException exception = assertThrows(ExasolValidationException.class, () -> df.save());
+        assertThat(exception.getMessage(), startsWith("E-EGC-21"));
+    }
+
+    @Test
+    void testThrowsIfTableParameterIsNotSet() {
+        final DataFrameWriter<Integer> df = getDataset(List.of(1, 2), Encoders.INT()) //
+                .write() //
+                .mode("append") //
+                .format("exasol") //
+                .options(getDefaultOptions());
+        final ExasolValidationException exception = assertThrows(ExasolValidationException.class, () -> df.save());
+        assertThat(exception.getMessage(), startsWith("E-EGC-22"));
+    }
 
     @Test
     void testWriteBoolean() throws SQLException {
