@@ -2,8 +2,6 @@ package com.exasol.glue.query;
 
 import static com.exasol.glue.Constants.*;
 
-import java.util.Objects;
-
 import com.exasol.glue.ExasolOptions;
 
 /**
