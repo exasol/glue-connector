@@ -1,5 +1,6 @@
 package com.exasol.glue.reader;
 
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
@@ -83,7 +84,7 @@ public final class ExasolScanBuilderProvider {
     }
 
     private Seq<String> getS3ScanPath(final String s3Bucket, final String s3BucketKey) {
-        final String path = "s3a://" + s3Bucket + "/" + s3BucketKey + "/*.csv";
+        final String path = "s3a://" + Paths.get(s3Bucket, s3BucketKey, "*.csv").toString();
         return JavaConverters.asScalaIteratorConverter(Arrays.asList(path).iterator()).asScala().toSeq();
     }
 

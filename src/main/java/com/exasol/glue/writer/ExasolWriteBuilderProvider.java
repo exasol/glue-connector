@@ -2,6 +2,7 @@ package com.exasol.glue.writer;
 
 import static com.exasol.glue.Constants.PATH;
 
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -63,7 +64,7 @@ public final class ExasolWriteBuilderProvider {
         map.put("mapreduce.fileoutputcommitter.marksuccessfuljobs", "false");
         final String s3Bucket = this.options.getS3Bucket();
         final String s3BucketKey = UUID.randomUUID() + "-" + sparkSession.sparkContext().applicationId();
-        final String tempDir = "s3a://" + s3Bucket + "/" + s3BucketKey + "/";
+        final String tempDir = "s3a://" + Paths.get(s3Bucket, s3BucketKey).toString();
         map.put(TEMP_DIR, tempDir);
         if (tempDir.endsWith("/")) {
             map.put(PATH, tempDir + defaultInfo.queryId());

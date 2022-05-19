@@ -29,6 +29,7 @@ import org.apache.spark.sql.connector.write.*;
  */
 public class ExasolBatchWrite implements BatchWrite {
     private static final Logger LOGGER = Logger.getLogger(ExasolBatchWrite.class.getName());
+    private static final String MITIGATION_MESSAGE = "Please make sure the path is correct, starts with 's3a://'.";
 
     private final ExasolOptions options;
     private final BatchWrite delegate;
@@ -111,9 +112,9 @@ public class ExasolBatchWrite implements BatchWrite {
             }
             fileSystem.delete(new Path(this.options.get("tempdir")), true);
         } catch (final IOException exception) {
-            throw new ExasolValidationException(ExaError.messageBuilder("E-ESC-5")
-                    .message("Failed to list files in the path {{path}}.", path)
-                    .mitigation("Please make sure the path is correct file system (hdfs, s3a, etc) path.").toString(),
+            throw new ExasolValidationException(
+                    ExaError.messageBuilder("E-ESC-5").message("Failed to list files in the path {{path}}.", path)
+                            .mitigation(MITIGATION_MESSAGE).toString(),
                     exception);
         }
 
@@ -125,8 +126,7 @@ public class ExasolBatchWrite implements BatchWrite {
         } catch (final URISyntaxException exception) {
             throw new ExasolValidationException(ExaError.messageBuilder("E-ESC-3")
                     .message("Provided path {{path}} cannot be converted to URI systax.", path)
-                    .mitigation("Please make sure the path is correct file system (hdfs, s3a, etc) path.").toString(),
-                    exception);
+                    .mitigation(MITIGATION_MESSAGE).toString(), exception);
         }
     }
 
@@ -138,8 +138,7 @@ public class ExasolBatchWrite implements BatchWrite {
         } catch (final IOException exception) {
             throw new ExasolValidationException(ExaError.messageBuilder("E-ESC-4")
                     .message("Provided path {{path}} does not exist or the path does not allow listing files.", path)
-                    .mitigation("Please make sure the path is correct file system (hdfs, s3a, etc) path.").toString(),
-                    exception);
+                    .mitigation(MITIGATION_MESSAGE).toString(), exception);
         }
     }
 
