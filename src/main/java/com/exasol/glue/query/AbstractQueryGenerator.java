@@ -11,10 +11,11 @@ import com.exasol.glue.ExasolOptions;
  *
  * It generator Exasol import or export queries that access {@code CSV} files in AWS S3 bucket.
  *
- * @see https://docs.exasol.com/db/latest/sql/import.htm
- * @see https://docs.exasol.com/db/latest/sql/export.htm
+ * @see <a href="https://docs.exasol.com/db/latest/sql/import.htm">Exasol Import</a>
+ * @see <a href="https://docs.exasol.com/db/latest/sql/export.htm">Exasol Export</a>
  */
 public abstract class AbstractQueryGenerator implements QueryGenerator {
+    /** An {@link ExasolOptions} options. */
     protected final ExasolOptions options;
 
     /**
@@ -22,7 +23,7 @@ public abstract class AbstractQueryGenerator implements QueryGenerator {
      *
      * @param options user provided options
      */
-    public AbstractQueryGenerator(final ExasolOptions options) {
+    protected AbstractQueryGenerator(final ExasolOptions options) {
         this.options = options;
     }
 
@@ -49,11 +50,6 @@ public abstract class AbstractQueryGenerator implements QueryGenerator {
         } else {
             return endpoint;
         }
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.options);
     }
 
 }

@@ -17,11 +17,20 @@ import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
+/**
+ * A {@link SparkListener} class that cleans up intermediate data at the end of job run.
+ */
 public class ExasolJobEndListener extends SparkListener {
     private static final Logger LOGGER = Logger.getLogger(ExasolJobEndListener.class.getName());
     private final ExasolOptions options;
     private final String bucketKey;
 
+    /**
+     * Creates an instance of {@link ExasolJobEndListener}.
+     *
+     * @param options   a user provided options
+     * @param bucketKey a folder inside the user provided bucket
+     */
     public ExasolJobEndListener(final ExasolOptions options, final String bucketKey) {
         this.options = options;
         this.bucketKey = bucketKey;

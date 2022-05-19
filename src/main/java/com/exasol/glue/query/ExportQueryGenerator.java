@@ -13,7 +13,9 @@ public final class ExportQueryGenerator extends AbstractQueryGenerator {
     /**
      * Creates a new instance of {@link ExportQueryGenerator}.
      *
-     * @param options user provided options
+     * @param options       user provided options
+     * @param filesPrefix   a prefix string that indicate folder inside a bucket
+     * @param numberOfFiles the number of files to export data into
      */
     public ExportQueryGenerator(final ExasolOptions options, final String filesPrefix, final int numberOfFiles) {
         super(options);

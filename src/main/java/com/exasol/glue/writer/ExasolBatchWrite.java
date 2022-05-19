@@ -24,12 +24,21 @@ import org.apache.hadoop.fs.*;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.connector.write.*;
 
+/**
+ * An Exasol {@link BatchWrite} class.
+ */
 public class ExasolBatchWrite implements BatchWrite {
     private static final Logger LOGGER = Logger.getLogger(ExasolBatchWrite.class.getName());
 
     private final ExasolOptions options;
     private final BatchWrite delegate;
 
+    /**
+     * Creates a new instance of {@link ExasolBatchWrite}.
+     *
+     * @param options  a user provided options
+     * @param delegate a delegate {@code CSV} batch write
+     */
     public ExasolBatchWrite(final ExasolOptions options, final BatchWrite delegate) {
         this.options = options;
         this.delegate = delegate;
@@ -125,7 +134,7 @@ public class ExasolBatchWrite implements BatchWrite {
         try {
             return fs.listFiles(new Path(path), false);
         } catch (final FileNotFoundException exception) {
-            return new EmptyRemoteIterator<LocatedFileStatus>();
+            return new EmptyRemoteIterator<>();
         } catch (final IOException exception) {
             throw new ExasolValidationException(ExaError.messageBuilder("E-ESC-4")
                     .message("Provided path {{path}} does not exist or the path does not allow listing files.", path)

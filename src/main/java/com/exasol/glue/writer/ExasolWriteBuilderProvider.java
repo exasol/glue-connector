@@ -18,41 +18,57 @@ import scala.Option;
 import scala.collection.JavaConverters;
 import scala.collection.Seq;
 
+/**
+ * A class that provides {@link WriteBuilder} instance.
+ */
 public final class ExasolWriteBuilderProvider {
     private static final Logger LOGGER = Logger.getLogger(ExasolWriteBuilderProvider.class.getName());
     private static final String TEMP_DIR = "tempdir";
 
     private final ExasolOptions options;
 
+    /**
+     * Creates a new instance of {@link ExasolWriteBuilderProvider}.
+     *
+     * @param options user provided options
+     */
     public ExasolWriteBuilderProvider(final ExasolOptions options) {
         this.options = options;
     }
 
+    /**
+     * Creates a {@link WriteBuilder} for writing into Exasol database.
+     *
+     * @param schema      a user provided {@link StructType} schema
+     * @param defaultInfo a {@link LogicalWriteInfo} information for writing
+     * @return an instance of {@link WriteBuilder}
+     */
     public WriteBuilder createWriteBuilder(final StructType schema, final LogicalWriteInfo defaultInfo) {
         final SparkSession sparkSession = SparkSession.active();
         final LogicalWriteInfo info = getUpdatedLogicalWriteInfo(defaultInfo, sparkSession);
-        final ExasolOptions options = ExasolOptions.builder().from(this.options).withOptionsMap(info.options()).build();
-        final String path = options.get(PATH);
+        final ExasolOptions updatedOptions = ExasolOptions.builder().from(this.options).withOptionsMap(info.options())
+                .build();
+        final String path = updatedOptions.get(PATH);
         LOGGER.info(() -> "Writing intermediate data to the '" + path + "' path for write job.");
         final CSVTable csvTable = new CSVTable("", sparkSession, info.options(), getS3WritePath(path),
                 Option.apply(schema), null);
-        return new DelegatingWriteBuilder(options, csvTable.newWriteBuilder(info));
+        return new DelegatingWriteBuilder(updatedOptions, csvTable.newWriteBuilder(info));
     }
 
     private LogicalWriteInfo getUpdatedLogicalWriteInfo(final LogicalWriteInfo defaultInfo,
             final SparkSession sparkSession) {
-        final Map<String, String> options = new HashMap<>(defaultInfo.options().asCaseSensitiveMap());
-        options.put("header", "true");
-        options.put("delimiter", ",");
-        options.put("mapreduce.fileoutputcommitter.marksuccessfuljobs", "false");
+        final Map<String, String> map = new HashMap<>(defaultInfo.options().asCaseSensitiveMap());
+        map.put("header", "true");
+        map.put("delimiter", ",");
+        map.put("mapreduce.fileoutputcommitter.marksuccessfuljobs", "false");
         final String s3Bucket = this.options.getS3Bucket();
         final String s3BucketKey = UUID.randomUUID() + "-" + sparkSession.sparkContext().applicationId();
         final String tempDir = "s3a://" + s3Bucket + "/" + s3BucketKey + "/";
-        options.put(TEMP_DIR, tempDir);
+        map.put(TEMP_DIR, tempDir);
         if (tempDir.endsWith("/")) {
-            options.put(PATH, tempDir + defaultInfo.queryId());
+            map.put(PATH, tempDir + defaultInfo.queryId());
         } else {
-            options.put(PATH, tempDir + "/" + defaultInfo.queryId());
+            map.put(PATH, tempDir + "/" + defaultInfo.queryId());
         }
 
         return new LogicalWriteInfo() {
@@ -68,7 +84,7 @@ public final class ExasolWriteBuilderProvider {
 
             @Override
             public CaseInsensitiveStringMap options() {
-                return new CaseInsensitiveStringMap(options);
+                return new CaseInsensitiveStringMap(map);
             }
         };
     }

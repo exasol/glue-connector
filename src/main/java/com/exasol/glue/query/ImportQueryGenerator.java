@@ -18,7 +18,7 @@ import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 import software.amazon.awssdk.services.s3.model.S3Object;
 
 /**
- * A class that generates an Exasol {@code EXPORT} query.
+ * A class that generates an Exasol {@code IMPORT} query.
  */
 public final class ImportQueryGenerator extends AbstractQueryGenerator {
     private static final String IMPORT_QUERY_FOOTER = "SKIP = 1";

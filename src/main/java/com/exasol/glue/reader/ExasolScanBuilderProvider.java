@@ -22,15 +22,30 @@ import scala.Option;
 import scala.collection.JavaConverters;
 import scala.collection.Seq;
 
+/**
+ * A class that provides {@link ScanBuilder} instance.
+ */
 public final class ExasolScanBuilderProvider {
     private static final Logger LOGGER = Logger.getLogger(ExasolScanBuilderProvider.class.getName());
 
     private final ExasolOptions options;
 
+    /**
+     * Creates a new instance of {@link ExasolScanBuilderProvider}.
+     *
+     * @param options user provided options
+     */
     public ExasolScanBuilderProvider(final ExasolOptions options) {
         this.options = options;
     }
 
+    /**
+     * Creates a {@link ScanBuilder} for reading from Exasol database.
+     *
+     * @param schema a user provided {@link StructType} schema
+     * @param map    a user provided key-value options map
+     * @return an instance of {@link ScanBuilder}
+     */
     public ScanBuilder createScanBuilder(final StructType schema, final CaseInsensitiveStringMap map) {
         final SparkSession sparkSession = SparkSession.active();
         final String s3Bucket = this.options.getS3Bucket();
