@@ -1,6 +1,6 @@
 package com.exasol.glue.writer;
 
-import static com.exasol.glue.Constants.PATH;
+import static com.exasol.glue.Constants.INTERMEDIATE_DATA_PATH;
 
 import java.nio.file.Paths;
 import java.util.*;
@@ -40,20 +40,34 @@ public final class ExasolWriteBuilderProvider {
     /**
      * Creates a {@link WriteBuilder} for writing into Exasol database.
      *
-     * @param schema      a user provided {@link StructType} schema
-     * @param defaultInfo a {@link LogicalWriteInfo} information for writing
+     * @param schema      user provided {@link StructType} schema
+     * @param defaultInfo {@link LogicalWriteInfo} information for writing
      * @return an instance of {@link WriteBuilder}
      */
     public WriteBuilder createWriteBuilder(final StructType schema, final LogicalWriteInfo defaultInfo) {
         final SparkSession sparkSession = SparkSession.active();
         final LogicalWriteInfo info = getUpdatedLogicalWriteInfo(defaultInfo, sparkSession);
-        final ExasolOptions updatedOptions = ExasolOptions.builder().from(this.options).withOptionsMap(info.options())
-                .build();
-        final String path = updatedOptions.get(PATH);
-        LOGGER.info(() -> "Writing intermediate data to the '" + path + "' path for write job.");
-        final CSVTable csvTable = new CSVTable("", sparkSession, info.options(), getS3WritePath(path),
+        final ExasolOptions updatedOptions = getUpdatedOptions(info.options());
+        final String intermediateDataPath = updatedOptions.get(INTERMEDIATE_DATA_PATH);
+        LOGGER.info(() -> "Writing intermediate data to the '" + intermediateDataPath + "' path for write job.");
+        final CSVTable csvTable = new CSVTable("", sparkSession, info.options(), getS3WritePath(intermediateDataPath),
                 Option.apply(schema), null);
         return new DelegatingWriteBuilder(updatedOptions, csvTable.newWriteBuilder(info));
+    }
+
+    private ExasolOptions getUpdatedOptions(final Map<String, String> map) {
+        final ExasolOptions.Builder builder = ExasolOptions.builder() //
+                .jdbcUrl(this.options.getJdbcUrl()) //
+                .username(this.options.getUsername()) //
+                .password(this.options.getPassword()) //
+                .s3Bucket(this.options.getS3Bucket());
+        if (this.options.hasTable()) {
+            builder.table(this.options.getTable());
+        } else {
+            builder.query(this.options.getQuery());
+        }
+        builder.withOptionsMap(map);
+        return builder.build();
     }
 
     private LogicalWriteInfo getUpdatedLogicalWriteInfo(final LogicalWriteInfo defaultInfo,
@@ -67,9 +81,9 @@ public final class ExasolWriteBuilderProvider {
         final String tempDir = "s3a://" + Paths.get(s3Bucket, s3BucketKey).toString();
         map.put(TEMP_DIR, tempDir);
         if (tempDir.endsWith("/")) {
-            map.put(PATH, tempDir + defaultInfo.queryId());
+            map.put(INTERMEDIATE_DATA_PATH, tempDir + defaultInfo.queryId());
         } else {
-            map.put(PATH, tempDir + "/" + defaultInfo.queryId());
+            map.put(INTERMEDIATE_DATA_PATH, tempDir + "/" + defaultInfo.queryId());
         }
 
         return new LogicalWriteInfo() {

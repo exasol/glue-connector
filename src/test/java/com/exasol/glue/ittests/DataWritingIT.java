@@ -24,10 +24,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Tag("integration")
 @Testcontainers
 class DataWritingIT extends BaseIntegrationTestSetup {
-    private static final int INTEGER_MIN = -2147483648;
-    private static final int INTEGER_MAX = 2147483647;
-    private static final long LONG_MIN = -9223372036854775808L;
-    private static final long LONG_MAX = 9223372036854775807L;
 
     @Test
     void testThrowsWhenSavingIfNumberOfPartitionsExceedsMaximumAllowed() {
@@ -37,7 +33,7 @@ class DataWritingIT extends BaseIntegrationTestSetup {
                 .mode("append") //
                 .format("exasol") //
                 .options(getDefaultOptions()) //
-                .option("numPartitions", "1001") //
+                .option("numPartitions", "1351") //
                 .option("table", table.getFullyQualifiedName());
         final ExasolValidationException exception = assertThrows(ExasolValidationException.class, () -> df.save());
         assertThat(exception.getMessage(), startsWith("E-EGC-21"));
@@ -63,15 +59,16 @@ class DataWritingIT extends BaseIntegrationTestSetup {
     @Test
     void testWriteInteger() throws SQLException {
         final Table table = schema.createTable("table_write_integer", "c1", "INTEGER");
-        verify(List.of(-1, 0, 10, INTEGER_MIN, INTEGER_MAX), Encoders.INT(), table, //
-                table().row(INTEGER_MIN).row(-1).row(0).row(10).row(INTEGER_MAX).matches(NO_JAVA_TYPE_CHECK));
+        verify(List.of(-1, 0, 10, Integer.MIN_VALUE, Integer.MAX_VALUE), Encoders.INT(), table, //
+                table().row(Integer.MIN_VALUE).row(-1).row(0).row(10).row(Integer.MAX_VALUE)
+                        .matches(NO_JAVA_TYPE_CHECK));
     }
 
     @Test
     void testWriteLong() throws SQLException {
         final Table table = schema.createTable("table_write_long", "c1", "DECIMAL(36,0)");
-        verify(List.of(-1L, 0L, 1L, LONG_MIN, LONG_MAX), Encoders.LONG(), table, //
-                table().row(LONG_MIN).row(-1L).row(0L).row(1L).row(LONG_MAX).matches(NO_JAVA_TYPE_CHECK));
+        verify(List.of(-1L, 0L, 1L, Long.MIN_VALUE, Long.MAX_VALUE), Encoders.LONG(), table, //
+                table().row(Long.MIN_VALUE).row(-1L).row(0L).row(1L).row(Long.MAX_VALUE).matches(NO_JAVA_TYPE_CHECK));
     }
 
     @Test

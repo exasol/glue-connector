@@ -15,8 +15,8 @@ public class DelegatingWriteBuilder implements WriteBuilder {
     /**
      * Creates a new instance of {@link DelegatingWriteBuilder}.
      *
-     * @param options  a user provided options
-     * @param delegate a delegate write builder
+     * @param options  user provided options
+     * @param delegate delegate write builder
      */
     public DelegatingWriteBuilder(final ExasolOptions options, final WriteBuilder delegate) {
         this.options = options;

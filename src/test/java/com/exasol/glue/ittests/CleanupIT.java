@@ -64,8 +64,11 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
 
     @AfterEach
     void afterEach() {
-        spark.stop();
         TaskFailureStateCounter.clear();
+    }
+
+    private void assertThatBucketIsEmpty() {
+        spark.stop();
         assertThat(validateEmptyBucket(), equalTo(true));
     }
 
@@ -80,6 +83,7 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
         final Dataset<String> df = loadTable() //
                 .map((MapFunction<Row, String>) row -> row.getString(0), Encoders.STRING());
         assertThat(df.collectAsList(), contains("1", "2", "3"));
+        assertThatBucketIsEmpty();
     }
 
     @Test
@@ -97,6 +101,7 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
                 }, Encoders.INT());
 
         assertThat(df.collectAsList(), contains(1, 2, 3));
+        assertThatBucketIsEmpty();
     }
 
     @Test
@@ -119,6 +124,7 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
         // Should stay the same size = cachedDF.count();
         size = cachedDF.count();
         assertThat(size, equalTo(1L));
+        assertThatBucketIsEmpty();
     }
 
     @Test
@@ -143,6 +149,7 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
                 }, Encoders.STRING());
 
         assertThat(df.collectAsList(), containsInAnyOrder("even: [2]", "odd: [1, 3]"));
+        assertThatBucketIsEmpty();
     }
 
     @Test
@@ -154,6 +161,7 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
 
         final SparkException exception = assertThrows(SparkException.class, () -> df.collectAsList());
         assertThat(exception.getMessage(), containsString("Intentionally fails all tasks."));
+        assertThatBucketIsEmpty();
     }
 
     @Test
@@ -175,6 +183,7 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
         try (final ResultSet result = connection.createStatement().executeQuery(query)) {
             assertThat(result, table().row("str", 10, 3.14, true).row("abc", 20, 2.72, false).matches());
         }
+        assertThatBucketIsEmpty();
     }
 
     @Test
@@ -187,6 +196,7 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
                 .option("table", "non_existent_table");
         final SparkException exception = assertThrows(SparkException.class, () -> df.save());
         assertThat(exception.getMessage(), containsString("Writing job aborted."));
+        assertThatBucketIsEmpty();
     }
 
     private static class TaskFailureStateCounter {

@@ -10,7 +10,7 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.glue.ExasolOptions;
 import com.exasol.glue.ExasolValidationException;
 import com.exasol.glue.connection.ExasolConnectionFactory;
-import com.exasol.glue.listener.ExasolJobEndListener;
+import com.exasol.glue.listener.ExasolJobEndCleanupListener;
 import com.exasol.glue.query.ExportQueryGenerator;
 
 import org.apache.spark.sql.SparkSession;
@@ -51,28 +51,32 @@ public final class ExasolScanBuilderProvider {
         final String s3Bucket = this.options.getS3Bucket();
         final String s3BucketKey = UUID.randomUUID() + "-" + sparkSession.sparkContext().applicationId();
         LOGGER.info(() -> "Using S3 bucket '" + s3Bucket + "' with folder '" + s3BucketKey + "' for scan job data.");
-        exportIntermediateData(s3BucketKey);
         setupSparkCleanupJobListener(sparkSession, s3BucketKey);
+        exportIntermediateData(s3BucketKey);
         return createCSVScanBuilder(sparkSession, schema, map, s3Bucket, s3BucketKey);
     }
 
-    private int exportIntermediateData(final String s3BucketKey) {
+    private void setupSparkCleanupJobListener(final SparkSession spark, final String s3BucketKey) {
+        spark.sparkContext().addSparkListener(new ExasolJobEndCleanupListener(this.options, s3BucketKey));
+    }
+
+    private void exportIntermediateData(final String s3BucketKey) {
         final int numberOfPartitions = this.options.getNumberOfPartitions();
-        final String exportQuery = new ExportQueryGenerator(options, s3BucketKey, numberOfPartitions).generateQuery();
-        try (final Connection connection = new ExasolConnectionFactory(options).getConnection()) {
-            return new ExportQueryRunner(connection).runExportQuery(exportQuery);
+        final String exportQuery = new ExportQueryGenerator(this.options, s3BucketKey, numberOfPartitions)
+                .generateQuery();
+        final ExasolConnectionFactory connectionFactory = new ExasolConnectionFactory(this.options);
+        try (final Connection connection = connectionFactory.getConnection()) {
+            final int numberOfExportedRows = new ExportQueryRunner(connection).runExportQuery(exportQuery);
+            LOGGER.info(() -> "Exported '" + numberOfExportedRows + "' rows into '" + this.options.getS3Bucket() + "/"
+                    + s3BucketKey + "'.");
         } catch (final SQLException exception) {
             throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-16")
                     .message("Failed to run export query {{exportQuery}} into S3 path {{s3Path}} location.")
                     .parameter("exportQuery", exportQuery)
-                    .parameter("s3Path", options.getS3Bucket() + "/" + s3BucketKey)
+                    .parameter("s3Path", this.options.getS3Bucket() + "/" + s3BucketKey)
                     .mitigation("Please make sure that the query or table name is correct and obeys SQL syntax rules.")
                     .toString(), exception);
         }
-    }
-
-    private void setupSparkCleanupJobListener(final SparkSession spark, final String s3BucketKey) {
-        spark.sparkContext().addSparkListener(new ExasolJobEndListener(this.options, s3BucketKey));
     }
 
     private ScanBuilder createCSVScanBuilder(final SparkSession spark, final StructType schema,

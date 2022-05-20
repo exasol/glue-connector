@@ -99,7 +99,7 @@ public class ColumnDescription {
         /**
          * Sets the column name.
          *
-         * @param name a column name
+         * @param name column name
          * @return builder instance for fluent programming
          */
         public Builder name(final String name) {
@@ -110,7 +110,7 @@ public class ColumnDescription {
         /**
          * Sets the column type.
          *
-         * @param type a column type
+         * @param type column type
          * @return builder instance for fluent programming
          */
         public Builder type(final int type) {
@@ -121,7 +121,7 @@ public class ColumnDescription {
         /**
          * Sets the precision for numeric columns.
          *
-         * @param precision a precision for numeric column
+         * @param precision precision for numeric column
          * @return builder instance for fluent programming
          */
         public Builder precision(final int precision) {
@@ -132,7 +132,7 @@ public class ColumnDescription {
         /**
          * Sets the scale for numeric columns.
          *
-         * @param scale a scale for numeric column
+         * @param scale scale for numeric column
          * @return builder instance for fluent programming
          */
         public Builder scale(final int scale) {
@@ -143,7 +143,7 @@ public class ColumnDescription {
         /**
          * Sets the signnedness for numeric columns.
          *
-         * @param isSigned a boolean indicating if column is signed or not
+         * @param isSigned boolean indicating if column is signed or not
          * @return builder instance for fluent programming
          */
         public Builder isSigned(final boolean isSigned) {
@@ -154,7 +154,7 @@ public class ColumnDescription {
         /**
          * Sets the boolean for nullable columns.
          *
-         * @param isNullable a boolean indicating if a column nullable or not
+         * @param isNullable boolean indicating if a column nullable or not
          * @return builder instance for fluent programming
          */
         public Builder isNullable(final boolean isNullable) {

@@ -99,35 +99,35 @@ class GlueLocalValidationIT extends BaseIntegrationTestSetup {
 
     @Test
     void testReadExasolWriteS3() {
-        final DynamicFrame dyf = getGlueSource(table.getFullyQualifiedName()).getDynamicFrame();
+        final DynamicFrame dynamicFrame = getGlueSource(table.getFullyQualifiedName()).getDynamicFrame();
 
         // Save DynamicFrame
         final String writePath = "/tmp/output/readwritetest/" + UUID.randomUUID();
         glueContext //
                 .getSinkWithFormat("s3", new JsonOptions("{\"path\":\"" + writePath + "\"}"), "", "csv",
                         getCSVWriteOptions()) //
-                .writeDynamicFrame(dyf, CallSite.apply("", ""));
+                .writeDynamicFrame(dynamicFrame, CallSite.apply("", ""));
 
         // Read Saved DynamicFrame
-        final DynamicFrame readDyf = glueContext //
+        final DynamicFrame readDynamicFrame = glueContext //
                 .getSource("s3", getCSVPaths(writePath), "", "") //
                 .withFormat("csv", getCSVWriteOptions()) //
                 .getDynamicFrame();
 
-        assertAll(() -> assertThat(readDyf.count(), equalTo(6L)),
-                () -> assertThat(getDynamicFrameAsDataset(readDyf, Encoders.STRING()).collectAsList(),
+        assertAll(() -> assertThat(readDynamicFrame.count(), equalTo(6L)),
+                () -> assertThat(getDynamicFrameAsDataset(readDynamicFrame, Encoders.STRING()).collectAsList(),
                         containsInAnyOrder("1", "2", "3", "4", "5", "6")));
     }
 
     @Test
     void testReadS3WriteExasol() throws SQLException {
-        final String writePath = new File("src/test/resources/data/").getAbsolutePath();
+        final String dataPath = new File("src/test/resources/data/").getAbsolutePath();
         final Seq<Product> mappings = JavaConverters
                 .asScalaBuffer(Arrays.asList(Tuple4.apply("sensor_id", "string", "sensor_id", "string"),
                         Tuple4.apply("humidity", "string", "humidity", "int")));
 
-        final DynamicFrame readDyf = glueContext //
-                .getSource("s3", getCSVPaths(writePath), "", "") //
+        final DynamicFrame readDynamicFrame = glueContext //
+                .getSource("s3", getCSVPaths(dataPath), "", "") //
                 .withFormat("csv", getCSVWriteOptions()) //
                 .getDynamicFrame() //
                 .applyMapping(mappings, true, "", null, 0, 0);
@@ -135,7 +135,7 @@ class GlueLocalValidationIT extends BaseIntegrationTestSetup {
         final Table savedTable = schema.createTable("table_local_validation_read_s3", "SENSOR_ID", "VARCHAR(5)",
                 "HUMIDITY", "DECIMAL(9,0)");
         final String savedTableName = savedTable.getFullyQualifiedName();
-        getGlueSink(savedTableName).writeDynamicFrame(readDyf, null);
+        getGlueSink(savedTableName).writeDynamicFrame(readDynamicFrame, null);
 
         assertQuery("SELECT * FROM " + savedTableName + " ORDER BY HUMIDITY ASC", //
                 table().row("s1", 10) //
@@ -148,11 +148,11 @@ class GlueLocalValidationIT extends BaseIntegrationTestSetup {
 
     @Test
     void testReadExasolWriteExasol() throws SQLException {
-        final DynamicFrame dyf = getGlueSource(table.getFullyQualifiedName()).getDynamicFrame();
+        final DynamicFrame dynamicFrame = getGlueSource(table.getFullyQualifiedName()).getDynamicFrame();
 
         final Table savedTable = schema.createTable("table_local_validation_read_exasol", "ID", "DECIMAL(9,0)");
         final String savedTableName = savedTable.getFullyQualifiedName();
-        getGlueSink(savedTableName).writeDynamicFrame(dyf, null);
+        getGlueSink(savedTableName).writeDynamicFrame(dynamicFrame, null);
 
         assertQuery("SELECT * FROM " + savedTableName + " ORDER BY ID ASC", //
                 table().row(1).row(2).row(3).row(4).row(5).row(6).matches());

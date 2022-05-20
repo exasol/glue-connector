@@ -1,6 +1,6 @@
 package com.exasol.glue.query;
 
-import static com.exasol.glue.Constants.PATH;
+import static com.exasol.glue.Constants.INTERMEDIATE_DATA_PATH;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -42,7 +42,7 @@ public final class ImportQueryGenerator extends AbstractQueryGenerator {
 
     @Override
     public String getFiles() {
-        final String path = this.options.get(PATH);
+        final String path = this.options.get(INTERMEDIATE_DATA_PATH);
         final URI pathURI = getPathURI(path);
         final String bucketName = pathURI.getHost();
         final String bucketKey = pathURI.getPath().substring(1);
@@ -61,7 +61,7 @@ public final class ImportQueryGenerator extends AbstractQueryGenerator {
         try {
             return new URI(path);
         } catch (final URISyntaxException exception) {
-            throw new ExasolValidationException(ExaError.messageBuilder("E-ESC-3")
+            throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-3")
                     .message("Provided path {{path}} cannot be converted to URI systax.", path)
                     .mitigation("Please make sure the path is correct file system (hdfs, s3a, etc) path.").toString(),
                     exception);

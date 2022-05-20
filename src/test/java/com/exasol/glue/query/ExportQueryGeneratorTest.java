@@ -38,7 +38,7 @@ class ExportQueryGeneratorTest {
         final ExasolOptions options = builder.query("SELECT * FROM table").build();
         final ExportQueryGenerator generator = new ExportQueryGenerator(options, "a", 3);
         final String expected = "EXPORT (\n" //
-                + "SELECT * FROM (SELECT * FROM table) A\n" //
+                + "SELECT * FROM (SELECT * FROM table)\n" //
                 + ") INTO CSV\n" //
                 + "AT 'https://bucket.s3.amazonaws.com'\n" //
                 + "USER 'user' IDENTIFIED BY 'pass'\n" //

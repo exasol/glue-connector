@@ -22,7 +22,7 @@ public final class ExportQueryRunner {
     /**
      * Runs the given export query.
      *
-     * @param query an export query string
+     * @param query export query string
      * @return the number of rows exported
      * @throws SQLException if the query run fails
      */

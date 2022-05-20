@@ -1,6 +1,6 @@
 package com.exasol.glue.writer;
 
-import static com.exasol.glue.Constants.PATH;
+import static com.exasol.glue.Constants.INTERMEDIATE_DATA_PATH;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -37,8 +37,8 @@ public class ExasolBatchWrite implements BatchWrite {
     /**
      * Creates a new instance of {@link ExasolBatchWrite}.
      *
-     * @param options  a user provided options
-     * @param delegate a delegate {@code CSV} batch write
+     * @param options  user provided options
+     * @param delegate delegate {@code CSV} batch write
      */
     public ExasolBatchWrite(final ExasolOptions options, final BatchWrite delegate) {
         this.options = options;
@@ -79,7 +79,7 @@ public class ExasolBatchWrite implements BatchWrite {
             final long time = System.currentTimeMillis() - start;
             LOGGER.info(() -> "Imported '" + rows + "' rows into the table '" + table + "' in '" + time + "' millis.");
         } catch (final SQLException exception) {
-            throw new ExasolConnectionException(ExaError.messageBuilder("E-ESC-7")
+            throw new ExasolConnectionException(ExaError.messageBuilder("E-EGC-7")
                     .message("Failure running the import {{query}} query.", query)
                     .mitigation("Please check that connection address, username and password are correct.").toString(),
                     exception);
@@ -99,7 +99,7 @@ public class ExasolBatchWrite implements BatchWrite {
     }
 
     private void cleanup() {
-        final String path = this.options.get(PATH);
+        final String path = this.options.get(INTERMEDIATE_DATA_PATH);
         LOGGER.info(() -> "Running cleanup process for directory '" + path + "'.");
         final SparkSession sparkSession = SparkSession.active();
         final Configuration conf = sparkSession.sparkContext().hadoopConfiguration();
@@ -113,7 +113,7 @@ public class ExasolBatchWrite implements BatchWrite {
             fileSystem.delete(new Path(this.options.get("tempdir")), true);
         } catch (final IOException exception) {
             throw new ExasolValidationException(
-                    ExaError.messageBuilder("E-ESC-5").message("Failed to list files in the path {{path}}.", path)
+                    ExaError.messageBuilder("E-EGC-5").message("Failed to list files in the path {{path}}.", path)
                             .mitigation(MITIGATION_MESSAGE).toString(),
                     exception);
         }
@@ -124,7 +124,7 @@ public class ExasolBatchWrite implements BatchWrite {
         try {
             return new URI(path);
         } catch (final URISyntaxException exception) {
-            throw new ExasolValidationException(ExaError.messageBuilder("E-ESC-3")
+            throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-3")
                     .message("Provided path {{path}} cannot be converted to URI systax.", path)
                     .mitigation(MITIGATION_MESSAGE).toString(), exception);
         }
@@ -136,7 +136,7 @@ public class ExasolBatchWrite implements BatchWrite {
         } catch (final FileNotFoundException exception) {
             return new EmptyRemoteIterator<>();
         } catch (final IOException exception) {
-            throw new ExasolValidationException(ExaError.messageBuilder("E-ESC-4")
+            throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-4")
                     .message("Provided path {{path}} does not exist or the path does not allow listing files.", path)
                     .mitigation(MITIGATION_MESSAGE).toString(), exception);
         }

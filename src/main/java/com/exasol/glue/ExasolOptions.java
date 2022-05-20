@@ -67,7 +67,7 @@ public final class ExasolOptions {
     /**
      * Gets the table parameter.
      *
-     * @return a table
+     * @return table parameter value
      */
     public String getTable() {
         return this.table;
@@ -85,7 +85,7 @@ public final class ExasolOptions {
     /**
      * Gets the query parameter.
      *
-     * @return a query
+     * @return query parameter value
      */
     public String getQuery() {
         return this.query;
@@ -96,7 +96,7 @@ public final class ExasolOptions {
      *
      * Both of them would not be set at the same time.
      *
-     * @return a table or query
+     * @return table or query parameter value
      */
     public String getTableOrQuery() {
         return hasTable() ? this.table : this.query;
@@ -308,25 +308,6 @@ public final class ExasolOptions {
          */
         public Builder s3Bucket(final String s3Bucket) {
             this.s3Bucket = s3Bucket;
-            return this;
-        }
-
-        /**
-         * Sets values from another {@link ExasolOptions} options.
-         *
-         * @param options ExasolOptions options
-         * @return builder instance for fluent programming
-         */
-        public Builder from(final ExasolOptions options) {
-            this.jdbcUrl = options.get(JDBC_URL);
-            this.username = options.get(USERNAME);
-            this.password = options.get(PASSWORD);
-            this.s3Bucket = options.get(S3_BUCKET);
-            if (options.containsKey(TABLE)) {
-                this.table = options.get(TABLE);
-            } else if (options.containsKey(QUERY)) {
-                this.query = options.get(QUERY);
-            }
             return this;
         }
 

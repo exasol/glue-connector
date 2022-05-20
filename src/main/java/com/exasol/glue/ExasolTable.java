@@ -38,7 +38,7 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
     /**
      * Creates a new instance of {@link ExasolOptions}.
      *
-     * @param schema a user provided schema
+     * @param schema user provided schema
      */
     public ExasolTable(final StructType schema) {
         this.schema = schema;
@@ -133,17 +133,19 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
 
     private void updateSparkConfigurationForS3(final ExasolOptions options) {
         final SparkSession sparkSession = SparkSession.active();
-        final Configuration conf = sparkSession.sparkContext().hadoopConfiguration();
-        if (options.hasEnabled(CI_ENABLED)) {
-            conf.set("fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider");
-            conf.set("fs.s3a.access.key", options.get(AWS_ACCESS_KEY_ID));
-            conf.set("fs.s3a.secret.key", options.get(AWS_SECRET_ACCESS_KEY));
-        }
-        if (options.containsKey(S3_ENDPOINT_OVERRIDE)) {
-            conf.set("fs.s3a.endpoint", "http://" + options.get(S3_ENDPOINT_OVERRIDE));
-        }
-        if (options.hasEnabled(S3_PATH_STYLE_ACCESS)) {
-            conf.set("fs.s3a.path.style.access", "true");
+        synchronized (sparkSession.sparkContext().hadoopConfiguration()) {
+            final Configuration conf = sparkSession.sparkContext().hadoopConfiguration();
+            if (options.hasEnabled(CI_ENABLED)) {
+                conf.set("fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider");
+                conf.set("fs.s3a.access.key", options.get(AWS_ACCESS_KEY_ID));
+                conf.set("fs.s3a.secret.key", options.get(AWS_SECRET_ACCESS_KEY));
+            }
+            if (options.containsKey(S3_ENDPOINT_OVERRIDE)) {
+                conf.set("fs.s3a.endpoint", "http://" + options.get(S3_ENDPOINT_OVERRIDE));
+            }
+            if (options.hasEnabled(S3_PATH_STYLE_ACCESS)) {
+                conf.set("fs.s3a.path.style.access", "true");
+            }
         }
     }
 

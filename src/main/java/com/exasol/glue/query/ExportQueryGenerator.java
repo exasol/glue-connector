@@ -14,7 +14,7 @@ public final class ExportQueryGenerator extends AbstractQueryGenerator {
      * Creates a new instance of {@link ExportQueryGenerator}.
      *
      * @param options       user provided options
-     * @param filesPrefix   a prefix string that indicate folder inside a bucket
+     * @param filesPrefix   prefix string that indicate folder inside a bucket
      * @param numberOfFiles the number of files to export data into
      */
     public ExportQueryGenerator(final ExasolOptions options, final String filesPrefix, final int numberOfFiles) {
@@ -49,7 +49,7 @@ public final class ExportQueryGenerator extends AbstractQueryGenerator {
         if (this.options.hasTable()) {
             return "SELECT * FROM " + this.options.getTable();
         } else {
-            return "SELECT * FROM (" + this.options.getQuery() + ") A";
+            return "SELECT * FROM (" + this.options.getQuery() + ")";
         }
     }
 

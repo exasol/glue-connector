@@ -37,10 +37,8 @@ public final class Constants {
     public static final String NUMBER_OF_PARTITIONS = "numPartitions";
     /** Default number of partitions for Spark job. */
     public static final int DEFAULT_NUMBER_OF_PARTITIONS = 8;
-    /** Parameter name for Exasol database name that data will be saved. */
-    public static final String DBTABLE = "DBTABLE";
-    /** Parameter name for intermediate path location. */
-    public static final String PATH = "PATH";
+    /** Parameter name for intermediate data location. */
+    public static final String INTERMEDIATE_DATA_PATH = "PATH";
     /** Boolean parameter name to indicate local and CI environment. */
     public static final String CI_ENABLED = "exasol-ci";
 
