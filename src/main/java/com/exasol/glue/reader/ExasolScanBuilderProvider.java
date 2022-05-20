@@ -43,9 +43,8 @@ public final class ExasolScanBuilderProvider {
     /**
      * Creates a {@link ScanBuilder} for reading from Exasol database.
      *
-     * @param schema a user provided {@link StructType} schema
-     * @param map    a user provided key-value options map
-     * @return an instance of {@link ScanBuilder}
+     * @param schema user-provided {@link StructType} schema
+     * @param map    user-provided key-value options map
      */
     public ScanBuilder createScanBuilder(final StructType schema, final CaseInsensitiveStringMap map) {
         final SparkSession sparkSession = SparkSession.active();

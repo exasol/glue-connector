@@ -7,7 +7,7 @@ import com.exasol.glue.ExasolOptions;
 /**
  * An common {@code CSV} query generator class.
  *
- * It generator Exasol import or export queries that access {@code CSV} files in AWS S3 bucket.
+ * A generator for Exasol {@code IMPORT} or {@code EXPORT} queries that access {@code CSV} files in AWS S3 bucket.
  *
  * @see <a href="https://docs.exasol.com/db/latest/sql/import.htm">Exasol Import</a>
  * @see <a href="https://docs.exasol.com/db/latest/sql/export.htm">Exasol Export</a>
