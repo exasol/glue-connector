@@ -18,7 +18,7 @@ public final class ExasolConnectionFactory {
     /**
      * Creates an instance of a {@link ExasolConnectionFactory}.
      *
-     * @param options an {@link ExasolOptions} options
+     * @param options {@link ExasolOptions} options
      */
     public ExasolConnectionFactory(final ExasolOptions options) {
         this.options = options;

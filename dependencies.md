@@ -62,7 +62,6 @@
 | [Maven Deploy Plugin][85]                               | [The Apache Software License, Version 2.0][7] |
 | [Maven Site Plugin 3][87]                               | [The Apache Software License, Version 2.0][7] |
 
-[4]: https://github.com/paul-hammant/paranamer/paranamer
 [18]: https://github.com/exasol/error-reporting-java
 [7]: http://www.apache.org/licenses/LICENSE-2.0.txt
 [57]: https://maven.apache.org/surefire/maven-surefire-plugin/
@@ -70,7 +69,6 @@
 [34]: http://aws.amazon.com/asl/
 [12]: https://aws.amazon.com/sdkforjava
 [15]: https://docs.exasol.com/connect_exasol/drivers/jdbc.htm
-[8]: https://netty.io/netty-all/
 [17]: https://opensource.org/licenses/MIT
 [20]: https://github.com/mockito/mockito
 [59]: http://www.mojohaus.org/versions-maven-plugin/
@@ -83,6 +81,7 @@
 [70]: https://www.eclipse.org/legal/epl-2.0/
 [10]: http://github.com/FasterXML/jackson
 [46]: http://www.gnu.org/licenses/lgpl.txt
+[5]: LICENSE
 [9]: https://www.apache.org/licenses/LICENSE-2.0
 [69]: https://www.jacoco.org/jacoco/trunk/doc/maven.html
 [13]: https://aws.amazon.com/apache2.0
@@ -91,9 +90,7 @@
 [55]: http://zlika.github.io/reproducible-build-maven-plugin
 [45]: http://sonarsource.github.io/sonar-scanner-maven/
 [24]: https://junit.org/junit5/
-[51]: https://www.mojohaus.org/flatten-maven-plugin/flatten-maven-plugin
 [43]: http://logging.apache.org/log4j/1.2/
-[5]: LICENSE.txt
 [26]: http://hamcrest.org/JavaHamcrest/
 [81]: http://maven.apache.org/plugins/maven-resources-plugin/
 [65]: https://github.com/exasol/artifact-reference-checker-maven-plugin
@@ -101,8 +98,10 @@
 [37]: https://github.com/exasol/test-db-builder-java/
 [6]: https://github.com/google/guava
 [1]: http://www.apache.org/licenses/LICENSE-2.0.html
+[8]: https://netty.io
 [67]: https://maven.apache.org/surefire/maven-failsafe-plugin/
 [16]: https://github.com/exasol/sql-statement-builder
+[4]: https://github.com/paul-hammant/paranamer
 [29]: http://opensource.org/licenses/MIT
 [35]: https://github.com/exasol/exasol-testcontainers
 [72]: https://github.com/exasol/project-keeper/blob/main/LICENSE
@@ -112,6 +111,7 @@
 [49]: https://maven.apache.org/enforcer/maven-enforcer-plugin/
 [14]: http://www.exasol.com
 [25]: https://www.eclipse.org/legal/epl-v20.html
+[51]: https://www.mojohaus.org/flatten-maven-plugin
 [83]: http://maven.apache.org/plugins/maven-install-plugin/
 [53]: https://sonatype.github.io/ossindex-maven/maven-plugin/
 [28]: https://testcontainers.org

@@ -9,8 +9,8 @@ public class ExasolValidationException extends RuntimeException {
     /**
      * Create an instance of a {@link ExasolValidationException}.
      *
-     * @param message an error message
-     * @param cause   an exception cause
+     * @param message error message
+     * @param cause   exception cause
      */
     public ExasolValidationException(final String message, final Throwable cause) {
         super(message, cause);
@@ -19,7 +19,7 @@ public class ExasolValidationException extends RuntimeException {
     /**
      * Create an instance of a {@link ExasolValidationException}.
      *
-     * @param message an error message
+     * @param message error message
      */
     public ExasolValidationException(final String message) {
         super(message);

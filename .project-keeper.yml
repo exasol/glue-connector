@@ -8,3 +8,7 @@ excludes:
   - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
 linkReplacements:
   - "LICENSE-exasol-jdbc.txt|https://docs.exasol.com/connect_exasol/drivers/jdbc.htm"
+  - "https://github.com/paul-hammant/paranamer/paranamer|https://github.com/paul-hammant/paranamer"
+  - "https://netty.io/netty-all/|https://netty.io"
+  - "https://www.mojohaus.org/flatten-maven-plugin/flatten-maven-plugin|https://www.mojohaus.org/flatten-maven-plugin"
+  - "LICENSE.txt|LICENSE"

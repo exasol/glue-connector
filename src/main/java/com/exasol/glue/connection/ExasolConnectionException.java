@@ -9,8 +9,8 @@ public class ExasolConnectionException extends RuntimeException {
     /**
      * Creates an instance of a {@link ExasolConnectionException}.
      *
-     * @param message an error message
-     * @param cause   an exception cause
+     * @param message error message
+     * @param cause   exception cause
      */
     public ExasolConnectionException(final String message, final Throwable cause) {
         super(message, cause);
@@ -19,7 +19,7 @@ public class ExasolConnectionException extends RuntimeException {
     /**
      * Creates an instance of a {@link ExasolConnectionException}.
      *
-     * @param message an error message
+     * @param message error message
      */
     public ExasolConnectionException(final String message) {
         super(message);

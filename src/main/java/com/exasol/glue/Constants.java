@@ -37,6 +37,8 @@ public final class Constants {
     public static final String NUMBER_OF_PARTITIONS = "numPartitions";
     /** Default number of partitions for Spark job. */
     public static final int DEFAULT_NUMBER_OF_PARTITIONS = 8;
+    /** Parameter name for intermediate data location. */
+    public static final String INTERMEDIATE_DATA_PATH = "PATH";
     /** Boolean parameter name to indicate local and CI environment. */
     public static final String CI_ENABLED = "exasol-ci";
 

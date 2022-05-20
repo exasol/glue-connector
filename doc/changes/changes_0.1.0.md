@@ -7,6 +7,8 @@ Code name:
 * #2: Added requirements and design documentation
 * #5: Added initial project setup
 * #6: Added schema inference
+* #7: Added reading from Exasol table or query
+* #12: Added writing into Exasol table
 
 ## Refactorings
 
@@ -22,12 +24,12 @@ Code name:
 * Added `com.exasol:sql-statement-builder-java8:4.5.0`
 * Added `com.thoughtworks.paranamer:paranamer:2.8`
 * Added `org.apache.hadoop:hadoop-aws:3.3.2`
-* Added `software.amazon.awssdk:s3:2.17.184`
+* Added `software.amazon.awssdk:s3:2.17.194`
 
 ### Test Dependency Updates
 
 * Added `com.amazonaws:AWSGlueETL:3.0.0`
-* Added `com.amazonaws:aws-java-sdk-s3:1.12.213`
+* Added `com.amazonaws:aws-java-sdk-s3:1.12.223`
 * Added `com.exasol:exasol-testcontainers:6.1.1`
 * Added `com.exasol:hamcrest-resultset-matcher:1.5.1`
 * Added `com.exasol:test-db-builder-java:3.3.2`
@@ -44,7 +46,7 @@ Code name:
 
 * Added `com.exasol:artifact-reference-checker-maven-plugin:0.4.0`
 * Added `com.exasol:error-code-crawler-maven-plugin:1.1.1`
-* Added `com.exasol:project-keeper-maven-plugin:2.4.2`
+* Added `com.exasol:project-keeper-maven-plugin:2.4.3`
 * Added `io.github.zlika:reproducible-build-maven-plugin:0.15`
 * Added `org.apache.maven.plugins:maven-assembly-plugin:3.3.0`
 * Added `org.apache.maven.plugins:maven-clean-plugin:2.5`

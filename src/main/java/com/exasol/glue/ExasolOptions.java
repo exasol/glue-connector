@@ -67,7 +67,7 @@ public final class ExasolOptions {
     /**
      * Gets the table parameter.
      *
-     * @return a table
+     * @return table parameter value
      */
     public String getTable() {
         return this.table;
@@ -85,7 +85,7 @@ public final class ExasolOptions {
     /**
      * Gets the query parameter.
      *
-     * @return a query
+     * @return query parameter value
      */
     public String getQuery() {
         return this.query;
@@ -96,7 +96,7 @@ public final class ExasolOptions {
      *
      * Both of them would not be set at the same time.
      *
-     * @return a table or query
+     * @return table or query parameter value
      */
     public String getTableOrQuery() {
         return hasTable() ? this.table : this.query;

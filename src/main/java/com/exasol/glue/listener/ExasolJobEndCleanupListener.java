@@ -17,12 +17,21 @@ import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
-public class ExasolJobEndListener extends SparkListener {
-    private static final Logger LOGGER = Logger.getLogger(ExasolJobEndListener.class.getName());
+/**
+ * A {@link SparkListener} class that cleans up intermediate data at the end of job run.
+ */
+public final class ExasolJobEndCleanupListener extends SparkListener {
+    private static final Logger LOGGER = Logger.getLogger(ExasolJobEndCleanupListener.class.getName());
     private final ExasolOptions options;
     private final String bucketKey;
 
-    public ExasolJobEndListener(final ExasolOptions options, final String bucketKey) {
+    /**
+     * Creates an instance of {@link ExasolJobEndCleanupListener}.
+     *
+     * @param options   user provided options
+     * @param bucketKey bucketKey inside the user provided bucket
+     */
+    public ExasolJobEndCleanupListener(final ExasolOptions options, final String bucketKey) {
         this.options = options;
         this.bucketKey = bucketKey;
     }
@@ -39,15 +48,11 @@ public class ExasolJobEndListener extends SparkListener {
         final String bucketName = this.options.getS3Bucket();
         final S3ClientFactory s3ClientFactory = new S3ClientFactory(options);
         try (final S3Client s3Client = s3ClientFactory.getS3Client()) {
-            final List<S3Object> objects = listObject(s3Client, bucketName, this.bucketKey);
-            List<ObjectIdentifier> objectIds = objects.stream() //
+            final List<S3Object> objects = listObjects(s3Client, bucketName, this.bucketKey);
+            List<ObjectIdentifier> objectIdentifiers = objects.stream() //
                     .map(object -> ObjectIdentifier.builder().key(object.key()).build()) //
                     .collect(Collectors.toList());
-            DeleteObjectsRequest deleteObjectsRequest = DeleteObjectsRequest.builder() //
-                    .bucket(bucketName) //
-                    .delete(Delete.builder().objects(objectIds).build()) //
-                    .build();
-            s3Client.deleteObjects(deleteObjectsRequest);
+            deleteObjects(s3Client, bucketName, objectIdentifiers);
         } catch (final SdkClientException exception) {
             throw new ExasolConnectionException(
                     ExaError.messageBuilder("E-EGC-19")
@@ -63,7 +68,18 @@ public class ExasolJobEndListener extends SparkListener {
         }
     }
 
-    private List<S3Object> listObject(final S3Client s3Client, final String bucketName, final String bucketKey) {
+    private void deleteObjects(final S3Client s3Client, final String bucketName,
+            final List<ObjectIdentifier> objectIdentifiers) {
+        if (!objectIdentifiers.isEmpty()) {
+            DeleteObjectsRequest deleteObjectsRequest = DeleteObjectsRequest.builder() //
+                    .bucket(bucketName) //
+                    .delete(Delete.builder().objects(objectIdentifiers).build()) //
+                    .build();
+            s3Client.deleteObjects(deleteObjectsRequest);
+        }
+    }
+
+    private List<S3Object> listObjects(final S3Client s3Client, final String bucketName, final String bucketKey) {
         final ListObjectsV2Request listObjectsRequest = ListObjectsV2Request.builder().bucket(bucketName)
                 .prefix(bucketKey).build();
         final List<S3Object> result = new ArrayList<>();

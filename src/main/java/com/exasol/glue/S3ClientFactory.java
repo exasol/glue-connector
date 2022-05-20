@@ -19,7 +19,7 @@ public final class S3ClientFactory {
     /**
      * Creates a new instance of {@link S3ClientFactory}.
      *
-     * @param options an {@link ExasolOptions} options
+     * @param options {@link ExasolOptions} options
      */
     public S3ClientFactory(final ExasolOptions options) {
         this.options = options;
@@ -28,7 +28,7 @@ public final class S3ClientFactory {
     /**
      * Creates a new AWS S3 client.
      *
-     * @return a new S3 client
+     * @return new S3 client
      */
     public S3Client getS3Client() {
         final S3ClientBuilder builder = S3Client.builder() //

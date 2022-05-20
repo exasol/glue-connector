@@ -37,8 +37,8 @@ public final class SchemaConverter {
     /**
      * Converts a column description into a Spark {@link StructField} field type.
      *
-     * @param column a column description
-     * @return a matching Spark StructField type
+     * @param column column description
+     * @return matching Spark StructField type
      */
     public StructField convertColumn(final ColumnDescription column) {
         return DataTypes.createStructField(column.getName(), mapJDBCType(column), column.isNullable());
