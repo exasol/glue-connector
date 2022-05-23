@@ -27,7 +27,7 @@ public final class SchemaConverter {
     public StructType convert(final List<ColumnDescription> columns) {
         if (columns == null || columns.isEmpty()) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-EGC-10")
-                    .message("Provided list of column descriptions is empty or null.")
+                    .message("Provided list of column descriptions are empty or null.")
                     .mitigation("Please make sure that table or query has column definitions.").toString());
         }
         final List<StructField> fields = columns.stream().map(this::convertColumn).collect(Collectors.toList());
@@ -86,14 +86,14 @@ public final class SchemaConverter {
             return DataTypes.TimestampType;
         default:
             throw new UnsupportedOperationException(
-                    ExaError.messageBuilder("E-EGC-12").message("Unsupported JDBC type {{type}} for column {{column}}.",
+                    ExaError.messageBuilder("E-EGC-11").message("Unsupported JDBC type {{type}} for column {{column}}.",
                             column.getType(), column.getName()).ticketMitigation().toString());
         }
     }
 
     private DataType createDecimalDataType(int precision, int scale) {
         if (precision > DecimalType.MAX_PRECISION()) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-EGC-13") //
+            throw new IllegalStateException(ExaError.messageBuilder("E-EGC-12") //
                     .message("Exasol decimal precision {{exasolPrecision}} is larger than "
                             + "maximum Spark decimal precision {{sparkPrecision}}.") //
                     .parameter("exasolPrecision", precision) //
@@ -102,7 +102,7 @@ public final class SchemaConverter {
                     .toString());
         }
         if (scale > DecimalType.MAX_SCALE()) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-EGC-14") //
+            throw new IllegalStateException(ExaError.messageBuilder("E-EGC-13") //
                     .message("Exasol decimal scale {{exasolScale}} is larger than "
                             + "maximum Spark decimal scale {{sparkScale}}.") //
                     .parameter("exasolScale", scale) //

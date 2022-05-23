@@ -129,7 +129,7 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
             return new SchemaConverter().convert(columns);
         } catch (final SQLException exception) {
             throw new ExasolConnectionException(
-                    ExaError.messageBuilder("E-EGC-6")
+                    ExaError.messageBuilder("E-EGC-5")
                             .message("Could not create Spark schema from provided Exasol SQL query or table name.")
                             .mitigation("Please make sure that Exasol SQL query or table have columns.").toString(),
                     exception);

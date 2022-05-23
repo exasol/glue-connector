@@ -153,7 +153,7 @@ public final class ExasolOptions {
     public String get(final String key) {
         if (!containsKey(key)) {
             throw new IllegalArgumentException(
-                    ExaError.messageBuilder("E-EGC-17").message("Key {{key name}} not found in the options map.", key)
+                    ExaError.messageBuilder("E-EGC-14").message("Key {{key name}} not found in the options map.", key)
                             .mitigation("Please make sure it is set and correct.").toString());
         }
         return this.optionsMap.get(toLowerCase(key));
@@ -327,7 +327,7 @@ public final class ExasolOptions {
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 final String lowerCaseKey = entry.getKey().toLowerCase(Locale.ROOT);
                 if (caseInsensitiveMap.containsKey(lowerCaseKey)) {
-                    throw new IllegalArgumentException(ExaError.messageBuilder("E-EGC-18")
+                    throw new IllegalArgumentException(ExaError.messageBuilder("E-EGC-15")
                             .message("Found case sensitive duplicate key {{KEY}}.", entry.getKey())
                             .mitigation("Please remove case sensitive duplicate options, and set only one of them.")
                             .toString());
@@ -349,7 +349,7 @@ public final class ExasolOptions {
 
         private void validate() {
             if (this.table != null && this.query != null) {
-                throw new IllegalArgumentException(ExaError.messageBuilder("E-EGC-7")
+                throw new IllegalArgumentException(ExaError.messageBuilder("E-EGC-16")
                         .message("It is not possible to set both 'query' and 'table' options.")
                         .mitigation("Please set only one of the them.").toString());
             }

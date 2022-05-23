@@ -99,7 +99,7 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
 
     private void validateHasTable(final ExasolOptions options) {
         if (!options.hasTable()) {
-            throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-22")
+            throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-21")
                     .message("Missing 'table' option when writing into Exasol database.")
                     .mitigation("Please set 'table' property with fully qualified "
                             + "(e.g. 'schema_name.table_name') Exasol table name.")
@@ -114,7 +114,7 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
             s3Client.headBucket(HeadBucketRequest.builder().bucket(s3Bucket).build());
         } catch (final NoSuchBucketException exception) {
             throw new ExasolValidationException(
-                    ExaError.messageBuilder("E-EGC-15")
+                    ExaError.messageBuilder("E-EGC-22")
                             .message("Provided S3 bucket {{s3Bucket}} is not available.", s3Bucket)
                             .mitigation("Please create a bucket or provide an existing bucket name.").toString(),
                     exception);
@@ -124,7 +124,7 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
     private void validateNumberOfPartitions(final ExasolOptions options) {
         final int numberOfPartitions = options.getNumberOfPartitions();
         if (numberOfPartitions > MAX_ALLOWED_NUMBER_OF_PARTITIONS) {
-            throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-21")
+            throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-23")
                     .message("The number of partitions is larger than maximum allowed {{MAXPARTITIONS}} value.",
                             String.valueOf(MAX_ALLOWED_NUMBER_OF_PARTITIONS))
                     .mitigation("Please set the number of partitions parameter to a lower value.").toString());
