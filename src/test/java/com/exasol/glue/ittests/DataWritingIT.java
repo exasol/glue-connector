@@ -36,7 +36,7 @@ class DataWritingIT extends BaseIntegrationTestSetup {
                 .option("numPartitions", "1351") //
                 .option("table", table.getFullyQualifiedName());
         final ExasolValidationException exception = assertThrows(ExasolValidationException.class, () -> df.save());
-        assertThat(exception.getMessage(), startsWith("E-EGC-21"));
+        assertThat(exception.getMessage(), startsWith("E-EGC-23"));
     }
 
     @Test
@@ -47,7 +47,7 @@ class DataWritingIT extends BaseIntegrationTestSetup {
                 .format("exasol") //
                 .options(getDefaultOptions());
         final ExasolValidationException exception = assertThrows(ExasolValidationException.class, () -> df.save());
-        assertThat(exception.getMessage(), startsWith("E-EGC-22"));
+        assertThat(exception.getMessage(), startsWith("E-EGC-21"));
     }
 
     @Test
