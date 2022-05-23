@@ -42,7 +42,7 @@ public final class ExasolConnectionFactory {
             LOGGER.info(() -> "Obtained connection to '" + address + "' in '" + connectionTime + "' milliseconds.");
             return connection;
         } catch (final SQLException exception) {
-            throw new ExasolConnectionException(ExaError.messageBuilder("E-EGC-5")
+            throw new ExasolConnectionException(ExaError.messageBuilder("E-EGC-6")
                     .message("Could not connect to Exasol address on {{address}} with username {{username}}.")
                     .parameter("address", address).parameter("username", username)
                     .mitigation("Please check that connection address, username and password are correct.").toString(),
@@ -56,7 +56,7 @@ public final class ExasolConnectionFactory {
             Class.forName(driverClassName);
         } catch (final ClassNotFoundException exception) {
             throw new ExasolConnectionException(
-                    ExaError.messageBuilder("E-EGC-11")
+                    ExaError.messageBuilder("E-EGC-7")
                             .message("Failed to find Exasol JDBC Driver class {{class}}.", driverClassName)
                             .mitigation("Please make sure that Exasol JDBC Driver is installed.").toString(),
                     exception);

@@ -70,7 +70,7 @@ public final class ExasolScanBuilderProvider {
             LOGGER.info(() -> "Exported '" + numberOfExportedRows + "' rows into '" + this.options.getS3Bucket() + "/"
                     + s3BucketKey + "'.");
         } catch (final SQLException exception) {
-            throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-16")
+            throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-17")
                     .message("Failed to run export query {{exportQuery}} into S3 path {{s3Path}} location.")
                     .parameter("exportQuery", exportQuery)
                     .parameter("s3Path", this.options.getS3Bucket() + "/" + s3BucketKey)

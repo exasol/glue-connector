@@ -110,7 +110,7 @@ class ExasolOptionsTest {
     void testValidatesOnlyTableOrQueryExists() {
         final ExasolOptions.Builder builder = ExasolOptions.builder().table("table").query("query");
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> builder.build());
-        assertThat(exception.getMessage(), startsWith("E-EGC-7"));
+        assertThat(exception.getMessage(), startsWith("E-EGC-16"));
     }
 
     @Test
@@ -133,7 +133,7 @@ class ExasolOptionsTest {
         final ExasolOptions options = ExasolOptions.builder().build();
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> options.get("key"));
-        assertThat(exception.getMessage(), startsWith("E-EGC-17"));
+        assertThat(exception.getMessage(), startsWith("E-EGC-14"));
     }
 
     @Test
@@ -146,7 +146,7 @@ class ExasolOptionsTest {
         final ExasolOptions.Builder builder = ExasolOptions.builder();
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> builder.withOptionsMap(Map.of("k1", "v1", "K1", "v2")));
-        assertThat(exception.getMessage(), startsWith("E-EGC-18"));
+        assertThat(exception.getMessage(), startsWith("E-EGC-15: Found case sensitive duplicate key"));
     }
 
     @Test

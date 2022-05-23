@@ -33,7 +33,7 @@ class SchemaConverterTest {
     void testConvertNullAndEmptyThrows(final List<ColumnDescription> columns) {
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> schemaConverter.convert(columns));
-        assertThat(exception.getMessage(), startsWith("E-EGC-10"));
+        assertThat(exception.getMessage(), startsWith("E-EGC-10: Provided list of column descriptions are empty"));
     }
 
     @Test
@@ -70,7 +70,7 @@ class SchemaConverterTest {
         final ColumnDescription column = columnOf("c1", jdbcType);
         final UnsupportedOperationException exception = assertThrows(UnsupportedOperationException.class,
                 () -> schemaConverter.convertColumn(column));
-        assertThat(exception.getMessage(), startsWith("E-EGC-12"));
+        assertThat(exception.getMessage(), startsWith("E-EGC-11: Unsupported JDBC type"));
     }
 
     private ColumnDescription columnOf(final String name, final int type) {
@@ -171,7 +171,7 @@ class SchemaConverterTest {
             "39,39", //
     })
     void testDecimalConversionWithExcessPrecision(final int precision, final int scale) {
-        verifyDecimalExceptions(precision, scale, "E-EGC-13");
+        verifyDecimalExceptions(precision, scale, "E-EGC-12");
     }
 
     @ParameterizedTest
@@ -180,7 +180,7 @@ class SchemaConverterTest {
             "20,39" //
     })
     void testDecimalConversionWithExcessScale(final int precision, final int scale) {
-        verifyDecimalExceptions(precision, scale, "E-EGC-14");
+        verifyDecimalExceptions(precision, scale, "E-EGC-13");
     }
 
     @Test

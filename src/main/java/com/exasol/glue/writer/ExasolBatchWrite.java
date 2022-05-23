@@ -71,7 +71,7 @@ public class ExasolBatchWrite implements BatchWrite {
             final long time = System.currentTimeMillis() - start;
             LOGGER.info(() -> "Imported '" + rows + "' rows into the table '" + table + "' in '" + time + "' millis.");
         } catch (final SQLException exception) {
-            throw new ExasolConnectionException(ExaError.messageBuilder("E-EGC-7")
+            throw new ExasolConnectionException(ExaError.messageBuilder("E-EGC-24")
                     .message("Failure running the import {{query}} query.", query)
                     .mitigation("Please check that connection address, username and password are correct.").toString(),
                     exception);
