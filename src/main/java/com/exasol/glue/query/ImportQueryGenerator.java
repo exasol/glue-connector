@@ -61,7 +61,7 @@ public final class ImportQueryGenerator extends AbstractQueryGenerator {
         try {
             return new URI(path);
         } catch (final URISyntaxException exception) {
-            throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-3")
+            throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-18")
                     .message("Provided path {{path}} cannot be converted to URI systax.", path)
                     .mitigation("Please make sure the path is correct file system (hdfs, s3a, etc) path.").toString(),
                     exception);

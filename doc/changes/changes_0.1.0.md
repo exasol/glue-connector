@@ -14,6 +14,7 @@ Code name:
 
 * #14: Migrated to project-keeper version 2
 * #25: Added AWS Glue local validation tests
+* #35: Refactored error codes, removed duplicated error tags
 
 ## Dependency Updates
 
