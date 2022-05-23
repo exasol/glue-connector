@@ -15,6 +15,7 @@ Code name:
 * #14: Migrated to project-keeper version 2
 * #25: Added AWS Glue local validation tests
 * #35: Refactored error codes, removed duplicated error tags
+* #36: Added unified S3 filesystem operations interface
 
 ## Dependency Updates
 
@@ -40,8 +41,8 @@ Code name:
 * Added `org.junit.jupiter:junit-jupiter:5.8.2`
 * Added `org.mockito:mockito-core:4.5.1`
 * Added `org.mockito:mockito-junit-jupiter:4.5.1`
-* Added `org.testcontainers:junit-jupiter:1.17.1`
-* Added `org.testcontainers:localstack:1.17.1`
+* Added `org.testcontainers:junit-jupiter:1.17.2`
+* Added `org.testcontainers:localstack:1.17.2`
 
 ### Plugin Dependency Updates
 
