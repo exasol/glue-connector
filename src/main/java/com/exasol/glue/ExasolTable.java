@@ -2,11 +2,14 @@ package com.exasol.glue;
 
 import static com.exasol.glue.Constants.*;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.glue.filesystem.S3FileSystem;
 import com.exasol.glue.reader.ExasolScanBuilderProvider;
 import com.exasol.glue.writer.ExasolWriteBuilderProvider;
 
@@ -20,10 +23,6 @@ import org.apache.spark.sql.connector.write.LogicalWriteInfo;
 import org.apache.spark.sql.connector.write.WriteBuilder;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.sql.util.CaseInsensitiveStringMap;
-
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
-import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
 
 /**
  * Represents an instance of {@link ExasolTable}.
@@ -109,15 +108,13 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
 
     private void validateS3BucketExists(final ExasolOptions options) {
         final String s3Bucket = options.getS3Bucket();
-        final S3ClientFactory s3ClientFactory = new S3ClientFactory(options);
-        try (final S3Client s3Client = s3ClientFactory.getS3Client()) {
-            s3Client.headBucket(HeadBucketRequest.builder().bucket(s3Bucket).build());
-        } catch (final NoSuchBucketException exception) {
-            throw new ExasolValidationException(
-                    ExaError.messageBuilder("E-EGC-15")
-                            .message("Provided S3 bucket {{s3Bucket}} is not available.", s3Bucket)
-                            .mitigation("Please create a bucket or provide an existing bucket name.").toString(),
-                    exception);
+        try (final S3FileSystem s3FileSystem = new S3FileSystem(options)) {
+            if (!s3FileSystem.doesBucketExist(s3Bucket)) {
+                throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-15")
+                        .message("Provided S3 bucket {{s3Bucket}} is not available.", s3Bucket)
+                        .mitigation("Please create a bucket or provide an existing bucket name.").toString());
+
+            }
         }
     }
 

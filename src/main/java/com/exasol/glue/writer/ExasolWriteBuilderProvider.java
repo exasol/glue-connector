@@ -1,6 +1,7 @@
 package com.exasol.glue.writer;
 
 import static com.exasol.glue.Constants.INTERMEDIATE_DATA_PATH;
+import static com.exasol.glue.Constants.WRITE_S3_BUCKET_KEY;
 
 import java.nio.file.Paths;
 import java.util.*;
@@ -24,7 +25,6 @@ import scala.collection.Seq;
  */
 public final class ExasolWriteBuilderProvider {
     private static final Logger LOGGER = Logger.getLogger(ExasolWriteBuilderProvider.class.getName());
-    private static final String TEMP_DIR = "tempdir";
 
     private final ExasolOptions options;
 
@@ -77,14 +77,9 @@ public final class ExasolWriteBuilderProvider {
         map.put("delimiter", ",");
         map.put("mapreduce.fileoutputcommitter.marksuccessfuljobs", "false");
         final String s3Bucket = this.options.getS3Bucket();
-        final String s3BucketKey = UUID.randomUUID() + "-" + sparkSession.sparkContext().applicationId();
-        final String tempDir = "s3a://" + Paths.get(s3Bucket, s3BucketKey).toString();
-        map.put(TEMP_DIR, tempDir);
-        if (tempDir.endsWith("/")) {
-            map.put(INTERMEDIATE_DATA_PATH, tempDir + defaultInfo.queryId());
-        } else {
-            map.put(INTERMEDIATE_DATA_PATH, tempDir + "/" + defaultInfo.queryId());
-        }
+        final String s3BucketKey = getS3BucketKeyForWriteLocation(defaultInfo, sparkSession);
+        map.put(INTERMEDIATE_DATA_PATH, "s3a://" + Paths.get(s3Bucket, s3BucketKey).toString());
+        map.put(WRITE_S3_BUCKET_KEY, s3BucketKey);
 
         return new LogicalWriteInfo() {
             @Override
@@ -102,6 +97,13 @@ public final class ExasolWriteBuilderProvider {
                 return new CaseInsensitiveStringMap(map);
             }
         };
+    }
+
+    private String getS3BucketKeyForWriteLocation(final LogicalWriteInfo defaultInfo, final SparkSession sparkSession) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(UUID.randomUUID()).append("-").append(sparkSession.sparkContext().applicationId()).append("/")
+                .append(defaultInfo.queryId());
+        return builder.toString();
     }
 
     private Seq<String> getS3WritePath(final String path) {

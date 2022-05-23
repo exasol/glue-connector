@@ -37,8 +37,10 @@ public final class Constants {
     public static final String NUMBER_OF_PARTITIONS = "numPartitions";
     /** Default number of partitions for Spark job. */
     public static final int DEFAULT_NUMBER_OF_PARTITIONS = 8;
-    /** Parameter name for intermediate data location. */
+    /** Parameter name for intermediate data location for writing. */
     public static final String INTERMEDIATE_DATA_PATH = "PATH";
+    /** Parameter name for intermediate path S3 bucket key. */
+    public static final String WRITE_S3_BUCKET_KEY = "writeS3BucketKey";
     /** Boolean parameter name to indicate local and CI environment. */
     public static final String CI_ENABLED = "exasol-ci";
 
