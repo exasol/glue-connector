@@ -1,27 +1,20 @@
 package com.exasol.glue.writer;
 
 import static com.exasol.glue.Constants.INTERMEDIATE_DATA_PATH;
+import static com.exasol.glue.Constants.WRITE_S3_BUCKET_KEY;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.glue.ExasolOptions;
-import com.exasol.glue.ExasolValidationException;
 import com.exasol.glue.connection.ExasolConnectionException;
 import com.exasol.glue.connection.ExasolConnectionFactory;
+import com.exasol.glue.filesystem.S3FileSystem;
 import com.exasol.glue.query.ImportQueryGenerator;
 
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.*;
-import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.connector.write.*;
 
 /**
@@ -29,7 +22,6 @@ import org.apache.spark.sql.connector.write.*;
  */
 public class ExasolBatchWrite implements BatchWrite {
     private static final Logger LOGGER = Logger.getLogger(ExasolBatchWrite.class.getName());
-    private static final String MITIGATION_MESSAGE = "Please make sure the path is correct, starts with 's3a://'.";
 
     private final ExasolOptions options;
     private final BatchWrite delegate;
@@ -99,58 +91,9 @@ public class ExasolBatchWrite implements BatchWrite {
     }
 
     private void cleanup() {
-        final String path = this.options.get(INTERMEDIATE_DATA_PATH);
-        LOGGER.info(() -> "Running cleanup process for directory '" + path + "'.");
-        final SparkSession sparkSession = SparkSession.active();
-        final Configuration conf = sparkSession.sparkContext().hadoopConfiguration();
-        final URI tmpDirectoryURI = getPathURI(path);
-        try (final FileSystem fileSystem = FileSystem.get(tmpDirectoryURI, conf)) {
-            final RemoteIterator<LocatedFileStatus> listFiles = getFileStatuses(path, fileSystem);
-            while (listFiles.hasNext()) {
-                final LocatedFileStatus fileStatus = listFiles.next();
-                fileSystem.delete(fileStatus.getPath(), false);
-            }
-            fileSystem.delete(new Path(this.options.get("tempdir")), true);
-        } catch (final IOException exception) {
-            throw new ExasolValidationException(
-                    ExaError.messageBuilder("E-EGC-25").message("Failed to list files in the path {{path}}.", path)
-                            .mitigation(MITIGATION_MESSAGE).toString(),
-                    exception);
-        }
-
-    }
-
-    private URI getPathURI(final String path) {
-        try {
-            return new URI(path);
-        } catch (final URISyntaxException exception) {
-            throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-26")
-                    .message("Provided path {{path}} cannot be converted to URI systax.", path)
-                    .mitigation(MITIGATION_MESSAGE).toString(), exception);
-        }
-    }
-
-    private RemoteIterator<LocatedFileStatus> getFileStatuses(final String path, final FileSystem fs) {
-        try {
-            return fs.listFiles(new Path(path), false);
-        } catch (final FileNotFoundException exception) {
-            return new EmptyRemoteIterator<>();
-        } catch (final IOException exception) {
-            throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-27")
-                    .message("Provided path {{path}} does not exist or the path does not allow listing files.", path)
-                    .mitigation(MITIGATION_MESSAGE).toString(), exception);
-        }
-    }
-
-    private static class EmptyRemoteIterator<E> implements RemoteIterator<E> {
-        @Override
-        public boolean hasNext() {
-            return false;
-        }
-
-        @Override
-        public E next() {
-            throw new NoSuchElementException();
+        LOGGER.info(() -> "Running cleanup process for directory '" + this.options.get(INTERMEDIATE_DATA_PATH) + "'.");
+        try (final S3FileSystem s3FileSystem = new S3FileSystem(this.options)) {
+            s3FileSystem.deleteKeys(this.options.getS3Bucket(), this.options.get(WRITE_S3_BUCKET_KEY));
         }
     }
 

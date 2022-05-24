@@ -28,6 +28,8 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
+import software.amazon.awssdk.services.s3.model.S3Object;
 
 public class BaseIntegrationTestSetup {
     private static final Logger LOGGER = Logger.getLogger(BaseIntegrationTestSetup.class.getName());
@@ -74,6 +76,12 @@ public class BaseIntegrationTestSetup {
     public static void createBucket(final String bucketName) {
         LOGGER.info(() -> "Creating S3 bucket '" + bucketName + "'.");
         s3Client.createBucket(b -> b.bucket(bucketName));
+    }
+
+    public boolean isBucketEmpty(final String bucketName) {
+        final List<S3Object> objects = s3Client.listObjects(ListObjectsRequest.builder().bucket(bucketName).build())
+                .contents();
+        return objects.isEmpty();
     }
 
     public void createSchema(final String schemaName) {
