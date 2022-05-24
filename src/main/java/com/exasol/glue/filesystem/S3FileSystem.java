@@ -67,12 +67,12 @@ public final class S3FileSystem implements Closeable {
     }
 
     /**
-     * Deletes a given bucket with bucket key contents.
+     * Deletes a given bucket and its key contents.
      *
      * @param bucketName name of a bucket
      * @param bucketKey  bucket key value
      */
-    public void deleteBucketKey(final String bucketName, final String bucketKey) {
+    public void deleteKeys(final String bucketName, final String bucketKey) {
         LOGGER.info(() -> "Deleting S3 bucket '" + bucketName + "' with bucket key '" + bucketKey + "'.");
         deleteObjects(bucketName, Optional.of(bucketKey));
     }

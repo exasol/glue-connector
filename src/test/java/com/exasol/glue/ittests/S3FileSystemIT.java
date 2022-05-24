@@ -41,7 +41,7 @@ class S3FileSystemIT extends BaseIntegrationTestSetup {
         createBucket(bucketName);
         createEmptyFile(bucketName, "bucketkey/testFile01.txt");
         createEmptyFile(bucketName, "bucketkey/testFile02.txt");
-        s3FileSystem.deleteBucketKey(bucketName, "bucketkey");
+        s3FileSystem.deleteKeys(bucketName, "bucketkey");
         assertThat(isBucketEmpty(bucketName), equalTo(true));
     }
 
@@ -50,7 +50,7 @@ class S3FileSystemIT extends BaseIntegrationTestSetup {
         createBucket(bucketName);
         createEmptyFile(bucketName, "bucketkey/another/testFile01.txt");
         createEmptyFile(bucketName, "bucketkey/another/testFile02.txt");
-        s3FileSystem.deleteBucketKey(bucketName, "bucketkey");
+        s3FileSystem.deleteKeys(bucketName, "bucketkey");
         assertThat(isBucketEmpty(bucketName), equalTo(true));
     }
 

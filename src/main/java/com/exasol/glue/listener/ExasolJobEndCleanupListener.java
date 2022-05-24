@@ -37,7 +37,7 @@ public final class ExasolJobEndCleanupListener extends SparkListener {
 
     private void deleteObjects() {
         try (final S3FileSystem s3FileSystem = new S3FileSystem(this.options)) {
-            s3FileSystem.deleteBucketKey(this.options.getS3Bucket(), this.bucketKey);
+            s3FileSystem.deleteKeys(this.options.getS3Bucket(), this.bucketKey);
         }
     }
 

@@ -93,7 +93,7 @@ public class ExasolBatchWrite implements BatchWrite {
     private void cleanup() {
         LOGGER.info(() -> "Running cleanup process for directory '" + this.options.get(INTERMEDIATE_DATA_PATH) + "'.");
         try (final S3FileSystem s3FileSystem = new S3FileSystem(this.options)) {
-            s3FileSystem.deleteBucketKey(this.options.getS3Bucket(), this.options.get(WRITE_S3_BUCKET_KEY));
+            s3FileSystem.deleteKeys(this.options.getS3Bucket(), this.options.get(WRITE_S3_BUCKET_KEY));
         }
     }
 
