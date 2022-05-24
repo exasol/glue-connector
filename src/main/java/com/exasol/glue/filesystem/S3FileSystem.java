@@ -111,10 +111,11 @@ public final class S3FileSystem implements Closeable {
                 builder.continuationToken(continuationToken);
             }
             final ListObjectsV2Response response = s3Client.listObjectsV2(builder.build());
+            final boolean isTruncated = response.isTruncated();
             for (final S3Object s3Object : response.contents()) {
                 result.add(s3Object);
             }
-            if (!response.isTruncated()) {
+            if (!isTruncated) {
                 break;
             }
             continuationToken = response.nextContinuationToken();
