@@ -4,6 +4,7 @@ import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
@@ -19,6 +20,7 @@ import software.amazon.awssdk.services.s3.model.*;
  * An S3 file system operations implementations.
  */
 public final class S3FileSystem implements Closeable {
+    private static final Logger LOGGER = Logger.getLogger(S3FileSystem.class.getName());
     private final S3Client s3Client;
 
     /**
@@ -60,6 +62,7 @@ public final class S3FileSystem implements Closeable {
      * @param bucketName name of a bucket
      */
     public void deleteBucket(final String bucketName) {
+        LOGGER.info(() -> "Deleting S3 bucket '" + bucketName + "'.");
         deleteObjects(bucketName, Optional.empty());
     }
 
@@ -70,6 +73,7 @@ public final class S3FileSystem implements Closeable {
      * @param bucketKey  bucket key value
      */
     public void deleteBucketKey(final String bucketName, final String bucketKey) {
+        LOGGER.info(() -> "Deleting S3 bucket '" + bucketName + "' with bucket key '" + bucketKey + "'.");
         deleteObjects(bucketName, Optional.of(bucketKey));
     }
 

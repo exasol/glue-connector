@@ -27,9 +27,6 @@ import org.apache.spark.sql.types.StructType;
 import org.junit.jupiter.api.*;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
-import software.amazon.awssdk.services.s3.model.S3Object;
-
 @Tag("integration")
 @Testcontainers
 class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we start Spark session for each test unit to
@@ -69,13 +66,7 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
 
     private void assertThatBucketIsEmpty() {
         spark.stop();
-        assertThat(validateEmptyBucket(), equalTo(true));
-    }
-
-    private boolean validateEmptyBucket() {
-        final List<S3Object> objects = s3Client
-                .listObjects(ListObjectsRequest.builder().bucket(DEFAULT_BUCKET_NAME).build()).contents();
-        return objects.isEmpty();
+        assertThat(isBucketEmpty(DEFAULT_BUCKET_NAME), equalTo(true));
     }
 
     @Test
