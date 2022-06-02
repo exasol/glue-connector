@@ -8,6 +8,7 @@ Code name:
 * #5: Added initial project setup
 * #6: Added schema inference
 * #7: Added reading from Exasol table or query
+* #10: Added support for pushing predicates
 * #12: Added writing into Exasol table
 
 ## Refactorings

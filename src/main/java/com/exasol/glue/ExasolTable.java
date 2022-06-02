@@ -8,7 +8,7 @@ import java.util.Set;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.glue.filesystem.S3FileSystem;
-import com.exasol.glue.reader.ExasolScanBuilderProvider;
+import com.exasol.glue.reader.ExasolScanBuilder;
 import com.exasol.glue.writer.ExasolWriteBuilderProvider;
 
 import org.apache.hadoop.conf.Configuration;
@@ -48,7 +48,7 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
         final ExasolOptions options = getExasolOptions(map);
         validate(options);
         updateSparkConfigurationForS3(options);
-        return new ExasolScanBuilderProvider(options).createScanBuilder(this.schema, map);
+        return new ExasolScanBuilder(this.schema, options, map);
     }
 
     @Override

@@ -14,6 +14,7 @@ import com.exasol.glue.listener.ExasolJobEndCleanupListener;
 import com.exasol.glue.query.ExportQueryGenerator;
 
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.connector.read.Scan;
 import org.apache.spark.sql.connector.read.ScanBuilder;
 import org.apache.spark.sql.execution.datasources.v2.csv.CSVTable;
 import org.apache.spark.sql.types.StructType;
@@ -24,36 +25,46 @@ import scala.collection.JavaConverters;
 import scala.collection.Seq;
 
 /**
- * A class that provides {@link ScanBuilder} instance.
+ * A class that implements {@link ScanBuilder} interface for Exasol database.
  */
-public final class ExasolScanBuilderProvider {
-    private static final Logger LOGGER = Logger.getLogger(ExasolScanBuilderProvider.class.getName());
-
+public class ExasolScanBuilder implements ScanBuilder {
+    private static final Logger LOGGER = Logger.getLogger(ExasolScanBuilder.class.getName());
+    private final StructType schema;
     private final ExasolOptions options;
+    private final CaseInsensitiveStringMap map;
 
     /**
-     * Creates a new instance of {@link ExasolScanBuilderProvider}.
+     * Creates a new instance of {@link ExasolScanBuilder}.
      *
      * @param options user provided options
+     * @param schema  user-provided {@link StructType} schema
+     * @param map     user-provided key-value options map
      */
-    public ExasolScanBuilderProvider(final ExasolOptions options) {
+    public ExasolScanBuilder(final ExasolOptions options, final StructType schema, final CaseInsensitiveStringMap map) {
         this.options = options;
+        this.schema = schema;
+        this.map = map;
     }
 
-    /**
-     * Creates a {@link ScanBuilder} for reading from Exasol database.
-     *
-     * @param schema user-provided {@link StructType} schema
-     * @param map    user-provided key-value options map
-     */
-    public ScanBuilder createScanBuilder(final StructType schema, final CaseInsensitiveStringMap map) {
+    @Override
+    public Scan build() {
         final SparkSession sparkSession = SparkSession.active();
         final String s3Bucket = this.options.getS3Bucket();
         final String s3BucketKey = UUID.randomUUID() + "-" + sparkSession.sparkContext().applicationId();
+        prepareIntermediateData(sparkSession, s3Bucket, s3BucketKey);
+        return getScan(sparkSession, s3Bucket, s3BucketKey);
+    }
+
+    private void prepareIntermediateData(final SparkSession spark, final String s3Bucket, final String s3BucketKey) {
         LOGGER.info(() -> "Using S3 bucket '" + s3Bucket + "' with folder '" + s3BucketKey + "' for scan job data.");
-        setupSparkCleanupJobListener(sparkSession, s3BucketKey);
+        setupSparkCleanupJobListener(spark, s3BucketKey);
         exportIntermediateData(s3BucketKey);
-        return createCSVScanBuilder(sparkSession, schema, map, s3Bucket, s3BucketKey);
+    }
+
+    private Scan getScan(final SparkSession spark, final String s3Bucket, final String s3BucketKey) {
+        final CSVTable csvTable = new CSVTable("", spark, this.map, getS3ScanPath(s3Bucket, s3BucketKey),
+                Option.apply(this.schema), null);
+        return csvTable.newScanBuilder(getUpdatedMapWithCSVOptions(this.map)).build();
     }
 
     private void setupSparkCleanupJobListener(final SparkSession spark, final String s3BucketKey) {
@@ -77,13 +88,6 @@ public final class ExasolScanBuilderProvider {
                     .mitigation("Please make sure that the query or table name is correct and obeys SQL syntax rules.")
                     .toString(), exception);
         }
-    }
-
-    private ScanBuilder createCSVScanBuilder(final SparkSession spark, final StructType schema,
-            final CaseInsensitiveStringMap map, final String s3Bucket, final String s3BucketKey) {
-        final CSVTable csvTable = new CSVTable("", spark, map, getS3ScanPath(s3Bucket, s3BucketKey),
-                Option.apply(schema), null);
-        return csvTable.newScanBuilder(getUpdatedMapWithCSVOptions(map));
     }
 
     private Seq<String> getS3ScanPath(final String s3Bucket, final String s3BucketKey) {
