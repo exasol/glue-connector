@@ -23,6 +23,22 @@ public final class ExportQueryGenerator extends AbstractQueryGenerator {
         this.numberOfFiles = numberOfFiles;
     }
 
+    /**
+     * Generates an {@code EXPORT} query using the user provided base query.
+     *
+     * @param baseQuery base query to use for export
+     * @return generated export query
+     */
+    public String generateQuery(final String baseQuery) {
+        final StringBuilder builder = new StringBuilder();
+        builder //
+                .append("EXPORT (\n" + baseQuery + "\n) INTO CSV\n") //
+                .append(getIdentifier()) //
+                .append(getFiles()) //
+                .append(getFooter());
+        return builder.toString();
+    }
+
     @Override
     public String getHeader() {
         final StringBuilder builder = new StringBuilder();

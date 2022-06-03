@@ -94,4 +94,30 @@ class ExportQueryGeneratorTest {
                 containsString("AT 'https://bucket.s3.localhost:1337'"));
     }
 
+    @Test
+    void testGeneratesExportQueryWithTableAndBaseQuery() {
+        final ExasolOptions options = builder.table("table").build();
+        final String baseQuery = "SELECT \"a\", \"b\" FROM table WHERE \"c\" = 'a'";
+        final ExportQueryGenerator generator = new ExportQueryGenerator(options, "a", 1);
+        final String expected = "EXPORT (\n" + baseQuery + "\n) INTO CSV\n" //
+                + "AT 'https://bucket.s3.amazonaws.com'\n" //
+                + "USER 'user' IDENTIFIED BY 'pass'\n" //
+                + "FILE 'a/part-001.csv'\n" //
+                + "WITH COLUMN NAMES";
+        assertThat(generator.generateQuery(baseQuery), equalTo(expected));
+    }
+
+    @Test
+    void testGeneratesExportQueryWithQueryAndBaseQuery() {
+        final ExasolOptions options = builder.query("SELECT * FROM table1").build();
+        final String baseQuery = "SELECT \"a\", \"b\" FROM (SELECT * FROM table1) WHERE \"c\" = 'a'";
+        final ExportQueryGenerator generator = new ExportQueryGenerator(options, "a", 1);
+        final String expected = "EXPORT (\n" + baseQuery + "\n) INTO CSV\n" //
+                + "AT 'https://bucket.s3.amazonaws.com'\n" //
+                + "USER 'user' IDENTIFIED BY 'pass'\n" //
+                + "FILE 'a/part-001.csv'\n" //
+                + "WITH COLUMN NAMES";
+        assertThat(generator.generateQuery(baseQuery), equalTo(expected));
+    }
+
 }
