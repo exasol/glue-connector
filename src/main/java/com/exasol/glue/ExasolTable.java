@@ -48,7 +48,7 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
         final ExasolOptions options = getExasolOptions(map);
         validate(options);
         updateSparkConfigurationForS3(options);
-        return new ExasolScanBuilder(this.schema, options, map);
+        return new ExasolScanBuilder(options, this.schema, map);
     }
 
     @Override

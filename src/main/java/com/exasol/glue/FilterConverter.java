@@ -41,6 +41,16 @@ public final class FilterConverter {
         return Optional.of(BooleanTerm.and(expressions.toArray(new BooleanExpression[] {})));
     }
 
+    /**
+     * Checks is {@link Filter} filter can be converted into Exasol expression.
+     *
+     * @param filter filter to check
+     * @return {@code true} if filter can be converted; {@code false} otherwise
+     */
+    public boolean isFilterSupported(final Filter filter) {
+        return convertFilter(filter) != null;
+    }
+
     private BooleanExpression convertFilter(final Filter filter) {
         final OperationType operationType = FILTERS.getOrDefault(filter.getClass(), OperationType.UNKNOWN);
         switch (operationType) {

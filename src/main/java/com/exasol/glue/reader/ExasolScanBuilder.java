@@ -5,18 +5,23 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.glue.ExasolOptions;
 import com.exasol.glue.ExasolValidationException;
+import com.exasol.glue.FilterConverter;
 import com.exasol.glue.connection.ExasolConnectionFactory;
 import com.exasol.glue.listener.ExasolJobEndCleanupListener;
 import com.exasol.glue.query.ExportQueryGenerator;
+import com.exasol.glue.query.SelectStatementGenerator;
+import com.exasol.sql.expression.BooleanExpression;
 
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.connector.read.Scan;
-import org.apache.spark.sql.connector.read.ScanBuilder;
+import org.apache.spark.sql.connector.read.*;
 import org.apache.spark.sql.execution.datasources.v2.csv.CSVTable;
+import org.apache.spark.sql.sources.Filter;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.sql.util.CaseInsensitiveStringMap;
 
@@ -27,11 +32,14 @@ import scala.collection.Seq;
 /**
  * A class that implements {@link ScanBuilder} interface for Exasol database.
  */
-public class ExasolScanBuilder implements ScanBuilder {
+public class ExasolScanBuilder implements ScanBuilder, SupportsPushDownFilters, SupportsPushDownRequiredColumns {
     private static final Logger LOGGER = Logger.getLogger(ExasolScanBuilder.class.getName());
-    private final StructType schema;
+    private static final String PLACEHOLDER_TABLE = "<PLACEHOLDER>";
     private final ExasolOptions options;
     private final CaseInsensitiveStringMap map;
+
+    private StructType schema;
+    private Filter[] pushedFilters;
 
     /**
      * Creates a new instance of {@link ExasolScanBuilder}.
@@ -44,6 +52,32 @@ public class ExasolScanBuilder implements ScanBuilder {
         this.options = options;
         this.schema = schema;
         this.map = map;
+        this.pushedFilters = new Filter[0];
+    }
+
+    @Override
+    public Filter[] pushFilters(final Filter[] filters) {
+        final List<Filter> unsupportedFilters = getUnsupportedFilters(filters);
+        final List<Filter> supportedFilters = new ArrayList<>(Arrays.asList(filters));
+        supportedFilters.removeAll(unsupportedFilters);
+        this.pushedFilters = supportedFilters.toArray(new Filter[] {});
+        return unsupportedFilters.toArray(new Filter[] {});
+    }
+
+    private List<Filter> getUnsupportedFilters(final Filter[] filters) {
+        final FilterConverter filterConverter = new FilterConverter();
+        return Arrays.asList(filters).stream().filter(f -> !filterConverter.isFilterSupported(f))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Filter[] pushedFilters() {
+        return this.pushedFilters;
+    }
+
+    @Override
+    public void pruneColumns(final StructType schema) {
+        this.schema = schema;
     }
 
     @Override
@@ -53,6 +87,30 @@ public class ExasolScanBuilder implements ScanBuilder {
         final String s3BucketKey = UUID.randomUUID() + "-" + sparkSession.sparkContext().applicationId();
         prepareIntermediateData(sparkSession, s3Bucket, s3BucketKey);
         return getScan(sparkSession, s3Bucket, s3BucketKey);
+    }
+
+    /**
+     * Returns SQL query that would be run on the Exasol database.
+     *
+     * @return SQL query for the scan
+     */
+    protected String getScanQuery() {
+        final SelectStatementGenerator statementGenerator = new SelectStatementGenerator();
+        final Optional<BooleanExpression> predicate = new FilterConverter().convert(this.pushedFilters);
+        final String rendered = statementGenerator.getSelectStatement(PLACEHOLDER_TABLE, getColumnNames(), predicate);
+        return rendered.replace("\"" + PLACEHOLDER_TABLE + "\"", getTableOrQuery());
+    }
+
+    private String getTableOrQuery() {
+        if (this.options.hasTable()) {
+            return this.options.getTable();
+        } else {
+            return "(" + this.options.getQuery() + ")";
+        }
+    }
+
+    private List<String> getColumnNames() {
+        return Stream.of(this.schema.fields()).map(field -> field.name()).collect(Collectors.toList());
     }
 
     private void prepareIntermediateData(final SparkSession spark, final String s3Bucket, final String s3BucketKey) {
@@ -74,7 +132,8 @@ public class ExasolScanBuilder implements ScanBuilder {
     private void exportIntermediateData(final String s3BucketKey) {
         final int numberOfPartitions = this.options.getNumberOfPartitions();
         final String exportQuery = new ExportQueryGenerator(this.options, s3BucketKey, numberOfPartitions)
-                .generateQuery();
+                .generateQuery(getScanQuery());
+        LOGGER.info(() -> "Running export query '" + exportQuery + "'.");
         final ExasolConnectionFactory connectionFactory = new ExasolConnectionFactory(this.options);
         try (final Connection connection = connectionFactory.getConnection()) {
             final int numberOfExportedRows = new ExportQueryRunner(connection).runExportQuery(exportQuery);
