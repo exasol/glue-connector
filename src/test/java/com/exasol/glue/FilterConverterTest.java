@@ -5,9 +5,9 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.math.BigDecimal;
-import java.util.Map;
 import java.util.Optional;
 
+import com.exasol.sql.expression.BooleanExpression;
 import com.exasol.sql.expression.ValueExpression;
 import com.exasol.sql.expression.rendering.ValueExpressionRenderer;
 import com.exasol.sql.rendering.StringRendererConfig;
@@ -21,11 +21,11 @@ class FilterConverterTest {
     private final FilterConverter filterConverter = new FilterConverter();
 
     private String render(final Filter... filters) {
-        final Optional<ValueExpression> andExpression = filterConverter.convert(filters);
+        final Optional<BooleanExpression> andExpression = filterConverter.convert(filters);
         if (andExpression.isPresent()) {
             final StringRendererConfig rendererConfig = StringRendererConfig.builder().quoteIdentifiers(true).build();
             final ValueExpressionRenderer renderer = new ValueExpressionRenderer(rendererConfig);
-            andExpression.get().accept(renderer);
+            ((ValueExpression) andExpression.get()).accept(renderer);
             return renderer.render();
         } else {
             return "";
@@ -35,6 +35,12 @@ class FilterConverterTest {
     @Test
     void testEmptyFilters() {
         assertThat(render(), equalTo(""));
+    }
+
+    @Test
+    void testNullAndEmptyFilters() {
+        assertAll(() -> assertThat(filterConverter.convert(null), equalTo(Optional.empty())),
+                () -> assertThat(filterConverter.convert(new Filter[] {}), equalTo(Optional.empty())));
     }
 
     @Test

@@ -26,7 +26,10 @@ public final class FilterConverter {
      * @param filters array of filters
      * @return optional {@link ValueExpression}
      */
-    public Optional<ValueExpression> convert(final Filter[] filters) {
+    public Optional<BooleanExpression> convert(final Filter[] filters) {
+        if (filters == null || filters.length == 0) {
+            return Optional.empty();
+        }
         final List<BooleanExpression> expressions = new ArrayList<>();
         for (final Filter filter : filters) {
             final BooleanExpression convertedResult = convertFilter(filter);
