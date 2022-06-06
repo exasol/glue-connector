@@ -34,7 +34,6 @@ import scala.collection.Seq;
  */
 public class ExasolScanBuilder implements ScanBuilder, SupportsPushDownFilters, SupportsPushDownRequiredColumns {
     private static final Logger LOGGER = Logger.getLogger(ExasolScanBuilder.class.getName());
-    private static final String PLACEHOLDER_TABLE = "<PLACEHOLDER>";
     private final ExasolOptions options;
     private final CaseInsensitiveStringMap map;
 
@@ -97,8 +96,7 @@ public class ExasolScanBuilder implements ScanBuilder, SupportsPushDownFilters, 
     protected String getScanQuery() {
         final SelectStatementGenerator statementGenerator = new SelectStatementGenerator();
         final Optional<BooleanExpression> predicate = new FilterConverter().convert(this.pushedFilters);
-        final String rendered = statementGenerator.getSelectStatement(PLACEHOLDER_TABLE, getColumnNames(), predicate);
-        return rendered.replace("\"" + PLACEHOLDER_TABLE + "\"", getTableOrQuery());
+        return statementGenerator.getSelectStatement(getTableOrQuery(), getColumnNames(), predicate);
     }
 
     private String getTableOrQuery() {

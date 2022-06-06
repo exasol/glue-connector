@@ -1,5 +1,8 @@
 package com.exasol.glue.query;
 
+import java.util.Collections;
+import java.util.Optional;
+
 import com.exasol.glue.ExasolOptions;
 
 /**
@@ -42,7 +45,7 @@ public final class ExportQueryGenerator extends AbstractQueryGenerator {
     @Override
     public String getHeader() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("EXPORT (\n").append(getSelectFromTableOrQuery()).append("\n) INTO CSV\n");
+        builder.append("EXPORT (\n").append(getSelectQuery()).append("\n) INTO CSV\n");
         return builder.toString();
     }
 
@@ -61,11 +64,16 @@ public final class ExportQueryGenerator extends AbstractQueryGenerator {
         return EXPORT_QUERY_FOOTER;
     }
 
+    private String getSelectQuery() {
+        return new SelectStatementGenerator().getSelectStatement(getSelectFromTableOrQuery(), Collections.emptyList(),
+                Optional.empty());
+    }
+
     private String getSelectFromTableOrQuery() {
         if (this.options.hasTable()) {
-            return "SELECT * FROM " + this.options.getTable();
+            return this.options.getTable();
         } else {
-            return "SELECT * FROM (" + this.options.getQuery() + ")";
+            return "(" + this.options.getQuery() + ")";
         }
     }
 

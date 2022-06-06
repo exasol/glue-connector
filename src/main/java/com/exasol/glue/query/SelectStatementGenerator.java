@@ -13,6 +13,7 @@ import com.exasol.sql.rendering.StringRendererConfig;
  * A class that generates an Exasol {@code SELECT} statement with column selection and filter clause.
  */
 public final class SelectStatementGenerator {
+    private static final String PLACEHOLDER_TABLE = "<PLACEHOLDER>";
     private static final StatementFactory factory = StatementFactory.getInstance();
 
     /**
@@ -26,10 +27,11 @@ public final class SelectStatementGenerator {
     public String getSelectStatement(final String table, final List<String> columns,
             final Optional<BooleanExpression> predicate) {
         final Select select = factory.select();
-        select.from().table(table);
+        select.from().table(PLACEHOLDER_TABLE);
         addColumns(select, columns);
         addPredicate(select, predicate);
-        return renderSelect(select);
+        final String rendered = renderSelect(select);
+        return rendered.replace("\"" + PLACEHOLDER_TABLE + "\"", table);
     }
 
     private void addColumns(final Select select, final List<String> columns) {
