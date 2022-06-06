@@ -79,6 +79,10 @@
                     <artifactId>guava</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>com.google.protobuf</groupId>
+                    <artifactId>protobuf-java</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>log4j</groupId>
                     <artifactId>log4j</artifactId>
                 </exclusion>
@@ -94,6 +98,18 @@
                     <groupId>com.fasterxml.jackson.core</groupId>
                     <artifactId>jackson-databind</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.jersey.core</groupId>
+                    <artifactId>jersey-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.jersey.media</groupId>
+                    <artifactId>jersey-media-jaxb</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -101,6 +117,20 @@
             <artifactId>hadoop-client</artifactId>
             <version>${hadoop.version}</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.protobuf</groupId>
+                    <artifactId>protobuf-java</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.squareup.okhttp</groupId>
+                    <artifactId>okhttp</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
@@ -123,6 +153,12 @@
             <artifactId>netty-all</artifactId>
             <version>4.1.77.Final</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-handler</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -133,7 +169,13 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
-            <version>2.17.194</version>
+            <version>2.17.204</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-handler</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -154,13 +196,13 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>4.5.1</version>
+            <version>4.6.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>4.5.1</version>
+            <version>4.6.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -193,7 +235,7 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.12.223</version>
+            <version>1.12.233</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -215,8 +257,16 @@
                     <artifactId>awsgluesparkredshift_2.12</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>com.amazonaws</groupId>
+                    <artifactId>aws-encryption-sdk-java</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>com.google.guava</groupId>
                     <artifactId>guava</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.code.gson</groupId>
+                    <artifactId>gson</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -243,6 +293,10 @@
                     <artifactId>*</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>org.mongodb</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>org.postgresql</groupId>
                     <artifactId>postgresql</artifactId>
                 </exclusion>
@@ -253,6 +307,10 @@
                 <exclusion>
                     <groupId>org.bouncycastle</groupId>
                     <artifactId>bcprov-ext-jdk15on</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15on</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.codehaus.jackson</groupId>
@@ -281,6 +339,14 @@
                 <exclusion>
                     <groupId>commons-io</groupId>
                     <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.kafka</groupId>
+                    <artifactId>kafka-clients</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-core</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -324,7 +390,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>2.4.3</version>
+                <version>2.4.6</version>
                 <executions>
                     <execution>
                         <goals>
@@ -361,14 +427,25 @@
                 <artifactId>ossindex-maven-plugin</artifactId>
                 <configuration>
                     <skip>${ossindex.skip}</skip>
-                    <!-- Exlude log4j test dependency vulnerabilities -->
                     <excludeVulnerabilityIds>
-                        <exclude>e6e4ebea-da12-4bde-8f24-6272925ad093</exclude>
-                        <exclude>4a7955ac-037c-42bc-a83e-b51efe2490af</exclude>
-                        <exclude>d3477f9c-032a-44a7-a5e1-02ae35e4737c</exclude>
-                        <exclude>c998ada9-b8ca-4da9-ab6c-e863d6ef80e5</exclude>
-                        <exclude>fb558ee6-6701-41b7-bc85-b298e2e2c0e0</exclude>
-                        <exclude>8923f062-a77b-48ca-80a2-d3af45919229</exclude>
+                        <!-- Exlude log4j test dependency vulnerabilities -->
+                        <exclude>CVE-2019-17571</exclude>
+                        <exclude>CVE-2021-4104</exclude>
+                        <exclude>CVE-2022-23302</exclude>
+                        <exclude>CVE-2022-23305</exclude>
+                        <exclude>CVE-2022-23307</exclude>
+                        <exclude>sonatype-2010-0053</exclude>
+                        <!-- Guava palse positive vulnerability -->
+                        <exclude>sonatype-2020-0926</exclude>
+                        <!-- Spark 3.1.1 provided dependency vulnerabilities -->
+                        <exclude>CVE-2021-38296</exclude>
+                        <exclude>sonatype-2022-2430</exclude>
+                        <exclude>sonatype-2022-1694</exclude>
+                        <!-- jackson-databind 2.10.5 provided dependency vulnerabilities -->
+                        <exclude>sonatype-2021-4682</exclude>
+                        <exclude>CVE-2020-36518</exclude>
+                        <!-- hadoop-client provided dependency vulnerabilities -->
+                        <exclude>CVE-2022-26612</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>

@@ -27,12 +27,12 @@ Code name:
 * Added `com.exasol:sql-statement-builder-java8:4.5.0`
 * Added `com.thoughtworks.paranamer:paranamer:2.8`
 * Added `org.apache.hadoop:hadoop-aws:3.3.2`
-* Added `software.amazon.awssdk:s3:2.17.194`
+* Added `software.amazon.awssdk:s3:2.17.204`
 
 ### Test Dependency Updates
 
 * Added `com.amazonaws:AWSGlueETL:3.0.0`
-* Added `com.amazonaws:aws-java-sdk-s3:1.12.223`
+* Added `com.amazonaws:aws-java-sdk-s3:1.12.233`
 * Added `com.exasol:exasol-testcontainers:6.1.1`
 * Added `com.exasol:hamcrest-resultset-matcher:1.5.1`
 * Added `com.exasol:test-db-builder-java:3.3.2`
@@ -40,8 +40,8 @@ Code name:
 * Added `nl.jqno.equalsverifier:equalsverifier:3.10`
 * Added `org.hamcrest:hamcrest:2.2`
 * Added `org.junit.jupiter:junit-jupiter:5.8.2`
-* Added `org.mockito:mockito-core:4.5.1`
-* Added `org.mockito:mockito-junit-jupiter:4.5.1`
+* Added `org.mockito:mockito-core:4.6.1`
+* Added `org.mockito:mockito-junit-jupiter:4.6.1`
 * Added `org.testcontainers:junit-jupiter:1.17.2`
 * Added `org.testcontainers:localstack:1.17.2`
 
@@ -49,7 +49,7 @@ Code name:
 
 * Added `com.exasol:artifact-reference-checker-maven-plugin:0.4.0`
 * Added `com.exasol:error-code-crawler-maven-plugin:1.1.1`
-* Added `com.exasol:project-keeper-maven-plugin:2.4.3`
+* Added `com.exasol:project-keeper-maven-plugin:2.4.6`
 * Added `io.github.zlika:reproducible-build-maven-plugin:0.15`
 * Added `org.apache.maven.plugins:maven-assembly-plugin:3.3.0`
 * Added `org.apache.maven.plugins:maven-clean-plugin:2.5`
