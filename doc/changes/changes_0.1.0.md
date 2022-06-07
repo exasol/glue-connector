@@ -8,12 +8,14 @@ Code name:
 * #5: Added initial project setup
 * #6: Added schema inference
 * #7: Added reading from Exasol table or query
+* #9: Added support for column projection
 * #10: Added support for pushing predicates
 * #12: Added writing into Exasol table
 
 ## Refactorings
 
 * #14: Migrated to project-keeper version 2
+* #17: Refactored to use sql-statement-builder for generating queries
 * #25: Added AWS Glue local validation tests
 * #35: Refactored error codes, removed duplicated error tags
 * #36: Added unified S3 filesystem operations interface
