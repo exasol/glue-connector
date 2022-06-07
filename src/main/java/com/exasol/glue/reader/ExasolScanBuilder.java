@@ -22,6 +22,7 @@ import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.connector.read.*;
 import org.apache.spark.sql.execution.datasources.v2.csv.CSVTable;
 import org.apache.spark.sql.sources.Filter;
+import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.sql.util.CaseInsensitiveStringMap;
 
@@ -108,7 +109,7 @@ public class ExasolScanBuilder implements ScanBuilder, SupportsPushDownFilters, 
     }
 
     private List<String> getColumnNames() {
-        return Stream.of(this.schema.fields()).map(field -> field.name()).collect(Collectors.toList());
+        return Stream.of(this.schema.fields()).map(StructField::name).collect(Collectors.toList());
     }
 
     private void prepareIntermediateData(final SparkSession spark, final String s3Bucket, final String s3BucketKey) {

@@ -38,7 +38,7 @@ public final class SelectStatementGenerator {
         if (columns.isEmpty()) {
             select.all();
         } else {
-            columns.forEach(column -> select.field(column));
+            columns.forEach(select::field);
         }
     }
 

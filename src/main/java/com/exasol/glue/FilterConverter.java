@@ -134,7 +134,7 @@ public final class FilterConverter {
     }
 
     private ValueExpression[] getMappedLiteralValues(final Object[] values) {
-        return Arrays.stream(values).map(value -> getLiteralValue(value)).toArray(ValueExpression[]::new);
+        return Arrays.stream(values).map(this::getLiteralValue).toArray(ValueExpression[]::new);
     }
 
     private ValueExpression getLiteralValue(final Object value) {
