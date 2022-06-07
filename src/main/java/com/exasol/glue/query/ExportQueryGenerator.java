@@ -9,7 +9,7 @@ import com.exasol.glue.ExasolOptions;
  * A class that generates an Exasol {@code EXPORT} query.
  */
 public final class ExportQueryGenerator extends AbstractQueryGenerator {
-    private static final String EXPORT_QUERY_FOOTER = "WITH COLUMN NAMES";
+    private static final String EXPORT_QUERY_FOOTER = "WITH COLUMN NAMES\nBOOLEAN = 'true/false'";
     private String filesPrefix;
     private int numberOfFiles;
 

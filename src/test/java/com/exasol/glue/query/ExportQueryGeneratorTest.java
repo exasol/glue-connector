@@ -29,7 +29,8 @@ class ExportQueryGeneratorTest {
                 + "USER 'user' IDENTIFIED BY 'pass'\n" //
                 + "FILE 'a/part-001.csv'\n" //
                 + "FILE 'a/part-002.csv'\n" //
-                + "WITH COLUMN NAMES";
+                + "WITH COLUMN NAMES\n" //
+                + "BOOLEAN = 'true/false'";
         assertThat(generator.generateQuery(), equalTo(expected));
     }
 
@@ -45,7 +46,8 @@ class ExportQueryGeneratorTest {
                 + "FILE 'a/part-001.csv'\n" //
                 + "FILE 'a/part-002.csv'\n" //
                 + "FILE 'a/part-003.csv'\n" //
-                + "WITH COLUMN NAMES";
+                + "WITH COLUMN NAMES\n" //
+                + "BOOLEAN = 'true/false'";
         assertThat(generator.generateQuery(), equalTo(expected));
     }
 
@@ -72,7 +74,8 @@ class ExportQueryGeneratorTest {
                 + "AT 'https://bucket.s3.localstack.dev:4566'\n" //
                 + "USER 'name' IDENTIFIED BY 'key'\n" //
                 + "FILE 'a/part-001.csv'\n" //
-                + "WITH COLUMN NAMES";
+                + "WITH COLUMN NAMES\n" //
+                + "BOOLEAN = 'true/false'";
         assertThat(generator.generateQuery(), equalTo(expected));
     }
 
@@ -103,7 +106,8 @@ class ExportQueryGeneratorTest {
                 + "AT 'https://bucket.s3.amazonaws.com'\n" //
                 + "USER 'user' IDENTIFIED BY 'pass'\n" //
                 + "FILE 'a/part-001.csv'\n" //
-                + "WITH COLUMN NAMES";
+                + "WITH COLUMN NAMES\n" //
+                + "BOOLEAN = 'true/false'";
         assertThat(generator.generateQuery(baseQuery), equalTo(expected));
     }
 
@@ -116,7 +120,8 @@ class ExportQueryGeneratorTest {
                 + "AT 'https://bucket.s3.amazonaws.com'\n" //
                 + "USER 'user' IDENTIFIED BY 'pass'\n" //
                 + "FILE 'a/part-001.csv'\n" //
-                + "WITH COLUMN NAMES";
+                + "WITH COLUMN NAMES\n" //
+                + "BOOLEAN = 'true/false'";
         assertThat(generator.generateQuery(baseQuery), equalTo(expected));
     }
 
