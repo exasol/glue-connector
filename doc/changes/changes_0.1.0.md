@@ -37,6 +37,7 @@ Code name:
 * Added `com.amazonaws:aws-java-sdk-s3:1.12.233`
 * Added `com.exasol:exasol-testcontainers:6.1.1`
 * Added `com.exasol:hamcrest-resultset-matcher:1.5.1`
+* Added `com.exasol:java-util-logging-testing:2.0.0`
 * Added `com.exasol:test-db-builder-java:3.3.2`
 * Added `log4j:log4j:1.2.17`
 * Added `nl.jqno.equalsverifier:equalsverifier:3.10`
