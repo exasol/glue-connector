@@ -13,6 +13,7 @@ import com.exasol.glue.ExasolOptions;
 import com.exasol.glue.connection.ExasolConnectionException;
 import com.exasol.glue.connection.ExasolConnectionFactory;
 import com.exasol.glue.filesystem.S3FileSystem;
+import com.exasol.glue.query.AbstractQueryGenerator;
 import com.exasol.glue.query.ImportQueryGenerator;
 
 import org.apache.spark.sql.connector.write.*;
@@ -71,7 +72,8 @@ public class ExasolBatchWrite implements BatchWrite {
             LOGGER.info(() -> "Imported '" + rows + "' rows into the table '" + table + "' in '" + time + "' millis.");
         } catch (final SQLException exception) {
             throw new ExasolConnectionException(ExaError.messageBuilder("E-EGC-24")
-                    .message("Failure running the import {{query}} query.", query)
+                    .message("Failure running the import {{query}} query.",
+                            AbstractQueryGenerator.identifierRemoved(query))
                     .mitigation("Please check that connection address, username and password are correct.").toString(),
                     exception);
         } finally {

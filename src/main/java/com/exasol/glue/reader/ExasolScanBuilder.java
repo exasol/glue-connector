@@ -14,6 +14,7 @@ import com.exasol.glue.ExasolValidationException;
 import com.exasol.glue.FilterConverter;
 import com.exasol.glue.connection.ExasolConnectionFactory;
 import com.exasol.glue.listener.ExasolJobEndCleanupListener;
+import com.exasol.glue.query.AbstractQueryGenerator;
 import com.exasol.glue.query.ExportQueryGenerator;
 import com.exasol.glue.query.SelectStatementGenerator;
 import com.exasol.sql.expression.BooleanExpression;
@@ -142,7 +143,7 @@ public class ExasolScanBuilder implements ScanBuilder, SupportsPushDownFilters, 
         } catch (final SQLException exception) {
             throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-17")
                     .message("Failed to run export query {{exportQuery}} into S3 path {{s3Path}} location.")
-                    .parameter("exportQuery", exportQuery)
+                    .parameter("exportQuery", AbstractQueryGenerator.identifierRemoved(exportQuery))
                     .parameter("s3Path", this.options.getS3Bucket() + "/" + s3BucketKey)
                     .mitigation("Please make sure that the query or table name is correct and obeys SQL syntax rules.")
                     .toString(), exception);
