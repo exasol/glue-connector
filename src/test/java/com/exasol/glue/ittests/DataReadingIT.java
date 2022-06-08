@@ -42,7 +42,6 @@ class DataReadingIT extends BaseIntegrationTestSetup {
                 .bulkInsert(Stream.of(1, 2, 3, 4, 5, 6).map(n -> List.of(n)));
     }
 
-    @Test
     @Ignore("Will be addressed in #41")
     void testDataFrameShow() {
         final Dataset<Row> df = spark.read() //
