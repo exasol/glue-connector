@@ -65,7 +65,6 @@ public class ExasolBatchWrite implements BatchWrite {
         final long start = System.currentTimeMillis();
         final String table = this.options.getTable();
         final String query = new ImportQueryGenerator(this.options).generateQuery();
-        LOGGER.info(() -> "Generated import '" + query + "' query.");
         try {
             final int rows = runImportQuery(query);
             final long time = System.currentTimeMillis() - start;

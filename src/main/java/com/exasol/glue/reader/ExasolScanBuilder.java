@@ -130,9 +130,10 @@ public class ExasolScanBuilder implements ScanBuilder, SupportsPushDownFilters, 
 
     private void exportIntermediateData(final String s3BucketKey) {
         final int numberOfPartitions = this.options.getNumberOfPartitions();
+        final String innerScanQuery = getScanQuery();
         final String exportQuery = new ExportQueryGenerator(this.options, s3BucketKey, numberOfPartitions)
-                .generateQuery(getScanQuery());
-        LOGGER.info(() -> "Running export query '" + exportQuery + "'.");
+                .generateQuery(innerScanQuery);
+        LOGGER.info(() -> "Running export statement with inner query '" + innerScanQuery + "'.");
         final ExasolConnectionFactory connectionFactory = new ExasolConnectionFactory(this.options);
         try (final Connection connection = connectionFactory.getConnection()) {
             final int numberOfExportedRows = new ExportQueryRunner(connection).runExportQuery(exportQuery);

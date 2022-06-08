@@ -29,15 +29,15 @@ Code name:
 * Added `com.exasol:sql-statement-builder-java8:4.5.0`
 * Added `com.thoughtworks.paranamer:paranamer:2.8`
 * Added `org.apache.hadoop:hadoop-aws:3.3.2`
-* Added `software.amazon.awssdk:s3:2.17.204`
+* Added `software.amazon.awssdk:s3:2.17.206`
 
 ### Test Dependency Updates
 
 * Added `com.amazonaws:AWSGlueETL:3.0.0`
-* Added `com.amazonaws:aws-java-sdk-s3:1.12.233`
+* Added `com.amazonaws:aws-java-sdk-s3:1.12.235`
 * Added `com.exasol:exasol-testcontainers:6.1.1`
 * Added `com.exasol:hamcrest-resultset-matcher:1.5.1`
-* Added `com.exasol:java-util-logging-testing:2.0.0`
+* Added `com.exasol:java-util-logging-testing:2.0.1`
 * Added `com.exasol:test-db-builder-java:3.3.2`
 * Added `log4j:log4j:1.2.17`
 * Added `nl.jqno.equalsverifier:equalsverifier:3.10`
