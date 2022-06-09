@@ -2,6 +2,9 @@ package com.exasol.glue.query;
 
 import static com.exasol.glue.Constants.*;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.exasol.glue.ExasolOptions;
 
 /**
@@ -29,8 +32,22 @@ public abstract class AbstractQueryGenerator implements QueryGenerator {
     public String getIdentifier() {
         final String awsAccessKeyId = this.options.get(AWS_ACCESS_KEY_ID);
         final String awsSecretAccessKey = this.options.get(AWS_SECRET_ACCESS_KEY);
-        return "AT '" + getBucketURL() + "'\nUSER '" + awsAccessKeyId + "' IDENTIFIED BY '" + awsSecretAccessKey
-                + "'\n";
+        return "AT '" + escapeStringLiteral(getBucketURL()) + "'\nUSER '" + escapeStringLiteral(awsAccessKeyId)
+                + "' IDENTIFIED BY '" + escapeStringLiteral(awsSecretAccessKey) + "'\n";
+    }
+
+    private String escapeStringLiteral(final String input) {
+        return input.replace("'", "''");
+    }
+
+    /**
+     * Removes {@code IDENTIFIED BY} part of the Exasol SQL statement that contains credentials.
+     *
+     * @param input input query string
+     * @return identifier part removed query string
+     */
+    public static String identifierRemoved(final String input) {
+        return Stream.of(input.split("\n")).filter(s -> !s.contains("IDENTIFIED BY")).collect(Collectors.joining("\n"));
     }
 
     private String getBucketURL() {

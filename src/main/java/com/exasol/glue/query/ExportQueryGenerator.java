@@ -1,12 +1,15 @@
 package com.exasol.glue.query;
 
+import java.util.Collections;
+import java.util.Optional;
+
 import com.exasol.glue.ExasolOptions;
 
 /**
  * A class that generates an Exasol {@code EXPORT} query.
  */
 public final class ExportQueryGenerator extends AbstractQueryGenerator {
-    private static final String EXPORT_QUERY_FOOTER = "WITH COLUMN NAMES";
+    private static final String EXPORT_QUERY_FOOTER = "WITH COLUMN NAMES\nBOOLEAN = 'true/false'";
     private String filesPrefix;
     private int numberOfFiles;
 
@@ -23,10 +26,26 @@ public final class ExportQueryGenerator extends AbstractQueryGenerator {
         this.numberOfFiles = numberOfFiles;
     }
 
+    /**
+     * Generates an {@code EXPORT} query using the user provided base query.
+     *
+     * @param baseQuery base query to use for export
+     * @return generated export query
+     */
+    public String generateQuery(final String baseQuery) {
+        final StringBuilder builder = new StringBuilder();
+        builder //
+                .append("EXPORT (\n" + baseQuery + "\n) INTO CSV\n") //
+                .append(getIdentifier()) //
+                .append(getFiles()) //
+                .append(getFooter());
+        return builder.toString();
+    }
+
     @Override
     public String getHeader() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("EXPORT (\n").append(getSelectFromTableOrQuery()).append("\n) INTO CSV\n");
+        builder.append("EXPORT (\n").append(getSelectQuery()).append("\n) INTO CSV\n");
         return builder.toString();
     }
 
@@ -45,11 +64,16 @@ public final class ExportQueryGenerator extends AbstractQueryGenerator {
         return EXPORT_QUERY_FOOTER;
     }
 
+    private String getSelectQuery() {
+        return new SelectStatementGenerator().getSelectStatement(getSelectFromTableOrQuery(), Collections.emptyList(),
+                Optional.empty());
+    }
+
     private String getSelectFromTableOrQuery() {
         if (this.options.hasTable()) {
-            return "SELECT * FROM " + this.options.getTable();
+            return this.options.getTable();
         } else {
-            return "SELECT * FROM (" + this.options.getQuery() + ")";
+            return "(" + this.options.getQuery() + ")";
         }
     }
 

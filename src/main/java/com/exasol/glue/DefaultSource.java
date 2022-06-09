@@ -10,6 +10,10 @@ import java.util.logging.Logger;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.glue.connection.ExasolConnectionException;
 import com.exasol.glue.connection.ExasolConnectionFactory;
+import com.exasol.sql.StatementFactory;
+import com.exasol.sql.dql.select.Select;
+import com.exasol.sql.dql.select.rendering.SelectRenderer;
+import com.exasol.sql.rendering.StringRendererConfig;
 
 import org.apache.spark.sql.connector.catalog.Table;
 import org.apache.spark.sql.connector.catalog.TableProvider;
@@ -103,10 +107,22 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
     }
 
     private String generateInferSchemaQuery(final ExasolOptions options) {
+        final Select select = StatementFactory.getInstance().select();
+        select.all().from().table("<SCHEMA_INFERENCE_TABLE>");
+        if (options.hasQuery()) {
+            select.limit(1);
+        }
+        final StringRendererConfig rendererConfig = StringRendererConfig.builder().quoteIdentifiers(true).build();
+        final SelectRenderer renderer = new SelectRenderer(rendererConfig);
+        select.accept(renderer);
+        return renderer.render().replace("\"<SCHEMA_INFERENCE_TABLE>\"", getTableOrQuery(options));
+    }
+
+    private String getTableOrQuery(final ExasolOptions options) {
         if (options.hasTable()) {
-            return "SELECT * FROM " + options.getTable();
+            return options.getTable();
         } else {
-            return "SELECT * FROM (" + options.getQuery() + ") A LIMIT 1";
+            return "(" + options.getQuery() + ")";
         }
     }
 

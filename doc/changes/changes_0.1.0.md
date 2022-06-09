@@ -8,11 +8,14 @@ Code name:
 * #5: Added initial project setup
 * #6: Added schema inference
 * #7: Added reading from Exasol table or query
+* #9: Added support for column projection
+* #10: Added support for pushing predicates
 * #12: Added writing into Exasol table
 
 ## Refactorings
 
 * #14: Migrated to project-keeper version 2
+* #17: Refactored to use sql-statement-builder for generating queries
 * #25: Added AWS Glue local validation tests
 * #35: Refactored error codes, removed duplicated error tags
 * #36: Added unified S3 filesystem operations interface
@@ -26,21 +29,22 @@ Code name:
 * Added `com.exasol:sql-statement-builder-java8:4.5.0`
 * Added `com.thoughtworks.paranamer:paranamer:2.8`
 * Added `org.apache.hadoop:hadoop-aws:3.3.2`
-* Added `software.amazon.awssdk:s3:2.17.194`
+* Added `software.amazon.awssdk:s3:2.17.206`
 
 ### Test Dependency Updates
 
 * Added `com.amazonaws:AWSGlueETL:3.0.0`
-* Added `com.amazonaws:aws-java-sdk-s3:1.12.223`
+* Added `com.amazonaws:aws-java-sdk-s3:1.12.235`
 * Added `com.exasol:exasol-testcontainers:6.1.1`
 * Added `com.exasol:hamcrest-resultset-matcher:1.5.1`
+* Added `com.exasol:java-util-logging-testing:2.0.1`
 * Added `com.exasol:test-db-builder-java:3.3.2`
 * Added `log4j:log4j:1.2.17`
 * Added `nl.jqno.equalsverifier:equalsverifier:3.10`
 * Added `org.hamcrest:hamcrest:2.2`
 * Added `org.junit.jupiter:junit-jupiter:5.8.2`
-* Added `org.mockito:mockito-core:4.5.1`
-* Added `org.mockito:mockito-junit-jupiter:4.5.1`
+* Added `org.mockito:mockito-core:4.6.1`
+* Added `org.mockito:mockito-junit-jupiter:4.6.1`
 * Added `org.testcontainers:junit-jupiter:1.17.2`
 * Added `org.testcontainers:localstack:1.17.2`
 
@@ -48,7 +52,7 @@ Code name:
 
 * Added `com.exasol:artifact-reference-checker-maven-plugin:0.4.0`
 * Added `com.exasol:error-code-crawler-maven-plugin:1.1.1`
-* Added `com.exasol:project-keeper-maven-plugin:2.4.3`
+* Added `com.exasol:project-keeper-maven-plugin:2.4.6`
 * Added `io.github.zlika:reproducible-build-maven-plugin:0.15`
 * Added `org.apache.maven.plugins:maven-assembly-plugin:3.3.0`
 * Added `org.apache.maven.plugins:maven-clean-plugin:2.5`
