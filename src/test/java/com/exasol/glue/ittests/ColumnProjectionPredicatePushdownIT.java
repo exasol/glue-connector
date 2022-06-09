@@ -1,5 +1,6 @@
 package com.exasol.glue.ittests;
 
+import static org.apache.spark.sql.functions.col;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
@@ -8,14 +9,16 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import com.exasol.dbbuilder.dialects.Table;
 import com.exasol.logging.CapturingLogHandler;
 
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Encoders;
-import org.apache.spark.sql.Row;
+import org.apache.spark.sql.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Tag("integration")
@@ -28,7 +31,7 @@ class ColumnProjectionPredicatePushdownIT extends BaseIntegrationTestSetup {
     static void setup() {
         table = schema.createTableBuilder("table_pruning_pushdown") //
                 .column("c_int", "DECIMAL(9,0)") //
-                .column("c_str", "VARCHAR(3)") //
+                .column("c_str", "VARCHAR(30)") //
                 .column("c_double", "DOUBLE") //
                 .column("c_bool", "BOOLEAN") //
                 .build() //
@@ -80,13 +83,48 @@ class ColumnProjectionPredicatePushdownIT extends BaseIntegrationTestSetup {
         assertAll(() -> assertThat(df.collectAsList(), contains(2)), //
                 () -> assertThat(df.queryExecution().toString(), containsString("LIKE x%")), //
                 () -> assertThat(this.capturingLogHandler.getCapturedData(),
-                        containsString("WHERE (\"c_str\" IS NOT NULL) AND (\"c_str\" LIKE 'x%')")));
+                        containsString("WHERE (\"c_str\" IS NOT NULL) AND (\"c_str\" LIKE 'x%' ESCAPE '\\')")));
     }
 
     @Test
     void testPredicateStringContains() {
         final Dataset<String> df = spark.sql("SELECT c_str FROM t1 WHERE c_str LIKE '%y%'").as(Encoders.STRING());
         assertThat(df.collectAsList(), contains("xyz"));
+    }
+
+    @Test
+    void testPredicateStringEndsWith() {
+        final Dataset<String> df = spark.sql("SELECT c_str FROM t1 WHERE c_str LIKE '%c'").as(Encoders.STRING());
+        assertThat(df.collectAsList(), contains("abc"));
+    }
+
+    private static final Table escapedStringsTable = schema.createTableBuilder("table_pruning_pushdown_strings") //
+            .column("c_int", "DECIMAL(9,0)") //
+            .column("c_str", "VARCHAR(30)") //
+            .build() //
+            .insert("1", "unders\\corewildcard") //
+            .insert("2", "%underscore_wild%card%") //
+            .insert("3", "underscoreXwildcard") //
+            .insert("4", "contains'singlequote") //
+            .insert("5", "escaped\\_underscore");
+
+    private static final Stream<Arguments> stringFilters() {
+        return Stream.of(//
+                Arguments.of(col("c_str").startsWith("%under"), 2), //
+                Arguments.of(col("c_str").contains("e_wild%"), 2), //
+                Arguments.of(col("c_str").endsWith("card%"), 2), //
+                Arguments.of(col("c_str").contains("s\\cor"), 1), //
+                Arguments.of(col("c_str").contains("ains'sing"), 4), //
+                Arguments.of(col("c_str").contains("d\\_"), 5) //
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("stringFilters")
+    void testPredicateStringLiteralsEscaped(final Column column, final int id) {
+        final Dataset<Integer> df = loadTable(escapedStringsTable.getFullyQualifiedName()).select("c_int")
+                .filter(column).as(Encoders.INT());
+        assertThat(df.collectAsList(), contains(id));
     }
 
     @Test

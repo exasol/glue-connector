@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import com.exasol.sql.expression.BooleanExpression;
 import com.exasol.sql.expression.ValueExpression;
@@ -15,7 +16,9 @@ import com.exasol.sql.rendering.StringRendererConfig;
 import org.apache.spark.sql.sources.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class FilterConverterTest {
     private final FilterConverter filterConverter = new FilterConverter();
@@ -49,31 +52,23 @@ class FilterConverterTest {
                 equalTo(Optional.empty()));
     }
 
-    @Test
-    void testEmptyOptionalIfOneOfFiltersUnknown() {
-        assertAll(
-                () -> assertThat(
-                        filterConverter.convert(
-                                new Filter[] { new And(new EqualNullSafe("c1", "nullValue"), new EqualTo("c2", 1)) }),
-                        equalTo(Optional.empty())),
-                () -> assertThat(
-                        filterConverter.convert(
-                                new Filter[] { new And(new LessThan("c2", 1), new EqualNullSafe("c1", "null")) }),
-                        equalTo(Optional.empty())),
-                () -> assertThat(
-                        filterConverter
-                                .convert(new Filter[] { new Or(new EqualNullSafe("c1", "nv"), new EqualTo("c2", 1)) }),
-                        equalTo(Optional.empty())),
-                () -> assertThat(
-                        filterConverter.convert(
-                                new Filter[] { new Or(new GreaterThan("c2", 1), new EqualNullSafe("c1", "null")) }),
-                        equalTo(Optional.empty())),
-                () -> assertThat(filterConverter.convert(new Filter[] { new Not(new EqualNullSafe("c1", "null")) }),
-                        equalTo(Optional.empty())),
-                () -> assertThat(
-                        filterConverter.convert(
-                                new Filter[] { new LessThan("c2", "a"), new EqualNullSafe("c1", "nullValue") }),
-                        equalTo(Optional.empty())));
+    private static final Stream<Arguments> unknownFilters() {
+        return Stream.of(//
+                Arguments.of(
+                        (Object) new Filter[] { new And(new EqualNullSafe("c1", "nullValue"), new EqualTo("c2", 1)) }), //
+                Arguments.of((Object) new Filter[] { new And(new LessThan("c2", 1), new EqualNullSafe("c1", "null")) }), //
+                Arguments.of((Object) new Filter[] { new Or(new EqualNullSafe("c1", "nv"), new EqualTo("c2", 1)) }), //
+                Arguments.of(
+                        (Object) new Filter[] { new Or(new GreaterThan("c2", 1), new EqualNullSafe("c1", "null")) }), //
+                Arguments.of((Object) new Filter[] { new Not(new EqualNullSafe("c1", "null")) }), //
+                Arguments.of((Object) new Filter[] { new LessThan("c2", "a"), new EqualNullSafe("c1", "nullValue") }) //
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("unknownFilters")
+    void testEmptyOptionalIfOneOfFiltersUnknown(final Filter[] filters) {
+        assertThat(filterConverter.convert(filters), equalTo(Optional.empty()));
     }
 
     @ParameterizedTest
@@ -151,17 +146,30 @@ class FilterConverterTest {
 
     @Test
     void testStringStartsWith() {
-        assertThat(render(new StringStartsWith("c1", "start")), equalTo("(\"c1\" LIKE 'start%')"));
+        assertThat(render(new StringStartsWith("c1", "start")), equalTo("(\"c1\" LIKE 'start%' ESCAPE '\\')"));
     }
 
     @Test
     void testStringContains() {
-        assertThat(render(new StringContains("c1", "contains")), equalTo("(\"c1\" LIKE '%contains%')"));
+        assertThat(render(new StringContains("c1", "contains")), equalTo("(\"c1\" LIKE '%contains%' ESCAPE '\\')"));
     }
 
     @Test
     void testStringEndsWith() {
-        assertThat(render(new StringEndsWith("c1", "end")), equalTo("(\"c1\" LIKE '%end')"));
+        assertThat(render(new StringEndsWith("c1", "end")), equalTo("(\"c1\" LIKE '%end' ESCAPE '\\')"));
+    }
+
+    private static final Stream<Arguments> likeFilters() {
+        return Stream.of(//
+                Arguments.of(new StringContains("c", "cont_ai%ns"), "(\"c\" LIKE '%cont\\_ai\\%ns%' ESCAPE '\\')"), //
+                Arguments.of(new StringStartsWith("c", "s\\t'ar't"), "(\"c\" LIKE 's\\\\t''ar''t%' ESCAPE '\\')") //
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("likeFilters")
+    void testStringLikeLiteralEscaped(final Filter filter, final String expectedLikePredicate) {
+        assertThat(render(filter), equalTo(expectedLikePredicate));
     }
 
     @Test
@@ -176,7 +184,7 @@ class FilterConverterTest {
 
     @Test
     void testNot() {
-        assertThat(render(new Not(new StringEndsWith("c1", "e"))), equalTo("NOT((\"c1\" LIKE '%e'))"));
+        assertThat(render(new Not(new StringEndsWith("c1", "e"))), equalTo("NOT((\"c1\" LIKE '%e' ESCAPE '\\'))"));
     }
 
     @Test

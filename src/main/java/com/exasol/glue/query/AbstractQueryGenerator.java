@@ -32,8 +32,12 @@ public abstract class AbstractQueryGenerator implements QueryGenerator {
     public String getIdentifier() {
         final String awsAccessKeyId = this.options.get(AWS_ACCESS_KEY_ID);
         final String awsSecretAccessKey = this.options.get(AWS_SECRET_ACCESS_KEY);
-        return "AT '" + getBucketURL() + "'\nUSER '" + awsAccessKeyId + "' IDENTIFIED BY '" + awsSecretAccessKey
-                + "'\n";
+        return "AT '" + escapeStringLiteral(getBucketURL()) + "'\nUSER '" + escapeStringLiteral(awsAccessKeyId)
+                + "' IDENTIFIED BY '" + escapeStringLiteral(awsSecretAccessKey) + "'\n";
+    }
+
+    private String escapeStringLiteral(final String input) {
+        return input.replace("'", "''");
     }
 
     /**

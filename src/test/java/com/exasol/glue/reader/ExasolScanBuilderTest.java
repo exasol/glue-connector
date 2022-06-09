@@ -71,7 +71,7 @@ class ExasolScanBuilderTest {
         this.scanBuilder.pruneColumns(new StructType().add("c1", LongType, false));
         this.scanBuilder.pushFilters(new Filter[] { new StringContains("c2", "xyz"), new IsNull("c3") });
         assertThat(this.scanBuilder.getScanQuery(),
-                equalTo("SELECT \"c1\" FROM t1 WHERE (\"c2\" LIKE '%xyz%') AND (\"c3\" IS NULL)"));
+                equalTo("SELECT \"c1\" FROM t1 WHERE (\"c2\" LIKE '%xyz%' ESCAPE '\\') AND (\"c3\" IS NULL)"));
     }
 
     @Test
@@ -92,7 +92,7 @@ class ExasolScanBuilderTest {
         scanBuilder.pruneColumns(new StructType().add("c1", LongType, false));
         scanBuilder.pushFilters(new Filter[] { new StringContains("c2", "xyz"), new IsNull("c3") });
         assertThat(scanBuilder.getScanQuery(), equalTo(
-                "SELECT \"c1\" FROM (SELECT a,b FROM t3 WHERE c = 1) WHERE (\"c2\" LIKE '%xyz%') AND (\"c3\" IS NULL)"));
+                "SELECT \"c1\" FROM (SELECT a,b FROM t3 WHERE c = 1) WHERE (\"c2\" LIKE '%xyz%' ESCAPE '\\') AND (\"c3\" IS NULL)"));
     }
 
 }

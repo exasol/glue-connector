@@ -18,10 +18,14 @@ import org.apache.spark.sql.sources.*;
  * A class that converts Spark {@link Filter} conditions into Exasol {@link ValueExpression}.
  */
 public final class FilterConverter {
+    private static final Character LIKE_FILTER_ESCAPE_CHAR = '\\';
     private static final Map<Class<? extends Filter>, OperationType> FILTERS = getMappings();
 
     /**
      * Converts an array of Spark {@link Filter} conditions into Exasol SQL expression.
+     *
+     * The function returns {@link Optional#empty()} if any of the filters cannot be converted into Exasol where clause.
+     * Then, the filtering will be performed on the Spark side after getting the data without pushed filters.
      *
      * @param filters array of filters
      * @return optional {@link ValueExpression}
@@ -76,15 +80,18 @@ public final class FilterConverter {
 
         case STRING_STARTS_WITH:
             final StringStartsWith startsWith = (StringStartsWith) filter;
-            return BooleanTerm.like(column(startsWith.attribute()), stringLiteral(startsWith.value() + "%"));
+            return BooleanTerm.like(column(startsWith.attribute()),
+                    stringLiteral(escapeLikeLiteralValue(startsWith.value()) + "%"), LIKE_FILTER_ESCAPE_CHAR);
 
         case STRING_CONTAINS:
             final StringContains contains = (StringContains) filter;
-            return BooleanTerm.like(column(contains.attribute()), stringLiteral("%" + contains.value() + "%"));
+            return BooleanTerm.like(column(contains.attribute()),
+                    stringLiteral("%" + escapeLikeLiteralValue(contains.value()) + "%"), LIKE_FILTER_ESCAPE_CHAR);
 
         case STRING_ENDS_WITH:
             final StringEndsWith endsWith = (StringEndsWith) filter;
-            return BooleanTerm.like(column(endsWith.attribute()), stringLiteral("%" + endsWith.value()));
+            return BooleanTerm.like(column(endsWith.attribute()),
+                    stringLiteral("%" + escapeLikeLiteralValue(endsWith.value())), LIKE_FILTER_ESCAPE_CHAR);
 
         case IS_NULL:
             return BooleanTerm.isNull(column(((IsNull) filter).attribute()));
@@ -155,6 +162,14 @@ public final class FilterConverter {
         } else {
             return stringLiteral(value.toString());
         }
+    }
+
+    private String escapeLikeLiteralValue(final String value) {
+        return value //
+                .replace("'", "''") //
+                .replace("" + LIKE_FILTER_ESCAPE_CHAR, LIKE_FILTER_ESCAPE_CHAR + "" + LIKE_FILTER_ESCAPE_CHAR) //
+                .replace("%", LIKE_FILTER_ESCAPE_CHAR + "%") //
+                .replace("_", LIKE_FILTER_ESCAPE_CHAR + "_");
     }
 
     private enum OperationType {

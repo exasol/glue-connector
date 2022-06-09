@@ -37,7 +37,7 @@ import scala.collection.Seq;
 public class ExasolScanBuilder implements ScanBuilder, SupportsPushDownFilters, SupportsPushDownRequiredColumns {
     private static final Logger LOGGER = Logger.getLogger(ExasolScanBuilder.class.getName());
     private final ExasolOptions options;
-    private final CaseInsensitiveStringMap map;
+    private final CaseInsensitiveStringMap properties;
 
     private StructType schema;
     private Filter[] pushedFilters;
@@ -45,14 +45,15 @@ public class ExasolScanBuilder implements ScanBuilder, SupportsPushDownFilters, 
     /**
      * Creates a new instance of {@link ExasolScanBuilder}.
      *
-     * @param options user provided options
-     * @param schema  user-provided {@link StructType} schema
-     * @param map     user-provided key-value options map
+     * @param options    user provided options
+     * @param schema     user-provided {@link StructType} schema
+     * @param properties original key-value properties map that is passed to delegating classes
      */
-    public ExasolScanBuilder(final ExasolOptions options, final StructType schema, final CaseInsensitiveStringMap map) {
+    public ExasolScanBuilder(final ExasolOptions options, final StructType schema,
+            final CaseInsensitiveStringMap properties) {
         this.options = options;
         this.schema = schema;
-        this.map = map;
+        this.properties = properties;
         this.pushedFilters = new Filter[0];
     }
 
@@ -120,9 +121,9 @@ public class ExasolScanBuilder implements ScanBuilder, SupportsPushDownFilters, 
     }
 
     private Scan getScan(final SparkSession spark, final String s3Bucket, final String s3BucketKey) {
-        final CSVTable csvTable = new CSVTable("", spark, this.map, getS3ScanPath(s3Bucket, s3BucketKey),
+        final CSVTable csvTable = new CSVTable("", spark, this.properties, getS3ScanPath(s3Bucket, s3BucketKey),
                 Option.apply(this.schema), null);
-        return csvTable.newScanBuilder(getUpdatedMapWithCSVOptions(this.map)).build();
+        return csvTable.newScanBuilder(getUpdatedMapWithCSVOptions(this.properties)).build();
     }
 
     private void setupSparkCleanupJobListener(final SparkSession spark, final String s3BucketKey) {
