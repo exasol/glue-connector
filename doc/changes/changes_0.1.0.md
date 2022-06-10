@@ -10,9 +10,10 @@ Code name:
 * #7: Added reading from Exasol table or query
 * #9: Added support for column projection
 * #10: Added support for pushing predicates
+* #11: Added support using reserved identifiers in queries
 * #12: Added writing into Exasol table
 
-## Refactorings
+## Refactoring
 
 * #14: Migrated to project-keeper version 2
 * #17: Refactored to use sql-statement-builder for generating queries
@@ -25,7 +26,7 @@ Code name:
 ### Compile Dependency Updates
 
 * Added `com.exasol:error-reporting-java8:0.4.1`
-* Added `com.exasol:exasol-jdbc:7.1.10`
+* Added `com.exasol:exasol-jdbc:7.1.11`
 * Added `com.exasol:sql-statement-builder-java8:4.5.0`
 * Added `com.thoughtworks.paranamer:paranamer:2.8`
 * Added `org.apache.hadoop:hadoop-aws:3.3.2`

@@ -35,9 +35,9 @@ class ColumnProjectionPredicatePushdownIT extends BaseIntegrationTestSetup {
                 .column("c_double", "DOUBLE") //
                 .column("c_bool", "BOOLEAN") //
                 .build() //
-                .insert("1", "abc", "3.14", true) //
-                .insert("2", "xyz", "2.72", false) //
-                .insert("3", "str", "0.02", false);
+                .insert(1, "abc", 3.14, true) //
+                .insert(2, "xyz", 2.72, false) //
+                .insert(3, "str", 0.02, false);
     }
 
     private Dataset<Row> loadTable() {
@@ -149,6 +149,24 @@ class ColumnProjectionPredicatePushdownIT extends BaseIntegrationTestSetup {
     void testPredicateGreaterThanOrEqual() {
         final Dataset<Double> df = spark.sql("SELECT c_double FROM t1 WHERE c_int >= 1").as(Encoders.DOUBLE());
         assertThat(df.collectAsList(), contains(3.14, 2.72, 0.02));
+    }
+
+    @Test
+    void testNonPushedFiltersAreRunPostScan() {
+        final Dataset<Row> df = loadTable() //
+                .select("c_str", "c_int", "c_bool") //
+                .filter(col("c_str").eqNullSafe("abc")) // not pushed, should be filtered after scan
+                .filter(col("c_double").gt(0.0));
+        assertThat(df.collectAsList(), contains(RowFactory.create("abc", 1, true)));
+    }
+
+    @Test
+    void testMultipleFilters() {
+        final Dataset<Row> df = loadTable() //
+                .select("c_str", "c_bool") //
+                .filter(col("c_bool").equalTo(false)) //
+                .filter(col("c_double").gt(0.00));
+        assertThat(df.collectAsList(), contains(RowFactory.create("xyz", false), RowFactory.create("str", false)));
     }
 
 }
