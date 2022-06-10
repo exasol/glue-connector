@@ -35,9 +35,9 @@ class ColumnProjectionPredicatePushdownIT extends BaseIntegrationTestSetup {
                 .column("c_double", "DOUBLE") //
                 .column("c_bool", "BOOLEAN") //
                 .build() //
-                .insert("1", "abc", "3.14", true) //
-                .insert("2", "xyz", "2.72", false) //
-                .insert("3", "str", "0.02", false);
+                .insert(1, "abc", 3.14, true) //
+                .insert(2, "xyz", 2.72, false) //
+                .insert(3, "str", 0.02, false);
     }
 
     private Dataset<Row> loadTable() {
