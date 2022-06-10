@@ -144,8 +144,9 @@ class ExasolOptionsTest {
     @Test
     void testDuplicateKeyValuesThrows() {
         final ExasolOptions.Builder builder = ExasolOptions.builder();
+        final Map<String, String> pairs = Map.of("k1", "v1", "K1", "v2");
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> builder.withOptionsMap(Map.of("k1", "v1", "K1", "v2")));
+                () -> builder.withOptionsMap(pairs));
         assertThat(exception.getMessage(), startsWith("E-EGC-15: Found case sensitive duplicate key"));
     }
 
