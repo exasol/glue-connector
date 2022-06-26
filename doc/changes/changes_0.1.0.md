@@ -13,6 +13,10 @@ Code name:
 * #11: Added support using reserved identifiers in queries
 * #12: Added writing into Exasol table
 
+## Documentation
+
+* #3: Added user guide
+
 ## Refactoring
 
 * #14: Migrated to project-keeper version 2
