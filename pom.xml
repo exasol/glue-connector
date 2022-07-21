@@ -130,6 +130,14 @@
                     <groupId>com.squareup.okhttp</groupId>
                     <artifactId>okhttp</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-http</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-client</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -151,7 +159,7 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.77.Final</version>
+            <version>4.1.79.Final</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -169,7 +177,7 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
-            <version>2.17.206</version>
+            <version>2.17.236</version>
             <exclusions>
                 <exclusion>
                     <groupId>io.netty</groupId>
@@ -220,13 +228,13 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>1.17.2</version>
+            <version>1.17.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>1.17.2</version>
+            <version>1.17.3</version>
             <scope>test</scope>
         </dependency>
         <!-- Issue with Localstack S3
@@ -235,7 +243,7 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.12.235</version>
+            <version>1.12.265</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -353,13 +361,13 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-testcontainers</artifactId>
-            <version>6.1.1</version>
+            <version>6.1.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>test-db-builder-java</artifactId>
-            <version>3.3.2</version>
+            <version>3.3.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -396,7 +404,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>2.4.6</version>
+                <version>2.5.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -444,6 +452,7 @@
                         <!-- Guava palse positive vulnerability -->
                         <exclude>sonatype-2020-0926</exclude>
                         <!-- Spark 3.1.1 provided dependency vulnerabilities -->
+                        <exclude>CVE-2022-33891</exclude>
                         <exclude>CVE-2021-38296</exclude>
                         <exclude>sonatype-2022-2430</exclude>
                         <exclude>sonatype-2022-1694</exclude>
