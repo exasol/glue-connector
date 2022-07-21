@@ -130,6 +130,14 @@
                     <groupId>com.squareup.okhttp</groupId>
                     <artifactId>okhttp</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-http</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-client</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -444,6 +452,7 @@
                         <!-- Guava palse positive vulnerability -->
                         <exclude>sonatype-2020-0926</exclude>
                         <!-- Spark 3.1.1 provided dependency vulnerabilities -->
+                        <exclude>CVE-2022-33891</exclude>
                         <exclude>CVE-2021-38296</exclude>
                         <exclude>sonatype-2022-2430</exclude>
                         <exclude>sonatype-2022-1694</exclude>
