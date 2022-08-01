@@ -19,26 +19,15 @@ We are going to create an IAM Policy Role with required permissions that will ac
 - For "Use cases for other AWS services" search for "Glue" and select "Glue"
 - Click "Next" to add permissions
 - Type "S3" to Filter Policies and press enter, and then select `AmazonS3FullAccess` policy
-- Similarly, type "Glue" and press enter, and then select `AWSGlueServiceRole` policy
+- Type "Glue" and press enter, and then select `AWSGlueServiceRole` policy
+- Similarly, search for and add `AmazonEC2ContainerRegistryReadOnly` policy
 - These are the default policy roles, however, please change them accordingly
 - Then click next, and provide a descriptive Role name and Role description
 - Add tags, review and click "Create role" button
 
 ![Exasol AWS Glue Studio IAM Role](img/iam_role.png)
 
-### Adding S3 Endpoint to VPC
-
-AWS Glue Studio requires S3 endpoint to access the buckets. Go to ["Amazon VPC"](https://console.aws.amazon.com/vpc) &rarr; from navigation pane choose "Endpoints" &rarr; click "Create Endpoint" on the top right corner. Then follow these steps:
-
-- Ensure that "AWS services" is selected
-- For Service Name, type "S3" and press send
-- Select "S3 service gateway" from provided options
-- Select VPC Id that, we will use it later also in connector setup
-- On the routing tables section, choose the subnet that we will use later for connector setup
-- For this guide we are going to allow "Full Access" to the S3 endpoint, please adapt it accordingly
-- Add tags and click on "Create endpoint"
-
-![Exasol AWS Glue Studio S3 Endpoint](img/s3_endpoint.png)
+Please read about the AWS Glue Studio [documentation on minimum required permissions](https://docs.aws.amazon.com/glue/latest/ug/setting-up.html#getting-started-min-privs-connectors).
 
 ## Setting up the Connector
 
@@ -54,11 +43,7 @@ It will bring you into AWS Glue Studio service. Please add a unique connection n
 
 ![Exasol AWS Glue Studio Connection Name](img/glue_connection.png)
 
-Additionally, please setup the "Network options" accordingly. Choose a VPC, subnet and security group so that Exasol database is reachable from the Glue Studio service.
-
-![Exasol AWS Glue Studio Network Options](img/network_options.png)
-
-Finally click "Create Connection and Activate Connector" button.
+Then click "Create Connection and Activate Connector" button.
 
 #### Confirm That Connector and Connection are Created
 
