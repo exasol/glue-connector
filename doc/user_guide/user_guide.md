@@ -21,19 +21,18 @@ We are going to create an IAM Policy Role with required permissions that will ac
 - Type "S3" to Filter Policies and press enter, and then select `AmazonS3FullAccess` policy
 - Type "Glue" and press enter, and then select `AWSGlueServiceRole` policy
 - Similarly, search for and add `AmazonEC2ContainerRegistryReadOnly` policy
-- These are the default policy roles, however, please change them accordingly
+- **Note:** These are the default policy roles, however, please change them accordingly. See the AWS Glue Studio [documentation on minimum required permissions](https://docs.aws.amazon.com/glue/latest/ug/setting-up.html#getting-started-min-privs-connectors).
 - Then click next, and provide a descriptive Role name and Role description
 - Add tags, review and click "Create role" button
 
 ![Exasol AWS Glue Studio IAM Role](img/iam_role.png)
 
-Please read about the AWS Glue Studio [documentation on minimum required permissions](https://docs.aws.amazon.com/glue/latest/ug/setting-up.html#getting-started-min-privs-connectors).
 
 ## Setting up the Connector
 
 To setup the connector you will first need to login to your AWS account. Then, go to the Exasol AWS Glue Studio [connector marketplace](https://aws.amazon.com/marketplace/pp/prodview-2mlebkenfsg7o) page, and click on "Continue to Subscribe" button.
 
-Once you accepted the terms and conditions, click on "Usage" tab, go to "View usage instructions" and click to "Activate the Glue connector from AWS Glue Studio" link.
+Once you accepted the terms and conditions, click on "Usage" tab, go the "View usage instructions" and click to "Activate the Glue connector from AWS Glue Studio" link.
 
 ![Exasol AWS Glue Studio Marketplace](img/marketplace.png)
 
@@ -47,7 +46,7 @@ Then click "Create Connection and Activate Connector" button.
 
 #### Confirm That Connector and Connection are Created
 
-To confirm that the connector is activated and the corresponding connection is created, go to "AWS Glue Studio" &rarr; "Connectors". You should see the connector and connection are created as in following images.
+To confirm that the connector is activated and the corresponding connection is created, go to "AWS Glue Studio" &rarr; "Connectors". You should see that the connector and connection are created as shown in following images:
 
 ![Exasol AWS Glue Studio Connector](img/connector.png)
 
@@ -59,13 +58,13 @@ Let's now create a AWS Glue Studio Job that accesses Exasol database. Go to "AWS
 
 ![Exasol AWS Glue Studio Job Create](img/job_create.png)
 
-This creates a black canvas. From the "Source" dropdown menu select the "Exasol Connector for AWS Glue" and from the "Target" drowdown menu select "Amazon S3". This way, we are creating a simple job that will read from Exasol database and store the results into an S3 location.
+This creates a blank canvas. From the "Source" dropdown menu select the "Exasol Connector for AWS Glue" and from the "Target" drowdown menu select "Amazon S3". This way, we are creating a simple job that will read from Exasol database and store the results into an S3 location.
 
 ![Exasol AWS Glue Studio Canvas](img/canvas.png)
 
 #### Update Source Parameters
 
-We can now setup our source node parameters. Click on the "Data Source", for the connection select the "Connection Name" we created earlier. Then, click on "Connection options" &rarr; "Add new option", and add required key value parameters. You can read about them on [Job Parameters](#job-parameters) section.
+We can now setup our source node parameters. Click on the "Data Source", for the connection select the "Connection Name" we created earlier. Then, click on "Connection options" &rarr; "Add new option", and add required key value parameters. You can read about them in the [Job Parameters](#job-parameters) section.
 
 ![Exasol AWS Glue Studio Source Parameters](img/source_node_params.png)
 
@@ -101,11 +100,11 @@ The following table shows required or optional parameters for running AWS Glue S
 | `query`               |                    |          | `SELECT product_id, price FROM AWS_GLUE.RETAIL` |
 | `numPartitions`       | `8`                |          | `16`                                            |
 | `awsRegion`           | `us-east-1`        |          | `eu-central-1`                                  |
-| `awsEndpointOverride` | `default endpoint` |          | `s3.custom-endpoint.com`                        |
+| `awsEndpointOverride` | (default endpoint) |          | `s3.custom-endpoint.com`                        |
 | `s3PathStyleAccess`   | `false`            |          | `true`                                          |
 | `useSsl`              | `true`             |          | `false`                                         |
 
-Either one of `table` or `query` parameters should be provided when reading data from Exasol database.
+Either one of `table` or `query` parameters should be provided when reading data from an Exasol database.
 
 ## Data Mapping
 
