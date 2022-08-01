@@ -16,8 +16,12 @@
 
 An AWS Glue connector that allow accessing Exasol database in Glue Studio.
 
-## Additional Information
+## Information for Users
 
 * [User Guide](doc/user_guide/user_guide.md)
 * [Changelog](doc/changes/changelog.md)
+
+## Information for Developers
+
+* [Developers Guide](doc/developers_guide/developers_guide.md)
 * [Dependencies](dependencies.md)

@@ -13,6 +13,10 @@ Code name:
 * #11: Added support using reserved identifiers in queries
 * #12: Added writing into Exasol table
 
+## Documentation
+
+* #3: Added user guide
+
 ## Refactoring
 
 * #14: Migrated to project-keeper version 2
@@ -30,18 +34,18 @@ Code name:
 * Added `com.exasol:sql-statement-builder-java8:4.5.0`
 * Added `com.thoughtworks.paranamer:paranamer:2.8`
 * Added `org.apache.hadoop:hadoop-aws:3.3.2`
-* Added `software.amazon.awssdk:s3:2.17.236`
+* Added `software.amazon.awssdk:s3:2.17.243`
 
 ### Test Dependency Updates
 
 * Added `com.amazonaws:AWSGlueETL:3.0.0`
-* Added `com.amazonaws:aws-java-sdk-s3:1.12.265`
+* Added `com.amazonaws:aws-java-sdk-s3:1.12.272`
 * Added `com.exasol:exasol-testcontainers:6.1.2`
 * Added `com.exasol:hamcrest-resultset-matcher:1.5.1`
 * Added `com.exasol:java-util-logging-testing:2.0.1`
 * Added `com.exasol:test-db-builder-java:3.3.3`
 * Added `log4j:log4j:1.2.17`
-* Added `nl.jqno.equalsverifier:equalsverifier:3.10`
+* Added `nl.jqno.equalsverifier:equalsverifier:3.10.1`
 * Added `org.hamcrest:hamcrest:2.2`
 * Added `org.junit.jupiter:junit-jupiter:5.8.2`
 * Added `org.mockito:mockito-core:4.6.1`
