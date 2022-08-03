@@ -40,7 +40,7 @@ Now create a connection for your custom connector.
 
 ### Creating a Job
 
-Now you can follow from the [user guide - creating a job](doc/user_guide/user_guide.md#creating-a-job) section.
+Now you can follow from the [user guide - creating a job](../user_guide/user_guide.md#creating-a-job) section.
 
 
 ## Publishing the Connector to AWS Marketplace
