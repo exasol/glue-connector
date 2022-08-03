@@ -16,6 +16,7 @@ Code name:
 ## Documentation
 
 * #3: Added user guide
+* #46: Added developer guide with instructions for AWS Marketplace publishing
 
 ## Refactoring
 
