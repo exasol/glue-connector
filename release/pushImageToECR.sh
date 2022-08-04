@@ -15,19 +15,19 @@ function validate() {
 		echo "Missing 'AWS_REGION' environment variable, please set it and run again."
 		exit 1
 	fi
-	if [[ -z "$MARKETPLACE_REPO_NAME" ]]; then
-		echo "Missing 'MARKETPLACE_REPO_NAME' repository name environment variable, please set it and run again."
+	if [[ -z "$MARKETPLACE_ECR_REPO_NAME" ]]; then
+		echo "Missing 'MARKETPLACE_ECR_REPO_NAME' repository name environment variable, please set it and run again."
 		exit 1
 	fi
-	if [[ -z "$MARKETPLACE_ACCOUNT_ID" ]]; then
-		echo "Missing 'MARKETPLACE_ACCOUNT_ID' account id environment variable, please set it and run again."
+	if [[ -z "$MARKETPLACE_ECR_ACCOUNT_ID" ]]; then
+		echo "Missing 'MARKETPLACE_ECR_ACCOUNT_ID' account id environment variable, please set it and run again."
 		exit 1
 	fi
 }
 
 function ecr_login() {
 	echo "==> Logging into AWS ECR"
-	aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin "$MARKETPLACE_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
+	aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin "$MARKETPLACE_ECR_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
 }
 
 function prepare_artifacts() {
@@ -61,13 +61,13 @@ function prepare_docker_image() {
         FROM amazonlinux:latest
 	COPY ./artifacts  ./jars
 EOF
-	docker build -t "$MARKETPLACE_REPO_NAME:$TAG" .
-	docker tag "$MARKETPLACE_REPO_NAME:$TAG" "$MARKETPLACE_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$MARKETPLACE_REPO_NAME:$TAG"
+	docker build -t "$MARKETPLACE_ECR_REPO_NAME:$TAG" .
+	docker tag "$MARKETPLACE_ECR_REPO_NAME:$TAG" "$MARKETPLACE_ECR_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$MARKETPLACE_ECR_REPO_NAME:$TAG"
 }
 
 function push_docker_image() {
 	echo "==> Pushing docker image to AWS marketplace"
-	docker push "$MARKETPLACE_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$MARKETPLACE_REPO_NAME:$TAG"
+	docker push "$MARKETPLACE_ECR_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$MARKETPLACE_ECR_REPO_NAME:$TAG"
 }
 
 validate

@@ -34,8 +34,8 @@ jobs:
         run: ./release/pushDockerImage.sh
         env:
           AWS_REGION: us-east-1
-          MARKETPLACE_REPO_NAME: ${{ secrets.MARKETPLACE_REPO_NAME }}
-          MARKETPLACE_ACCOUNT_ID: ${{ secrets.MARKETPLACE_ACCOUNT_ID }}
+          MARKETPLACE_ECR_REPO_NAME: ${{ secrets.MARKETPLACE_ECR_REPO_NAME }}
+          MARKETPLACE_ECR_ACCOUNT_ID: ${{ secrets.MARKETPLACE_ECR_ACCOUNT_ID }}
       - name: Clean up
         run: rm -rf Dockerfile artifacts/
       - name: Create issue for publishing new version manually
