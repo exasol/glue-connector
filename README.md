@@ -16,6 +16,14 @@
 
 An AWS Glue connector that allow accessing Exasol database in Glue Studio.
 
+## Features
+
+* Allows mapping Exasol table or query metadata to AWS Glue Studio Spark schema
+* Allows reading from an Exasol table or query
+* Allows pushing pruning of columns from Glue dataframe to Exasol database
+* Allows pushing filters from Glue dataframe to Exasol database
+* Allows saving AWS Glue Studio dataframe into an Exasol table
+
 ## Information for Users
 
 * [User Guide](doc/user_guide/user_guide.md)
