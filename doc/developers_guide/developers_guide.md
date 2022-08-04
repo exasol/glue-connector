@@ -53,7 +53,7 @@ Then select `Spark` as "Connection type" from drop-down list and fill other nece
 - "Browse S3" and select the uploaded JAR artifact from previous step
 - Enter unique and descriptive name for the connector
 - Enter `exasol` as "Class name"
-- And click to the "Create connector" button
+- And click on the "Create connector" button
 
 ![Exasol AWS Glue Studio Custom Connector Setup](img/custom_connector_setup.png)
 

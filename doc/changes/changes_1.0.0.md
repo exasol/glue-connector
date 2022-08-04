@@ -6,7 +6,7 @@ Code name: First Release
 
 This is the first release of Exasol AWS Glue Studio connector.
 
-In this the following features are supported:
+In this release the following features are supported:
 
 - Mapping Exasol table or query metadata to AWS Glue Studio Spark schema
 - Reading from an Exasol table or provided Exasol SQL query
