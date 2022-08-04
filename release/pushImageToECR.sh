@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -eou pipefail
+set -eo pipefail
 
 if ! command -v xmlstarlet &>/dev/null; then
 	echo "xmlstarlet tool is not available, please install it to continue."
