@@ -14,7 +14,7 @@ In this release the following features are supported:
 - Pushing of filters from Glue dataframe into Exasol database
 - Writing AWS Glue Studio dataframe into an Exasol table
 
-Please checkout the project user guide for more details.
+Please checkout the project [user guide](https://github.com/exasol/glue-connector/blob/main/doc/user_guide/user_guide.md) for more details.
 
 ## Features
 
