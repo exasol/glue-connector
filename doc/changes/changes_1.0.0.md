@@ -1,6 +1,20 @@
-# Exasol AWS Glue Connector 0.1.0, released 2022-??-??
+# Exasol AWS Glue Connector 1.0.0, released 2022-08-04
 
-Code name:
+Code name: First Release
+
+## Summary
+
+This is the first release of Exasol AWS Glue Studio connector.
+
+In this the following features are supported:
+
+- Mapping Exasol table or query metadata to AWS Glue Studio Spark schema
+- Reading from an Exasol table or provided Exasol SQL query
+- Pruning of columns from Glue dataframe into Exasol database
+- Pushing of filters from Glue dataframe into Exasol database
+- Writing AWS Glue Studio dataframe into an Exasol table
+
+Please checkout the project user guide for more details.
 
 ## Features
 
@@ -25,6 +39,7 @@ Code name:
 * #25: Added AWS Glue local validation tests
 * #35: Refactored error codes, removed duplicated error tags
 * #36: Added unified S3 filesystem operations interface
+* #47: Added reminder issue creation after each release to publish to AWS marketplace
 
 ## Dependency Updates
 
