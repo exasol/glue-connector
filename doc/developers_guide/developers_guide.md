@@ -6,6 +6,14 @@ This guide contains information for developers.
 
 Once the release pushes new connector image to the AWS ECR Registry, you'll have to manually publish the new version.
 
+Ensure that the docker image with new release tag is pushed to AWS ECR registry:
+
+```sh
+aws ecr describe-images --registry-id $MARKETPLACE_ECR_ACCOUNT_ID --repository-name $MARKETPLACE_ECR_REPO_NAME --region us-east-1
+```
+
+Login to Amazon AWS account and follow the instructions below:
+
 - Go to Exasol [AWS Marketplace Portal](https://aws.amazon.com/marketplace/management/homepage) (this is main `exasol` account)
 - Go to Products &rarr; Server &rarr; "Exasol Connector for AWS Glue"
 - Click on "Request changes" and select "Add new version"
