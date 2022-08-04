@@ -2,6 +2,24 @@
 
 This guide contains information for developers.
 
+## Publishing the Connector to AWS Marketplace
+
+Once the release pushes new connector image to the AWS ECR Registry, you'll have to manually publish the new version.
+
+- Go to Exasol [AWS Marketplace Portal](https://aws.amazon.com/marketplace/management/homepage) (this is main `exasol` account)
+- Go to Products &rarr; Server &rarr; "Exasol Connector for AWS Glue"
+- Click on "Request changes" and select "Add new version"
+- Add new version and for the "Release notes" copy the content of changes markdown file for that version
+- Click on "Activate in AWS Glue Studio" on the Delivery Options section
+- On the "Container image" field, update the **version** at the end of the image
+- On the "Usage instructions" field, update the **version** on the `connectorUrl` and `connectorVersion` properties
+- Only select `Amazon Elastic Container Service (ECS)` on "Supported Services"
+- Click Next
+
+On the next "Restrict version" section, select "No" so that previous version still remain visible to users, and click next.
+
+Finally, review all the changes and submit the request.
+
 ## Creating Custom Connector
 
 AWS Glue Studio allows to create a custom connectors. It can be useful to debug the connector.
@@ -41,6 +59,3 @@ Now create a connection for your custom connector.
 ### Creating a Job
 
 Now you can follow from the [user guide - creating a job](../user_guide/user_guide.md#creating-a-job) section.
-
-
-## Publishing the Connector to AWS Marketplace
