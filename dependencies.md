@@ -24,6 +24,7 @@
 | [mockito-core][17]                              | [The MIT License][18]                         |
 | [mockito-junit-jupiter][17]                     | [The MIT License][18]                         |
 | [JUnit Jupiter (Aggregator)][19]                | [Eclipse Public License v2.0][20]             |
+| [JUnit Jupiter API][19]                         | [Eclipse Public License v2.0][20]             |
 | [Hamcrest][21]                                  | [BSD License 3][22]                           |
 | [Testcontainers :: JUnit Jupiter Extension][23] | [MIT][24]                                     |
 | [Testcontainers :: Localstack][23]              | [MIT][24]                                     |
