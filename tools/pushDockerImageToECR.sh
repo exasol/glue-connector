@@ -51,7 +51,9 @@ function prepare_artifacts() {
 EOF
 
 	echo "==> Downloading artifact for tag '$TAG' from releases"
-	wget "https://github.com/exasol/glue-connector/releases/download/$TAG/exasol-glue-connector-$TAG-assembly.jar" -P artifacts/
+	local artifact_name="exasol-glue-connector-$TAG-assembly.jar"
+	curl -JLO "https://github.com/exasol/glue-connector/releases/download/$TAG/$artifact_name"
+	mv "$artifact_name" artifacts/
 }
 
 function prepare_docker_image() {

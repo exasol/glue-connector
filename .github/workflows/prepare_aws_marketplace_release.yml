@@ -31,7 +31,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.MARKETPLACE_AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
       - name: Push connector image to AWS Marketplace repository
-        run: ./release/pushDockerImage.sh
+        run: ./tools/pushDockerImageToECR.sh
         env:
           AWS_REGION: us-east-1
           MARKETPLACE_ECR_REPO_NAME: ${{ secrets.MARKETPLACE_ECR_REPO_NAME }}
