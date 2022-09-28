@@ -2,6 +2,10 @@
 
 This guide contains information for developers.
 
+## Available Dependencies in AWS Glue
+
+See [AWS Glue versions](https://docs.aws.amazon.com/glue/latest/dg/release-notes.html) and the [Migration guide](https://docs.aws.amazon.com/glue/latest/dg/migrating-version-30.html) for a list of provided dependencies and their versions.
+
 ## Publishing the Connector to AWS Marketplace
 
 Once the release pushes new connector image to the AWS ECR Registry, you'll have to manually publish the new version.
