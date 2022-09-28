@@ -1,12 +1,12 @@
-# Exasol AWS Glue Connector 1.0.1, released 2022-??-??
+# Exasol AWS Glue Connector 1.0.1, released 2022-09-28
 
-Code name:
+Code name: Updated dependencies
 
 ## Summary
 
 ## Refactoring
 
-* #42: Fixed docker image preparation Github action issues
+* PR #42: Fixed docker image preparation Github action issues
 
 ## Bugfixes
 
