@@ -23,8 +23,15 @@ The following vulnerabilities are known in Spark 3.3.4, but no update is availab
 
 ### Compile Dependency Updates
 
-* Added `org.apache.commons:commons-text:1.10.0`
+* Updated `org.apache.hadoop:hadoop-aws:3.3.2` to `3.3.3`
+* Updated `software.amazon.awssdk:s3:2.17.283` to `2.18.3`
 
 ### Test Dependency Updates
 
+* Updated `com.amazonaws:aws-java-sdk-s3:1.12.312` to `1.12.328`
+* Updated `com.exasol:exasol-testcontainers:6.2.0` to `6.3.0`
+* Updated `com.exasol:test-db-builder-java:3.3.4` to `3.4.1`
+* Updated `org.mockito:mockito-core:4.8.0` to `4.8.1`
+* Updated `org.mockito:mockito-junit-jupiter:4.8.0` to `4.8.1`
 * Updated `org.testcontainers:junit-jupiter:1.17.3` to `1.17.5`
+* Updated `org.testcontainers:localstack:1.17.3` to `1.17.5`

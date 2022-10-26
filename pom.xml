@@ -9,8 +9,9 @@
     <url>https://github.com/exasol/glue-connector/</url>
     <properties>
         <java.version>1.8</java.version>
-        <hadoop.version>3.3.2</hadoop.version>
+        <hadoop.version>3.3.3</hadoop.version>
         <junit.version>5.9.1</junit.version>
+        <mockito.version>4.8.1</mockito.version>
     </properties>
     <parent>
         <artifactId>glue-connector-generated-parent</artifactId>
@@ -43,12 +44,20 @@
         </repository>
     </repositories>
     <dependencies>
+        <!--
+        AWS Glue version 3.0 at the moment supports only Spark 3.1.1 version
+        Source: https://docs.aws.amazon.com/glue/latest/dg/release-notes.html
+        -->
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.12</artifactId>
-            <version>3.3.1</version>
+            <version>3.1.1</version>
             <scope>provided</scope>
             <exclusions>
+                <exclusion>
+                    <groupId>org.spark-project.spark</groupId>
+                    <artifactId>unused</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>com.google.guava</groupId>
                     <artifactId>guava</artifactId>
@@ -76,6 +85,10 @@
                 <exclusion>
                     <groupId>commons-codec</groupId>
                     <artifactId>commons-codec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-text</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.glassfish.jersey.core</groupId>
@@ -113,6 +126,10 @@
                     <groupId>org.eclipse.jetty</groupId>
                     <artifactId>jetty-client</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.reload4j</groupId>
+                    <artifactId>reload4j</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -134,7 +151,7 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.79.Final</version>
+            <version>4.1.84.Final</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -143,16 +160,22 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!--
+            Spark 3.1.1 internal RDDOperationScope uses Jackson Scala module 2.10.5. Therefore jackson-databind version
+            should be compatible with it.
+            Caused by: com.fasterxml.jackson.databind.JsonMappingException: Scala module 2.10.5 requires Jackson
+            Databind version >= 2.10.0 and < 2.11.0
+        -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.13.4.2</version>
+            <version>2.10.5.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
-            <version>2.17.283</version>
+            <version>2.18.3</version>
             <exclusions>
                 <exclusion>
                     <groupId>io.netty</groupId>
@@ -179,13 +202,13 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>4.8.0</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>4.8.0</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -215,16 +238,17 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>1.17.3</version>
+            <version>1.17.5</version>
             <scope>test</scope>
         </dependency>
-        <!-- Issue with Localstack S3
-             https://stackoverflow.com/questions/64017812/junit-awscredentials-noclassdeffounderror-with-localstackcontainer
+        <!--
+            Issue with Localstack S3
+            https://stackoverflow.com/questions/64017812/junit-awscredentials-noclassdeffounderror-with-localstackcontainer
         -->
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.12.312</version>
+            <version>1.12.328</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -267,6 +291,14 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.hadoop</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.spark-project.spark</groupId>
+                    <artifactId>unused</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.spark</groupId>
                     <artifactId>*</artifactId>
                 </exclusion>
                 <exclusion>
@@ -334,13 +366,13 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-testcontainers</artifactId>
-            <version>6.2.0</version>
+            <version>6.3.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>test-db-builder-java</artifactId>
-            <version>3.3.4</version>
+            <version>3.4.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -370,11 +402,6 @@
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-            <version>1.10.0</version><!-- fixes sonatype-2022-5732 -->
         </dependency>
     </dependencies>
     <build>
@@ -420,12 +447,6 @@
                 <configuration>
                     <skip>${ossindex.skip}</skip>
                     <excludeVulnerabilityIds>
-                        <!-- excluded vulnerabilities for profile spark 3.3.1 -->
-                        <!-- XXE attack in command line tool "hdfs ec"; not used by the connector -->
-                        <exclude>sonatype-2022-5732</exclude>
-                        <!-- Same root cause as above, but according to HADOOP-18469 does not result in known issue -->
-                        <exclude>sonatype-2022-5820</exclude>
-
                         <!-- Exlude log4j test dependency vulnerabilities -->
                         <exclude>CVE-2019-17571</exclude>
                         <exclude>CVE-2021-4104</exclude>
@@ -441,12 +462,16 @@
                         <exclude>sonatype-2022-2430</exclude>
                         <exclude>sonatype-2022-1694</exclude>
                         <exclude>CVE-2022-25168</exclude>
-                        <exclude>CVE-2022-25168</exclude>
                         <!-- jackson-databind 2.10.5 provided dependency vulnerabilities -->
                         <exclude>sonatype-2021-4682</exclude>
                         <exclude>CVE-2020-36518</exclude>
-                        <!-- hadoop-client provided dependency vulnerabilities -->
-                        <exclude>CVE-2022-26612</exclude>
+                        <exclude>CVE-2022-42003</exclude>
+                        <exclude>CVE-2022-42004</exclude>
+                        <!-- hadoop-client 3.3.3 provided dependency vulnerabilities -->
+                        <!-- XXE attack in command line tool "hdfs ec"; not used by the connector -->
+                        <exclude>sonatype-2022-5732</exclude>
+                        <!-- Same root cause as above, but according to HADOOP-18469 does not result in known issue -->
+                        <exclude>sonatype-2022-5820</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
