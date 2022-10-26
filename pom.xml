@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>glue-connector</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <name>Exasol AWS Glue Connector</name>
     <description>An AWS Glue connector for accessing Exasol database</description>
     <url>https://github.com/exasol/glue-connector/</url>
@@ -15,7 +15,7 @@
     <parent>
         <artifactId>glue-connector-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <repositories>
@@ -46,13 +46,9 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.12</artifactId>
-            <version>3.1.1</version>
+            <version>3.3.1</version>
             <scope>provided</scope>
             <exclusions>
-                <exclusion>
-                    <groupId>org.spark-project.spark</groupId>
-                    <artifactId>unused</artifactId>
-                </exclusion>
                 <exclusion>
                     <groupId>com.google.guava</groupId>
                     <artifactId>guava</artifactId>
@@ -150,7 +146,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.10.5.1</version>
+            <version>2.13.4.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -213,7 +209,7 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>1.17.3</version>
+            <version>1.17.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -271,14 +267,6 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.hadoop</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.spark-project.spark</groupId>
-                    <artifactId>unused</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.spark</groupId>
                     <artifactId>*</artifactId>
                 </exclusion>
                 <exclusion>
@@ -383,6 +371,11 @@
             <version>1.2.17</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.10.0</version><!-- fixes sonatype-2022-5732 -->
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -427,6 +420,12 @@
                 <configuration>
                     <skip>${ossindex.skip}</skip>
                     <excludeVulnerabilityIds>
+                        <!-- excluded vulnerabilities for profile spark 3.3.1 -->
+                        <!-- XXE attack in command line tool "hdfs ec"; not used by the connector -->
+                        <exclude>sonatype-2022-5732</exclude>
+                        <!-- Same root cause as above, but according to HADOOP-18469 does not result in known issue -->
+                        <exclude>sonatype-2022-5820</exclude>
+
                         <!-- Exlude log4j test dependency vulnerabilities -->
                         <exclude>CVE-2019-17571</exclude>
                         <exclude>CVE-2021-4104</exclude>
