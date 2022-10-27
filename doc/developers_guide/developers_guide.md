@@ -44,7 +44,7 @@ By running `mvn verify` or `mvn package` create a connector artifact. For exampl
 
 ### Uploading the Artifact to S3 Bucket
 
-Upload the JAR artifact from previous step into an S3 bucket. For instance, `s3://exasol-artifacts/glue-connector/`.
+Upload the JAR artifact from previous step into an S3 bucket. For instance, `s3://exasol-artifacts/glue-connector/exasol-glue-connector-1.0.2-assembly.jar`.
 
 ### Creating a Glue Studio Custom Connector
 
