@@ -35,4 +35,5 @@ TODO: explain, why updating to the latest Spark is currently not possible and wh
 
 ### Plugin Dependency Updates
 
+* Updated `com.exasol:artifact-reference-checker-maven-plugin:0.4.0` to `0.4.2`
 * Updated `org.apache.maven.plugins:maven-shade-plugin:3.3.0` to `3.4.0`
