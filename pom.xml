@@ -9,7 +9,7 @@
     <url>https://github.com/exasol/glue-connector/</url>
     <properties>
         <java.version>1.8</java.version>
-        <hadoop.version>3.3.3</hadoop.version>
+        <hadoop.version>3.3.4</hadoop.version>
         <junit.version>5.9.1</junit.version>
         <mockito.version>4.8.1</mockito.version>
     </properties>
@@ -175,7 +175,7 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
-            <version>2.18.3</version>
+            <version>2.18.4</version>
             <exclusions>
                 <exclusion>
                     <groupId>io.netty</groupId>
@@ -248,7 +248,7 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.12.328</version>
+            <version>1.12.329</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -491,7 +491,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.4.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
