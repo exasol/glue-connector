@@ -6,11 +6,20 @@ Code name: Dependency updates on top of 1.0.1
 
 The following vulnerabilities in dependencies were fixed by updating the dependencies:
 
-* CVE-2022-42003: Uncontrolled Resource Consumption in `jackson-databind`
+* [CVE-2022-42889](https://www.cve.org/CVERecord?id=CVE-2022-42889): Remote Code Execution (RCE) when applied to untrusted input
 
 ## Known Remaining Spark Vulnerabilities and Sonatype Warnings
 
-TODO: explain, why updating to the latest Spark is currently not possible and what the consequences are.
+The latest [AWS Glue version 3.0 uses Spark 3.1.1](https://docs.aws.amazon.com/glue/latest/dg/release-notes.html), this means that we cannot update Spark dependency without breaking compatibility. Additionally, this version of Spark depends transitively on the `jackson-databind` versions `>= 2.10.0` and `< 2.11.0`.
+
+This versions of `jackson-databind` includes these vulnerabilities:
+
+* [CVE-2022-42003](https://www.cve.org/CVERecord?id=CVE-2022-42003): Possible resource exhaustion in `jackson-databind` before `2.14.0-rc1`
+* [CVE-2022-42004](https://www.cve.org/CVERecord?id=CVE-2022-42004): Possible resource exhaustion in `jackson-databind` before `2.13.4`
+
+However, Exasol `glue-connector` depends on Spark library with scope `provided`, meaning that we are not shipping this dependency with our release artifact, but assume that it is available at the runtime environment.
+
+Users should be aware that these libraries are provided by the AWS Glue service when using the `glue-connector`.
 
 ## Bugfixes
 
