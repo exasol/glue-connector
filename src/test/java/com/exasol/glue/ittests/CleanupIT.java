@@ -186,7 +186,7 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
                 .options(getDefaultOptions()) //
                 .option("table", "non_existent_table");
         final SparkException exception = assertThrows(SparkException.class, () -> df.save());
-        assertThat(exception.getMessage(), containsString("Writing job aborted."));
+        assertThat(exception.getMessage(), containsString("Writing job aborted"));
         assertThatBucketIsEmpty();
     }
 

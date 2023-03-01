@@ -33,7 +33,7 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 
 public class BaseIntegrationTestSetup {
     private static final Logger LOGGER = Logger.getLogger(BaseIntegrationTestSetup.class.getName());
-    private static final String DEFAULT_DOCKER_IMAGE = "7.1.10";
+    private static final String DEFAULT_DOCKER_IMAGE = "7.1.18";
     protected static final String DEFAULT_BUCKET_NAME = "csvtest";
 
     @Container
@@ -41,7 +41,7 @@ public class BaseIntegrationTestSetup {
             getExasolDockerImage()).withReuse(true);
     @Container
     private static final S3LocalStackContainerWithReuse S3 = new S3LocalStackContainerWithReuse(
-            DockerImageName.parse("localstack/localstack:0.14"));
+            DockerImageName.parse("localstack/localstack:1.4"));
 
     protected static Connection connection;
     protected static ExasolObjectFactory factory;
