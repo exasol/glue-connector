@@ -135,9 +135,9 @@
             </exclusions>
         </dependency>
         <dependency>
-          <groupId>com.fasterxml.woodstox</groupId>
-          <artifactId>woodstox-core</artifactId>
-          <version>6.5.0</version>
+            <groupId>com.fasterxml.woodstox</groupId>
+            <artifactId>woodstox-core</artifactId>
+            <version>6.5.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
@@ -162,10 +162,10 @@
             <scope>provided</scope>
         </dependency>
         <!--
-            Spark 3.1.1 internal RDDOperationScope uses Jackson Scala module 2.10.5. Therefore jackson-databind version
-            should be compatible with it.
-            Caused by: com.fasterxml.jackson.databind.JsonMappingException: Scala module 2.10.5 requires Jackson
-            Databind version >= 2.10.0 and < 2.11.0
+            Spark 3.1.1 internal RDDOperationScope uses Jackson Scala module 2.10.5. Therefore jackson-databind
+            version should be compatible with it.
+            Caused by: com.fasterxml.jackson.databind.JsonMappingException: Scala module 2.10.5 requires
+            Jackson Databind version >= 2.10.0 and < 2.11.0
         -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -244,7 +244,8 @@
         </dependency>
         <!--
             Issue with Localstack S3
-            https://stackoverflow.com/questions/64017812/junit-awscredentials-noclassdeffounderror-with-localstackcontainer
+            https://stackoverflow.com/questions/64017812/
+            junit-awscredentials-noclassdeffounderror-with-localstackcontainer
         -->
         <dependency>
             <groupId>com.amazonaws</groupId>
@@ -400,8 +401,8 @@
             <scope>test</scope>
         </dependency>
         <!--
-            Added Log4j for tests only. In tests we start Spark job, which depends on this version of log4j. Using
-            newer versions results in Java9 MDC issues.
+            Added Log4j for tests only. In tests we start Spark job, which depends on this version of log4j.
+            Using newer versions results in Java9 MDC issues.
         -->
         <dependency>
             <groupId>log4j</groupId>
@@ -463,17 +464,33 @@
                 <configuration>
                     <skip>${ossindex.skip}</skip>
                     <excludeVulnerabilityIds>
+                        <!--
+                            Most of these dependencies are not included in the released artifact, but are 'provided' by
+                            the runtime Spark cluster.
+                        -->
                         <!-- Vulnerabilities for org.apache.spark:spark-core_2.12:jar:3.3.0 -->
-                        <!-- CWE-74: Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection') (5.4); -->
+                        <!--
+                            CWE-74: Improper Neutralization of Special Elements in Output Used by a
+                            Downstream Component ('Injection') (5.4);
+                        -->
                         <exclude>CVE-2022-31777</exclude>
                         <!-- Guava false positive vulnerability -->
                         <exclude>sonatype-2020-0926</exclude>
                         <!-- Vulnerabilities for com.fasterxml.jackson.core:jackson-core:jar:2.13.4 -->
-                        <!-- CWE-400: Uncontrolled Resource Consumption ('Resource Exhaustion') from jackson-core:2.13.4 -->
+                        <!--
+                            CWE-400: Uncontrolled Resource Consumption ('Resource Exhaustion') from
+                            jackson-core:2.13.4
+                        -->
                         <exclude>sonatype-2022-6438</exclude>
-                        <!-- io.netty:netty-handler:jar:4.1.89.Final is provided by arrow-vector ... spark-catalyst ... spark-core. -->
+                        <!--
+                            io.netty:netty-handler:jar:4.1.89.Final is provided by arrow-vector ...
+                            spark-catalyst ... spark-core.
+                        -->
                         <!-- Currently no update available. -->
-                        <!-- As potential attackers cannot manipulate the URL, the developers decided to accept the risk for now. -->
+                        <!--
+                            As potential attackers cannot manipulate the URL, the developers
+                            decided to accept the risk for now.
+                        -->
                         <exclude>sonatype-2020-0026</exclude>
                         <!-- Spark 3.1.1 provided dependency vulnerabilities -->
                         <exclude>CVE-2022-33891</exclude>
@@ -489,9 +506,13 @@
                         <!-- hadoop-client 3.3.3 provided dependency vulnerabilities -->
                         <!-- XXE attack in command line tool "hdfs ec"; not used by the connector -->
                         <exclude>sonatype-2022-5732</exclude>
-                        <!-- Same root cause as above, but according to HADOOP-18469 does not result in known issue -->
+                        <!--
+                            Same root cause as above, but according to HADOOP-18469 does not result
+                            in known issue
+                        -->
                         <exclude>sonatype-2022-5820</exclude>
                         <!-- Exlude log4j test dependency vulnerabilities -->
+                        <!-- Only used in tests, transitively coming from Spark. -->
                         <exclude>CVE-2019-17571</exclude>
                         <exclude>CVE-2021-4104</exclude>
                         <exclude>CVE-2022-23302</exclude>
@@ -538,8 +559,10 @@
                                 </filter>
                             </filters>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                                <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                     <resource>reference.conf</resource>
                                 </transformer>
                             </transformers>
