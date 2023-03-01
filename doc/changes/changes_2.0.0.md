@@ -1,4 +1,4 @@
-# Exasol AWS Glue Connector 1.1.0, released 2023-??-??
+# Exasol AWS Glue Connector 2.0.0, released 2023-03-02
 
 Code name: AWS Glue Version 4.0.0
 
@@ -26,8 +26,8 @@ Code name: AWS Glue Version 4.0.0
 * Updated `com.exasol:test-db-builder-java:3.4.1` to `3.4.2`
 * Removed `log4j:log4j:1.2.17`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.10.1` to `3.14`
-* Added `org.apache.logging.log4j:log4j-api:2.19.0`
-* Added `org.apache.logging.log4j:log4j-core:2.19.0`
+* Added `org.apache.logging.log4j:log4j-api:2.20.0`
+* Added `org.apache.logging.log4j:log4j-core:2.20.0`
 * Updated `org.junit.jupiter:junit-jupiter-api:5.9.1` to `5.9.2`
 * Updated `org.junit.jupiter:junit-jupiter:5.9.1` to `5.9.2`
 * Updated `org.mockito:mockito-core:4.8.1` to `5.1.1`
