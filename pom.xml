@@ -244,8 +244,7 @@
         </dependency>
         <!--
             Issue with Localstack S3
-            https://stackoverflow.com/questions/64017812/
-            junit-awscredentials-noclassdeffounderror-with-localstackcontainer
+            https://stackoverflow.com/questions/64017812/junit-awscredentials-noclassdeffounderror-with-localstackcontainer
         -->
         <dependency>
             <groupId>com.amazonaws</groupId>
