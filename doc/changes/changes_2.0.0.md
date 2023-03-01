@@ -4,6 +4,18 @@ Code name: AWS Glue Version 4.0.0
 
 ## Summary
 
+In this release we updated support for the latest AWS Glue Studio `4.0.0` release.
+
+It supports the Spark `3.3.0` and Python `3.10` versions. Here are some notable improvements:
+
+- Many Spark functionality upgrades from Spark 3.1 to Spark 3.3
+- Log4j 2 migration from Log4j 1.x
+- Several Python module updates from AWS Glue 3.0, such as an upgraded version of Boto
+- Native support for open-data lake frameworks with Apache Hudi, Delta Lake, and Apache Iceberg
+- Native support for the Amazon S3-based Cloud Shuffle Storage Plugin (an Apache Spark plugin) to use Amazon S3 for shuffling and elastic storage capacity
+
+You can read more about the changes on the [release notes](https://docs.aws.amazon.com/glue/latest/dg/release-notes.html).
+
 ## Refactorings
 
 - #66: Updated to AWS Glue version `4.0.0`
