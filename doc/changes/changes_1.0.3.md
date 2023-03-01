@@ -6,7 +6,7 @@ Code name:
 
 ## Features
 
-* #64: Updated dependencies and removed references to `manve.exasol.com` repository
+* #64: Updated dependencies and removed references to `maven.exasol.com` repository
 
 ## Dependency Updates
 
