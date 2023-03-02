@@ -2,6 +2,7 @@ package com.exasol.glue.writer;
 
 import com.exasol.glue.ExasolOptions;
 
+import org.apache.spark.sql.connector.write.Write;
 import org.apache.spark.sql.connector.write.BatchWrite;
 import org.apache.spark.sql.connector.write.WriteBuilder;
 
@@ -24,7 +25,14 @@ public class DelegatingWriteBuilder implements WriteBuilder {
     }
 
     @Override
-    public BatchWrite buildForBatch() {
-        return new ExasolBatchWrite(this.options, delegate.buildForBatch());
+    public Write build() {
+        return new Write() {
+            @Override
+            public BatchWrite toBatch() {
+                return new ExasolBatchWrite(options, delegate.build());
+            }
+
+        };
     }
+
 }

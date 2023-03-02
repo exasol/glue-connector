@@ -33,9 +33,9 @@ public class ExasolBatchWrite implements BatchWrite {
      * @param options  user provided options
      * @param delegate delegate {@code CSV} batch write
      */
-    public ExasolBatchWrite(final ExasolOptions options, final BatchWrite delegate) {
+    public ExasolBatchWrite(final ExasolOptions options, final Write delegate) {
         this.options = options;
-        this.delegate = delegate;
+        this.delegate = delegate.toBatch();
     }
 
     @Override
