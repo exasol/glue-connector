@@ -144,6 +144,13 @@
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-aws</artifactId>
             <version>${hadoop.version}</version>
+            <exclusions>
+                <!-- excluded to fix CVE-2019-14887 -->
+                <exclusion>
+                    <groupId>org.wildfly.openssl</groupId>
+                    <artifactId>wildfly-openssl</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.thoughtworks.paranamer</groupId>
