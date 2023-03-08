@@ -1,4 +1,4 @@
-# Exasol AWS Glue Connector 2.0.0, released 2023-03-02
+# Exasol AWS Glue Connector 2.0.0, released 2023-03-08
 
 Code name: AWS Glue Version 4.0.0
 
@@ -8,18 +8,18 @@ In this release we updated support for the latest AWS Glue Studio `4.0.0` releas
 
 It supports the Spark `3.3.0` and Python `3.10` versions. Here are some notable improvements:
 
-- Many Spark functionality upgrades from Spark 3.1 to Spark 3.3
-- Log4j 2 migration from Log4j 1.x
-- Several Python module updates from AWS Glue 3.0, such as an upgraded version of Boto
-- Native support for open-data lake frameworks with Apache Hudi, Delta Lake, and Apache Iceberg
-- Native support for the Amazon S3-based Cloud Shuffle Storage Plugin (an Apache Spark plugin) to use Amazon S3 for shuffling and elastic storage capacity
+* Many Spark functionality upgrades from Spark 3.1 to Spark 3.3
+* Log4j 2 migration from Log4j 1.x
+* Several Python module updates from AWS Glue 3.0, such as an upgraded version of Boto
+* Native support for open-data lake frameworks with Apache Hudi, Delta Lake, and Apache Iceberg
+* Native support for the Amazon S3-based Cloud Shuffle Storage Plugin (an Apache Spark plugin) to use Amazon S3 for shuffling and elastic storage capacity
 
 You can read more about the changes on the [release notes](https://docs.aws.amazon.com/glue/latest/dg/release-notes.html).
 
 ## Refactorings
 
-- #66: Updated to AWS Glue version `4.0.0`
-- #64: Updated dependencies and removed references to `maven.exasol.com` repository
+* #66: Updated to AWS Glue version `4.0.0`
+* #64: Updated dependencies and removed references to `maven.exasol.com` repository
 
 ## Dependency Updates
 
@@ -27,12 +27,12 @@ You can read more about the changes on the [release notes](https://docs.aws.amaz
 
 * Updated `com.exasol:exasol-jdbc:7.1.11` to `7.1.17`
 * Added `com.fasterxml.woodstox:woodstox-core:6.5.0`
-* Updated `software.amazon.awssdk:s3:2.18.4` to `2.20.14`
+* Updated `software.amazon.awssdk:s3:2.18.4` to `2.20.19`
 
 ### Test Dependency Updates
 
 * Updated `com.amazonaws:AWSGlueETL:3.0.0` to `4.0.0`
-* Updated `com.amazonaws:aws-java-sdk-s3:1.12.329` to `1.12.417`
+* Updated `com.amazonaws:aws-java-sdk-s3:1.12.329` to `1.12.422`
 * Updated `com.exasol:exasol-testcontainers:6.3.0` to `6.5.1`
 * Updated `com.exasol:java-util-logging-testing:2.0.2` to `2.0.3`
 * Updated `com.exasol:test-db-builder-java:3.4.1` to `3.4.2`
