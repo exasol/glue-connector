@@ -3,21 +3,21 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>glue-connector</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <name>Exasol AWS Glue Connector</name>
     <description>An AWS Glue connector for accessing Exasol database</description>
     <url>https://github.com/exasol/glue-connector/</url>
     <parent>
         <artifactId>glue-connector-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>2.0.0</version>
+        <version>2.0.1</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
         <java.version>1.8</java.version>
         <hadoop.version>3.3.4</hadoop.version>
         <junit.version>5.9.2</junit.version>
-        <mockito.version>5.1.1</mockito.version>
+        <mockito.version>5.2.0</mockito.version>
         <log4j.version>2.20.0</log4j.version>
     </properties>
     <repositories>
@@ -166,7 +166,7 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.89.Final</version>
+            <version>4.1.90.Final</version>
             <scope>provided</scope>
         </dependency>
         <!--
@@ -182,7 +182,7 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
-            <version>2.20.19</version>
+            <version>2.20.26</version>
             <exclusions>
                 <exclusion>
                     <groupId>io.netty</groupId>
@@ -255,7 +255,7 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.12.422</version>
+            <version>1.12.429</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -402,7 +402,7 @@
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
-            <version>3.14</version>
+            <version>3.14.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -423,7 +423,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>2.9.3</version>
+                <version>2.9.4</version>
                 <executions>
                     <execution>
                         <goals>
@@ -537,10 +537,8 @@
                                 </filter>
                             </filters>
                             <transformers>
-                                <transformer
-                                    implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-                                <transformer
-                                    implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                     <resource>reference.conf</resource>
                                 </transformer>
                             </transformers>
