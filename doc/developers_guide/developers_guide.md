@@ -40,11 +40,11 @@ To test connector by creating a custom connector, please follow these steps.
 
 ### Creating an Assembly Jar
 
-By running `mvn verify` or `mvn package` create a connector artifact. For example, `target/exasol-glue-connector-2.0.0-assembly.jar`.
+By running `mvn verify` or `mvn package` create a connector artifact. For example, `target/exasol-glue-connector-2.0.1-assembly.jar`.
 
 ### Uploading the Artifact to S3 Bucket
 
-Upload the JAR artifact from previous step into an S3 bucket. For instance, `s3://exasol-artifacts/glue-connector/exasol-glue-connector-2.0.0-assembly.jar`.
+Upload the JAR artifact from previous step into an S3 bucket. For instance, `s3://exasol-artifacts/glue-connector/exasol-glue-connector-2.0.1-assembly.jar`.
 
 ### Creating a Glue Studio Custom Connector
 
