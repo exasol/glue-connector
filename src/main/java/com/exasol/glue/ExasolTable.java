@@ -108,7 +108,7 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
         final String s3Bucket = options.getS3Bucket();
         try (final S3FileSystem s3FileSystem = new S3FileSystem(options)) {
             if (!s3FileSystem.doesBucketExist(s3Bucket)) {
-                throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-15")
+                throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-28")
                         .message("Provided S3 bucket {{s3Bucket}} is not available.", s3Bucket)
                         .mitigation("Please create a bucket or provide an existing bucket name.").toString());
 
