@@ -70,9 +70,9 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
     private void validateRequiredOptions(CaseInsensitiveStringMap options) {
         for (final String key : REQUIRED_OPTIONS) {
             if (!options.containsKey(key)) {
-                throw new IllegalArgumentException(
-                        ExaError.messageBuilder("E-EGC-3").message("Required option {{key}} is not found.", key)
-                                .mitigation("Please provide a value for the {{key}} option.", key).toString());
+                throw new IllegalArgumentException(ExaError.messageBuilder("E-EGC-3")
+                        .message("Required option {{key}} is not found.")
+                        .mitigation("Please provide a value for the {{key}} option.").parameter("key", key).toString());
             }
         }
     }

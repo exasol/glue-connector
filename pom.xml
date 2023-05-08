@@ -14,7 +14,7 @@
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>8</java.version>
         <hadoop.version>3.3.5</hadoop.version>
         <junit.version>5.9.3</junit.version>
         <mockito.version>5.3.1</mockito.version>
@@ -454,6 +454,14 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
                 <version>2.9.7</version>
@@ -467,18 +475,7 @@
             </plugin>
             <plugin>
                 <groupId>com.exasol</groupId>
-                <artifactId>error-code-crawler-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>verify</id>
-                        <phase>none</phase>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.exasol</groupId>
                 <artifactId>artifact-reference-checker-maven-plugin</artifactId>
-                <version>0.4.2</version>
                 <configuration>
                     <excludes>
                         <exclude>/doc/changes/*</exclude>

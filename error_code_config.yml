@@ -2,4 +2,4 @@ error-tags:
   EGC:
     packages:
       - com.exasol.glue
-    highest-index: 27
+    highest-index: 28
