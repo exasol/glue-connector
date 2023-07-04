@@ -97,10 +97,6 @@
                     <groupId>org.slf4j</groupId>
                     <artifactId>jcl-over-slf4j</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>org.codehaus.janino</groupId>
-                    <artifactId>janino</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
         <!-- override dependency of com.amazonaws:AWSGlueETL
@@ -180,14 +176,7 @@
             <version>4.1.94.Final</version>
             <scope>provided</scope>
         </dependency>
-        <!--
-            Spark 3.3.0 internal RDDOperationScope uses Jackson Scala module 2.13.4.2. Therefore
-            jackson-databind version should be compatible with it.
-            2.13.4.2: used before dep-update
-            2.15.2: latest
-            Build error: Scala module 2.14.2 requires Jackson Databind version >= 2.14.0 and < 2.15.0
-            2.14.3: latest < 2.15.0 available on maven central
-        -->
+        <!-- Scala module 2.14.2 requires Jackson Databind version >= 2.14.0 and < 2.15.0 -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -545,6 +534,21 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.ossindex.maven</groupId>
+                <artifactId>ossindex-maven-plugin</artifactId>
+                <configuration>
+                    <excludeVulnerabilityIds>
+                      <!-- Ignore vulnerability reported for
+                           transitive dependency org.codehaus.janino:janino:jar:3.1.9
+                           via org.apache.spark:spark-sql_2.12
+                           Please note: janino is not included in the released artifact,
+                           but 'provided' by the runtime Spark cluster.
+                      -->
+                      <exclude>CVE-2023-33546</exclude>
+                    </excludeVulnerabilityIds>
+                </configuration>
             </plugin>
         </plugins>
     </build>
