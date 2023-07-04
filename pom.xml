@@ -15,9 +15,9 @@
     </parent>
     <properties>
         <java.version>8</java.version>
-        <hadoop.version>3.3.5</hadoop.version>
+        <hadoop.version>3.3.6</hadoop.version>
         <junit.version>5.9.3</junit.version>
-        <mockito.version>5.3.1</mockito.version>
+        <mockito.version>5.4.0</mockito.version>
         <log4j.version>2.20.0</log4j.version>
     </properties>
     <repositories>
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.12</artifactId>
-            <version>3.3.0</version>
+            <version>3.4.1</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -69,11 +69,6 @@
                     <groupId>commons-codec</groupId>
                     <artifactId>commons-codec</artifactId>
                 </exclusion>
-                <!-- excluded to fix CVE-2021-37533 -->
-                <exclusion>
-                    <groupId>commons-net</groupId>
-                    <artifactId>commons-net</artifactId>
-                </exclusion>
                 <exclusion>
                     <groupId>org.apache.commons</groupId>
                     <artifactId>commons-text</artifactId>
@@ -85,11 +80,6 @@
                 <exclusion>
                     <groupId>org.glassfish.jersey.media</groupId>
                     <artifactId>jersey-media-jaxb</artifactId>
-                </exclusion>
-                <!-- excluded to fix CVEs: CVE-2022-37865 and CVE-2022-37866 -->
-                <exclusion>
-                    <groupId>org.apache.ivy</groupId>
-                    <artifactId>ivy</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.hadoop</groupId>
@@ -107,7 +97,18 @@
                     <groupId>org.slf4j</groupId>
                     <artifactId>jcl-over-slf4j</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.janino</groupId>
+                    <artifactId>janino</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+        <!-- override dependency of com.amazonaws:AWSGlueETL
+             to fix vulnerabilities CVE-2023-34454 and CVE-2023-34455 -->
+        <dependency>
+            <groupId>org.xerial.snappy</groupId>
+            <artifactId>snappy-java</artifactId>
+            <version>1.1.10.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
@@ -139,21 +140,6 @@
                     <groupId>ch.qos.reload4j</groupId>
                     <artifactId>reload4j</artifactId>
                 </exclusion>
-                <!-- excluded to fix CVE-2021-37533 -->
-                <exclusion>
-                    <groupId>commons-net</groupId>
-                    <artifactId>commons-net</artifactId>
-                </exclusion>
-                <!-- excluded to fix CVE-2023-1370 -->
-                <exclusion>
-                    <groupId>net.minidev</groupId>
-                    <artifactId>json-smart</artifactId>
-                </exclusion>
-                <!-- excluded to fix vulnerability CVE-2022-2047 -->
-                <exclusion>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>jetty-util</artifactId>
-                </exclusion>
                 <exclusion>
                     <groupId>javax.servlet</groupId>
                     <artifactId>*</artifactId>
@@ -172,23 +158,10 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- Added to fix CVE-2022-40152 -->
-        <dependency>
-            <groupId>com.fasterxml.woodstox</groupId>
-            <artifactId>woodstox-core</artifactId>
-            <version>6.5.1</version>
-        </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-aws</artifactId>
             <version>${hadoop.version}</version>
-            <exclusions>
-                <!-- excluded to fix CVE-2019-14887 -->
-                <exclusion>
-                    <groupId>org.wildfly.openssl</groupId>
-                    <artifactId>wildfly-openssl</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.thoughtworks.paranamer</groupId>
@@ -198,13 +171,13 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>31.1-jre</version>
+            <version>32.1.1-jre</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.92.Final</version>
+            <version>4.1.94.Final</version>
             <scope>provided</scope>
         </dependency>
         <!--
@@ -214,13 +187,13 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.13.4.2</version>
+            <version>2.15.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
-            <version>2.20.61</version>
+            <version>2.20.98</version>
             <exclusions>
                 <exclusion>
                     <groupId>io.netty</groupId>
@@ -231,7 +204,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-jdbc</artifactId>
-            <version>7.1.19</version>
+            <version>7.1.20</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -277,13 +250,13 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>1.18.0</version>
+            <version>1.18.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>1.18.0</version>
+            <version>1.18.3</version>
             <scope>test</scope>
         </dependency>
         <!--
@@ -293,7 +266,7 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.12.464</version>
+            <version>1.12.501</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -411,7 +384,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-testcontainers</artifactId>
-            <version>6.5.2</version>
+            <version>6.6.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -435,7 +408,7 @@
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
-            <version>3.14.1</version>
+            <version>3.14.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -494,38 +467,6 @@
                         <phase>none</phase>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.sonatype.ossindex.maven</groupId>
-                <artifactId>ossindex-maven-plugin</artifactId>
-                <configuration>
-                    <skip>${ossindex.skip}</skip>
-                    <excludeVulnerabilityIds>
-                        <!--
-                            Most of these dependencies are not included in the released artifact, but are 'provided' by
-                            the runtime Spark cluster.
-                        -->
-                        <!-- Vulnerabilities for org.apache.spark:spark-core_2.12:jar:3.3.0 -->
-                        <!-- CWE-74: Improper Neutralization of Special Elements in Output Used by a -->
-                        <!-- Downstream Component ('Injection') (5.4); -->
-                        <exclude>CVE-2022-31777</exclude>
-                        <!-- org.apache.spark:spark-core_2.12:jar:3.3.0: CWE-269: Improper Privilege Management (6.4); https://ossindex.sonatype.org/vulnerability/CVE-2023-22946 -->
-                        <!-- This from the spark-code_2.12 version, which we release using profiles below. -->
-                        <exclude>CVE-2023-22946</exclude>
-                        <!-- Guava false positive vulnerability -->
-                        <exclude>CVE-2020-8908</exclude>
-                        <!-- Vulnerabilities for com.fasterxml.jackson.core:jackson-core:jar:2.13.4. -->
-                        <!-- CWE-400: Uncontrolled Resource Consumption ('Resource Exhaustion') from -->
-                        <!-- jackson-core:2.13.4 -->
-                        <exclude>sonatype-2022-6438</exclude>
-                        <!-- hadoop-client 3.3.4 provided dependency vulnerabilities -->
-                        <!-- XXE attack in command line tool "hdfs ec"; not used by the connector -->
-                        <exclude>sonatype-2022-5732</exclude>
-                        <!-- Same root cause as above, but according to HADOOP-18469 does not result -->
-                        <!-- in known issue -->
-                        <exclude>sonatype-2022-5820</exclude>
-                    </excludeVulnerabilityIds>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.basepom.maven</groupId>
