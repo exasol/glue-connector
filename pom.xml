@@ -180,16 +180,6 @@
             <version>4.1.94.Final</version>
             <scope>provided</scope>
         </dependency>
-        <!--
-            Spark 3.3.0 internal RDDOperationScope uses Jackson Scala module 2.13.4.2. Therefore
-            jackson-databind version should be compatible with it.
-        -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.15.2</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
