@@ -33,7 +33,6 @@ This release fixes the following vulnerabilities by updating dependencies:
 * Updated `com.exasol:sql-statement-builder-java8:4.5.0` to `4.5.4`
 * Removed `com.fasterxml.woodstox:woodstox-core:6.5.0`
 * Updated `org.apache.hadoop:hadoop-aws:3.3.4` to `3.3.6`
-* Added `org.xerial.snappy:snappy-java:1.1.10.1`
 * Updated `software.amazon.awssdk:s3:2.20.19` to `2.20.98`
 
 ### Test Dependency Updates
