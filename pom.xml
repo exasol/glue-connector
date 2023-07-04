@@ -34,7 +34,7 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.12</artifactId>
-            <version>3.4.1</version>
+            <version>3.3.0</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -81,6 +81,11 @@
                     <groupId>org.glassfish.jersey.media</groupId>
                     <artifactId>jersey-media-jaxb</artifactId>
                 </exclusion>
+                <!-- excluded to fix CVEs: CVE-2022-37865 and CVE-2022-37866 -->
+                <exclusion>
+                    <groupId>org.apache.ivy</groupId>
+                    <artifactId>ivy</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>org.apache.hadoop</groupId>
                     <artifactId>hadoop-client-api</artifactId>
@@ -101,12 +106,12 @@
         </dependency>
         <!-- override dependency of com.amazonaws:AWSGlueETL
              to fix vulnerabilities CVE-2023-34454 and CVE-2023-34455
+        -->
         <dependency>
             <groupId>org.xerial.snappy</groupId>
             <artifactId>snappy-java</artifactId>
             <version>1.1.10.1</version>
         </dependency>
-        -->
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-client</artifactId>
@@ -540,17 +545,26 @@
                 <groupId>org.sonatype.ossindex.maven</groupId>
                 <artifactId>ossindex-maven-plugin</artifactId>
                 <configuration>
+                    <skip>${ossindex.skip}</skip>
                     <excludeVulnerabilityIds>
-                      <!-- Ignore vulnerability reported for
-                           transitive dependency org.codehaus.janino:janino:jar:3.1.9
-                           via org.apache.spark:spark-sql_2.12
-                           Please note: janino is not included in the released artifact,
-                           but 'provided' by the runtime Spark cluster.
-                      -->
-                      <exclude>CVE-2023-33546</exclude>
-                      <!-- org.xerial.snappy:snappy-java -->
-                      <exclude>CVE-2023-34454</exclude>
-                      <exclude>CVE-2023-34455</exclude>
+                        <!-- Vulnerabilities for org.apache.spark:spark-core_2.12:jar:3.3.0 -->
+                        <!-- CWE-74: Improper Neutralization of Special Elements in Output Used by a -->
+                        <!-- Downstream Component ('Injection') (5.4); -->
+                        <exclude>CVE-2022-31777</exclude>
+                        <!-- org.apache.spark:spark-core_2.12:jar:3.3.0: CWE-269: Improper Privilege Management (6.4) -->
+                        <!-- This from the spark-code_2.12 version, which we release using profiles below. -->
+                        <exclude>CVE-2023-22946</exclude>
+                        <!-- Ignore vulnerability reported for
+                             transitive dependency org.codehaus.janino:janino:jar:3.1.9
+                             via org.apache.spark:spark-sql_2.12
+                             Please note: janino is not included in the released artifact,
+                             but 'provided' by the runtime Spark cluster.
+                        -->
+                        <exclude>CVE-2023-33546</exclude>
+                        <!-- org.xerial.snappy:snappy-java
+                        <exclude>CVE-2023-34454</exclude>
+                        <exclude>CVE-2023-34455</exclude>
+                        -->
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
