@@ -106,12 +106,12 @@
         </dependency>
         <!-- override dependency of com.amazonaws:AWSGlueETL
              to fix vulnerabilities CVE-2023-34454 and CVE-2023-34455
-        -->
         <dependency>
             <groupId>org.xerial.snappy</groupId>
             <artifactId>snappy-java</artifactId>
             <version>1.1.10.1</version>
         </dependency>
+        -->
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-client</artifactId>
@@ -562,9 +562,9 @@
                         -->
                         <exclude>CVE-2023-33546</exclude>
                         <!-- org.xerial.snappy:snappy-java
+                        -->
                         <exclude>CVE-2023-34454</exclude>
                         <exclude>CVE-2023-34455</exclude>
-                        -->
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
