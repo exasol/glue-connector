@@ -23,8 +23,9 @@ import com.exasol.glue.connection.ExasolConnectionFactory;
 import com.exasol.glue.listener.ExasolJobEndCleanupListener;
 import com.exasol.glue.query.AbstractQueryGenerator;
 import com.exasol.glue.query.ExportQueryGenerator;
-import com.exasol.glue.query.SelectStatementGenerator;
 import com.exasol.spark.common.FilterConverter;
+import com.exasol.spark.common.SelectStatementGenerator;
+import com.exasol.spark.common.StatementGeneratorFactory;
 import com.exasol.sql.expression.BooleanExpression;
 
 import scala.Option;
@@ -97,9 +98,13 @@ public class ExasolScanBuilder implements ScanBuilder, SupportsPushDownFilters, 
      * @return SQL query for the scan
      */
     protected String getScanQuery() {
-        final SelectStatementGenerator statementGenerator = new SelectStatementGenerator();
         final Optional<BooleanExpression> predicate = new FilterConverter().convert(this.pushedFilters);
-        return statementGenerator.getSelectStatement(getTableOrQuery(), getColumnNames(), predicate);
+        final SelectStatementGenerator renderer = StatementGeneratorFactory.selectFrom(getTableOrQuery())
+                .columns(getColumnNames());
+        if (predicate.isPresent()) {
+            renderer.where(predicate.get());
+        }
+        return renderer.render();
     }
 
     private String getTableOrQuery() {
@@ -110,8 +115,8 @@ public class ExasolScanBuilder implements ScanBuilder, SupportsPushDownFilters, 
         }
     }
 
-    private List<String> getColumnNames() {
-        return Stream.of(this.schema.fields()).map(StructField::name).collect(Collectors.toList());
+    private String[] getColumnNames() {
+        return Stream.of(this.schema.fields()).map(StructField::name).toArray(String[]::new);
     }
 
     private void prepareIntermediateData(final SparkSession spark, final String s3Bucket, final String s3BucketKey) {
