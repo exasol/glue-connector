@@ -8,10 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import com.exasol.containers.ExasolContainer;
-import com.exasol.dbbuilder.dialects.exasol.ExasolObjectFactory;
-import com.exasol.dbbuilder.dialects.exasol.ExasolSchema;
-
 import org.apache.spark.SparkConf;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -24,6 +20,10 @@ import org.testcontainers.containers.localstack.LocalStackContainer.Service;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.utility.DockerImageName;
 
+import com.exasol.containers.ExasolContainer;
+import com.exasol.dbbuilder.dialects.exasol.ExasolObjectFactory;
+import com.exasol.dbbuilder.dialects.exasol.ExasolSchema;
+
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -33,7 +33,7 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 
 public class BaseIntegrationTestSetup {
     private static final Logger LOGGER = Logger.getLogger(BaseIntegrationTestSetup.class.getName());
-    private static final String DEFAULT_DOCKER_IMAGE = "7.1.18";
+    private static final String DEFAULT_DOCKER_IMAGE = "7.1.22";
     protected static final String DEFAULT_BUCKET_NAME = "csvtest";
 
     @Container
