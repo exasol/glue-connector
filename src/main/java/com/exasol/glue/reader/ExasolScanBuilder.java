@@ -8,17 +8,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.exasol.errorreporting.ExaError;
-import com.exasol.glue.ExasolOptions;
-import com.exasol.glue.ExasolValidationException;
-import com.exasol.glue.FilterConverter;
-import com.exasol.glue.connection.ExasolConnectionFactory;
-import com.exasol.glue.listener.ExasolJobEndCleanupListener;
-import com.exasol.glue.query.AbstractQueryGenerator;
-import com.exasol.glue.query.ExportQueryGenerator;
-import com.exasol.glue.query.SelectStatementGenerator;
-import com.exasol.sql.expression.BooleanExpression;
-
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.connector.read.*;
 import org.apache.spark.sql.execution.datasources.v2.csv.CSVTable;
@@ -26,6 +15,17 @@ import org.apache.spark.sql.sources.Filter;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.sql.util.CaseInsensitiveStringMap;
+
+import com.exasol.errorreporting.ExaError;
+import com.exasol.glue.ExasolOptions;
+import com.exasol.glue.ExasolValidationException;
+import com.exasol.glue.connection.ExasolConnectionFactory;
+import com.exasol.glue.listener.ExasolJobEndCleanupListener;
+import com.exasol.glue.query.AbstractQueryGenerator;
+import com.exasol.glue.query.ExportQueryGenerator;
+import com.exasol.glue.query.SelectStatementGenerator;
+import com.exasol.spark.common.FilterConverter;
+import com.exasol.sql.expression.BooleanExpression;
 
 import scala.Option;
 import scala.collection.JavaConverters;
