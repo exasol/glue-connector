@@ -4,6 +4,8 @@ import static com.exasol.glue.Constants.*;
 
 import java.net.URI;
 
+import com.exasol.spark.common.ExasolOptions;
+
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;

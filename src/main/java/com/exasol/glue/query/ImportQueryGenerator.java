@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.glue.ExasolOptions;
 import com.exasol.glue.S3ClientFactory;
+import com.exasol.spark.common.ExasolOptions;
 import com.exasol.spark.common.ExasolValidationException;
 
 import software.amazon.awssdk.services.s3.S3Client;

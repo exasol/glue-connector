@@ -5,7 +5,7 @@ import static com.exasol.glue.Constants.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.exasol.glue.ExasolOptions;
+import com.exasol.spark.common.ExasolOptions;
 
 /**
  * An common {@code CSV} query generator class.

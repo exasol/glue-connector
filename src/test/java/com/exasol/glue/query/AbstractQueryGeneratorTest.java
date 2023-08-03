@@ -7,9 +7,9 @@ import static org.hamcrest.Matchers.equalTo;
 
 import java.util.Map;
 
-import com.exasol.glue.ExasolOptions;
-
 import org.junit.jupiter.api.Test;
+
+import com.exasol.spark.common.ExasolOptions;
 
 class AbstractQueryGeneratorTest {
 

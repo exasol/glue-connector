@@ -1,6 +1,6 @@
 package com.exasol.glue.query;
 
-import com.exasol.glue.ExasolOptions;
+import com.exasol.spark.common.ExasolOptions;
 import com.exasol.spark.common.StatementGeneratorFactory;
 
 /**

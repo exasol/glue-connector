@@ -10,9 +10,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.Map;
 
-import com.exasol.glue.ExasolOptions;
-
 import org.junit.jupiter.api.Test;
+
+import com.exasol.spark.common.ExasolOptions;
 
 class ExportQueryGeneratorTest {
     final ExasolOptions.Builder builder = ExasolOptions.builder().s3Bucket("bucket")

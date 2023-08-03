@@ -8,15 +8,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
 
+import org.apache.spark.sql.connector.write.*;
+
 import com.exasol.errorreporting.ExaError;
-import com.exasol.glue.ExasolOptions;
 import com.exasol.glue.connection.ExasolConnectionException;
 import com.exasol.glue.connection.ExasolConnectionFactory;
 import com.exasol.glue.filesystem.S3FileSystem;
 import com.exasol.glue.query.AbstractQueryGenerator;
 import com.exasol.glue.query.ImportQueryGenerator;
-
-import org.apache.spark.sql.connector.write.*;
+import com.exasol.spark.common.ExasolOptions;
 
 /**
  * An Exasol {@link BatchWrite} class.

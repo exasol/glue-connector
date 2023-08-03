@@ -2,7 +2,8 @@ package com.exasol.glue.reader;
 
 import static com.exasol.glue.Constants.AWS_ACCESS_KEY_ID;
 import static com.exasol.glue.Constants.AWS_SECRET_ACCESS_KEY;
-import static org.apache.spark.sql.types.DataTypes.*;
+import static org.apache.spark.sql.types.DataTypes.DoubleType;
+import static org.apache.spark.sql.types.DataTypes.LongType;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -10,12 +11,12 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Map;
 
-import com.exasol.glue.ExasolOptions;
-
 import org.apache.spark.sql.sources.*;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.sql.util.CaseInsensitiveStringMap;
 import org.junit.jupiter.api.Test;
+
+import com.exasol.spark.common.ExasolOptions;
 
 class ExasolScanBuilderTest {
     private final ExasolOptions options = ExasolOptions.builder() //

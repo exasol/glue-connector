@@ -17,7 +17,6 @@ import org.apache.spark.sql.types.StructType;
 import org.apache.spark.sql.util.CaseInsensitiveStringMap;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.glue.ExasolOptions;
 import com.exasol.glue.connection.ExasolConnectionFactory;
 import com.exasol.glue.listener.ExasolJobEndCleanupListener;
 import com.exasol.glue.query.AbstractQueryGenerator;

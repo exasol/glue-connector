@@ -1,10 +1,10 @@
 package com.exasol.glue.writer;
 
-import com.exasol.glue.ExasolOptions;
-
-import org.apache.spark.sql.connector.write.Write;
 import org.apache.spark.sql.connector.write.BatchWrite;
+import org.apache.spark.sql.connector.write.Write;
 import org.apache.spark.sql.connector.write.WriteBuilder;
+
+import com.exasol.spark.common.ExasolOptions;
 
 /**
  * A delegating {@link WriteBuilder} class.

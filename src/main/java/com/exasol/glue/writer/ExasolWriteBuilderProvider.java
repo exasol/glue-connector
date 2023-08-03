@@ -7,14 +7,14 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Logger;
 
-import com.exasol.glue.ExasolOptions;
-
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.connector.write.LogicalWriteInfo;
 import org.apache.spark.sql.connector.write.WriteBuilder;
 import org.apache.spark.sql.execution.datasources.v2.csv.CSVTable;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.sql.util.CaseInsensitiveStringMap;
+
+import com.exasol.spark.common.ExasolOptions;
 
 import scala.Option;
 import scala.collection.JavaConverters;
@@ -57,9 +57,11 @@ public final class ExasolWriteBuilderProvider {
 
     private ExasolOptions getUpdatedOptions(final Map<String, String> map) {
         final ExasolOptions.Builder builder = ExasolOptions.builder() //
-                .jdbcUrl(this.options.getJdbcUrl()) //
+                .host(this.options.getHost()) //
+                .port(this.options.getPort()) //
                 .username(this.options.getUsername()) //
                 .password(this.options.getPassword()) //
+                .fingerprint(this.options.getFingerprint()) //
                 .s3Bucket(this.options.getS3Bucket());
         if (this.options.hasTable()) {
             builder.table(this.options.getTable());
