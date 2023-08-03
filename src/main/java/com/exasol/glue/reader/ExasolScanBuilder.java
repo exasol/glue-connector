@@ -18,14 +18,11 @@ import org.apache.spark.sql.util.CaseInsensitiveStringMap;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.glue.ExasolOptions;
-import com.exasol.glue.ExasolValidationException;
 import com.exasol.glue.connection.ExasolConnectionFactory;
 import com.exasol.glue.listener.ExasolJobEndCleanupListener;
 import com.exasol.glue.query.AbstractQueryGenerator;
 import com.exasol.glue.query.ExportQueryGenerator;
-import com.exasol.spark.common.FilterConverter;
-import com.exasol.spark.common.SelectStatementGenerator;
-import com.exasol.spark.common.StatementGeneratorFactory;
+import com.exasol.spark.common.*;
 import com.exasol.sql.expression.BooleanExpression;
 
 import scala.Option;

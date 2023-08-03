@@ -6,11 +6,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.exasol.errorreporting.ExaError;
-import com.exasol.glue.filesystem.S3FileSystem;
-import com.exasol.glue.reader.ExasolScanBuilder;
-import com.exasol.glue.writer.ExasolWriteBuilderProvider;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.connector.catalog.SupportsRead;
@@ -21,6 +16,12 @@ import org.apache.spark.sql.connector.write.LogicalWriteInfo;
 import org.apache.spark.sql.connector.write.WriteBuilder;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.sql.util.CaseInsensitiveStringMap;
+
+import com.exasol.errorreporting.ExaError;
+import com.exasol.glue.filesystem.S3FileSystem;
+import com.exasol.glue.reader.ExasolScanBuilder;
+import com.exasol.glue.writer.ExasolWriteBuilderProvider;
+import com.exasol.spark.common.ExasolValidationException;
 
 /**
  * Represents an instance of {@link ExasolTable}.

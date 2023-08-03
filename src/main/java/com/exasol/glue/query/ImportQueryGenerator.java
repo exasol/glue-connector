@@ -9,8 +9,8 @@ import java.util.List;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.glue.ExasolOptions;
-import com.exasol.glue.ExasolValidationException;
 import com.exasol.glue.S3ClientFactory;
+import com.exasol.spark.common.ExasolValidationException;
 
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;

@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import com.exasol.dbbuilder.dialects.Table;
-import com.exasol.glue.ExasolValidationException;
-
 import org.apache.spark.api.java.function.*;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
@@ -23,6 +20,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import com.exasol.dbbuilder.dialects.Table;
+import com.exasol.spark.common.ExasolValidationException;
 
 @Tag("integration")
 @Testcontainers
