@@ -15,7 +15,7 @@ public final class ExasolJdbcUrlParser {
     private static final Pattern EXASOL_JDBC_URL_PATTERN = Pattern.compile(EXASOL_JDBC_URL_REGEX);
 
     /**
-     * Extracts {@code HOST}, {@code PORT} and other components from Exasol {@JDBC} connection string.
+     * Extracts {@code HOST}, {@code PORT} and other components from Exasol {code @JDBC} connection string.
      *
      * @param jdbcUrl Exasol JDBC connection string
      * @return map of components
