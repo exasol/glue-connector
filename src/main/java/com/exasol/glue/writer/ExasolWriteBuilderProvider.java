@@ -1,8 +1,5 @@
 package com.exasol.glue.writer;
 
-import static com.exasol.glue.Constants.INTERMEDIATE_DATA_PATH;
-import static com.exasol.glue.Constants.WRITE_S3_BUCKET_KEY;
-
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Logger;
@@ -15,8 +12,8 @@ import org.apache.spark.sql.types.StructType;
 import org.apache.spark.sql.util.CaseInsensitiveStringMap;
 
 import com.exasol.spark.common.ExasolOptions;
+import com.exasol.spark.common.Option;
 
-import scala.Option;
 import scala.collection.JavaConverters;
 import scala.collection.Seq;
 
@@ -48,10 +45,10 @@ public final class ExasolWriteBuilderProvider {
         final SparkSession sparkSession = SparkSession.active();
         final LogicalWriteInfo info = getUpdatedLogicalWriteInfo(defaultInfo, sparkSession);
         final ExasolOptions updatedOptions = getUpdatedOptions(info.options());
-        final String intermediateDataPath = updatedOptions.get(INTERMEDIATE_DATA_PATH);
+        final String intermediateDataPath = updatedOptions.get(Option.INTERMEDIATE_DATA_PATH.key());
         LOGGER.info(() -> "Writing intermediate data to the '" + intermediateDataPath + "' path for write job.");
         final CSVTable csvTable = new CSVTable("", sparkSession, info.options(), getS3WritePath(intermediateDataPath),
-                Option.apply(schema), null);
+                scala.Option.apply(schema), null);
         return new DelegatingWriteBuilder(updatedOptions, csvTable.newWriteBuilder(info));
     }
 
@@ -83,8 +80,8 @@ public final class ExasolWriteBuilderProvider {
         map.put("mapreduce.fileoutputcommitter.marksuccessfuljobs", "false");
         final String s3Bucket = this.options.getS3Bucket();
         final String s3BucketKey = getS3BucketKeyForWriteLocation(defaultInfo, sparkSession);
-        map.put(INTERMEDIATE_DATA_PATH, "s3a://" + Paths.get(s3Bucket, s3BucketKey).toString());
-        map.put(WRITE_S3_BUCKET_KEY, s3BucketKey);
+        map.put(Option.INTERMEDIATE_DATA_PATH.key(), "s3a://" + Paths.get(s3Bucket, s3BucketKey).toString());
+        map.put(Option.WRITE_S3_BUCKET_KEY.key(), s3BucketKey);
 
         return new LogicalWriteInfo() {
             @Override

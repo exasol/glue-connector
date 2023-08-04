@@ -1,11 +1,10 @@
 package com.exasol.glue.query;
 
-import static com.exasol.glue.Constants.*;
-
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.exasol.spark.common.ExasolOptions;
+import com.exasol.spark.common.Option;
 
 /**
  * An common {@code CSV} query generator class.
@@ -30,8 +29,8 @@ public abstract class AbstractQueryGenerator implements QueryGenerator {
 
     @Override
     public String getIdentifier() {
-        final String awsAccessKeyId = this.options.get(AWS_ACCESS_KEY_ID);
-        final String awsSecretAccessKey = this.options.get(AWS_SECRET_ACCESS_KEY);
+        final String awsAccessKeyId = this.options.get(Option.AWS_ACCESS_KEY_ID.key());
+        final String awsSecretAccessKey = this.options.get(Option.AWS_SECRET_ACCESS_KEY.key());
         return "AT '" + escapeStringLiteral(getBucketURL()) + "'\nUSER '" + escapeStringLiteral(awsAccessKeyId)
                 + "' IDENTIFIED BY '" + escapeStringLiteral(awsSecretAccessKey) + "'\n";
     }
@@ -55,15 +54,15 @@ public abstract class AbstractQueryGenerator implements QueryGenerator {
     }
 
     private String getS3Endpoint() {
-        if (this.options.containsKey(S3_ENDPOINT_OVERRIDE)) {
-            return replaceInCITests(this.options.get(S3_ENDPOINT_OVERRIDE));
+        if (this.options.containsKey(Option.S3_ENDPOINT_OVERRIDE.key())) {
+            return replaceInCITests(this.options.get(Option.S3_ENDPOINT_OVERRIDE.key()));
         } else {
             return "amazonaws.com";
         }
     }
 
     private String replaceInCITests(final String endpoint) {
-        if (this.options.hasEnabled(CI_ENABLED)) {
+        if (this.options.hasEnabled(Option.REPLACE_LOCALHOST_BY_DEFAULT_S3_ENDPOINT.key())) {
             return endpoint.replace("localhost", "amazonaws.com");
         } else {
             return endpoint;

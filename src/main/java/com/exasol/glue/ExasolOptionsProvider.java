@@ -1,12 +1,11 @@
 package com.exasol.glue;
 
-import static com.exasol.glue.Constants.JDBC_URL;
-
 import java.util.Map;
 
 import org.apache.spark.sql.util.CaseInsensitiveStringMap;
 
 import com.exasol.spark.common.ExasolOptions;
+import com.exasol.spark.common.Option;
 
 /**
  * This class provides the {@link ExasolOptions} using {@code JDBC} connection string and Spark configuration options.
@@ -23,7 +22,7 @@ public final class ExasolOptionsProvider {
      * @return Exasol options instance
      */
     public ExasolOptions fromJdbcUrl(final CaseInsensitiveStringMap sparkStringMap) {
-        final String jdbcUrl = sparkStringMap.get(JDBC_URL);
+        final String jdbcUrl = sparkStringMap.get(Option.JDBC_URL.key());
         final Map<String, String> jdbcUrlMap = new ExasolJdbcUrlParser().parse(jdbcUrl);
         jdbcUrlMap.putAll(sparkStringMap.asCaseSensitiveMap());
         return ExasolOptions.from(new CaseInsensitiveStringMap(jdbcUrlMap));

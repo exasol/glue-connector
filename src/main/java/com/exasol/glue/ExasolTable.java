@@ -1,7 +1,5 @@
 package com.exasol.glue;
 
-import static com.exasol.glue.Constants.*;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,6 +21,7 @@ import com.exasol.glue.reader.ExasolScanBuilder;
 import com.exasol.glue.writer.ExasolWriteBuilderProvider;
 import com.exasol.spark.common.ExasolOptions;
 import com.exasol.spark.common.ExasolValidationException;
+import com.exasol.spark.common.Option;
 
 /**
  * Represents an instance of {@link ExasolTable}.
@@ -118,15 +117,17 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
         final SparkSession sparkSession = SparkSession.active();
         synchronized (sparkSession.sparkContext().hadoopConfiguration()) {
             final Configuration conf = sparkSession.sparkContext().hadoopConfiguration();
-            if (options.hasEnabled(CI_ENABLED)) {
+            conf.set("fs.s3a.access.key", options.get(Option.AWS_ACCESS_KEY_ID.key()));
+            conf.set("fs.s3a.secret.key", options.get(Option.AWS_SECRET_ACCESS_KEY.key()));
+            if (options.containsKey(Option.AWS_CREDENTIALS_PROVIDER.key())) {
+                conf.set("fs.s3a.aws.credentials.provider", options.get(Option.AWS_CREDENTIALS_PROVIDER.key()));
+            } else {
                 conf.set("fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider");
-                conf.set("fs.s3a.access.key", options.get(AWS_ACCESS_KEY_ID));
-                conf.set("fs.s3a.secret.key", options.get(AWS_SECRET_ACCESS_KEY));
             }
-            if (options.containsKey(S3_ENDPOINT_OVERRIDE)) {
-                conf.set("fs.s3a.endpoint", "http://" + options.get(S3_ENDPOINT_OVERRIDE));
+            if (options.containsKey(Option.S3_ENDPOINT_OVERRIDE.key())) {
+                conf.set("fs.s3a.endpoint", "http://" + options.get(Option.S3_ENDPOINT_OVERRIDE.key()));
             }
-            if (options.hasEnabled(S3_PATH_STYLE_ACCESS)) {
+            if (options.hasEnabled(Option.S3_PATH_STYLE_ACCESS.key())) {
                 conf.set("fs.s3a.path.style.access", "true");
             }
         }

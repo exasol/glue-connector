@@ -117,7 +117,7 @@ public class BaseIntegrationTestSetup {
                 "awsEndpointOverride", endpointOverride));
         map.put("useSsl", "false");
         map.put("numPartitions", "3");
-        map.put("exasol-ci", "true");
+        map.put("replaceLocalhostByDefaultS3Endpoint", "true");
         return map;
     }
 

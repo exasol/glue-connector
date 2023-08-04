@@ -1,8 +1,5 @@
 package com.exasol.glue;
 
-import static com.exasol.glue.Constants.QUERY;
-import static com.exasol.glue.Constants.TABLE;
-import static com.exasol.glue.Constants.USERNAME;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.startsWith;
@@ -13,6 +10,8 @@ import java.util.Map;
 
 import org.apache.spark.sql.util.CaseInsensitiveStringMap;
 import org.junit.jupiter.api.Test;
+
+import com.exasol.spark.common.Option;
 
 class DefaultSourceTest {
     private final DefaultSource source = new DefaultSource();
@@ -33,7 +32,7 @@ class DefaultSourceTest {
     @Test
     void testInferSchemaThrowsWhenBothQueryOrTableOption() {
         final CaseInsensitiveStringMap options = new CaseInsensitiveStringMap(
-                Map.of(TABLE, "db_table", QUERY, "db_query"));
+                Map.of(Option.TABLE.key(), "db_table", Option.QUERY.key(), "db_query"));
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> source.inferSchema(options));
         assertThat(exception.getMessage(), startsWith("E-EGC-2"));
@@ -42,7 +41,7 @@ class DefaultSourceTest {
     @Test
     void testInferSchemaThrowsIfRequiredParametersMissing() {
         final CaseInsensitiveStringMap options = new CaseInsensitiveStringMap(
-                Map.of(QUERY, "db_query", USERNAME, "sys"));
+                Map.of(Option.QUERY.key(), "db_query", Option.USERNAME.key(), "sys"));
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> source.inferSchema(options));
         assertThat(exception.getMessage(), startsWith("E-EGC-3"));
