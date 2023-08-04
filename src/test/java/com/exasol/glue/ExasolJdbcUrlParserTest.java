@@ -29,6 +29,22 @@ class ExasolJdbcUrlParserTest {
     }
 
     @Test
+    void testParsesJdbcUrlWithEmptyFingerprint() {
+        final Map<String, String> options = parser.parse("jdbc:exa:localhost/:8563");
+        assertAll(() -> assertThat(options.get("host"), equalTo("localhost")),
+                () -> assertThat(options.get("port"), equalTo("8563")),
+                () -> assertThat(options.containsKey("fingerprint"), equalTo(false)));
+    }
+
+    @Test
+    void testParsesJdbcUrlWithBlankFingerprint() {
+        final Map<String, String> options = parser.parse("jdbc:exa:localhost/   :8563");
+        assertAll(() -> assertThat(options.get("host"), equalTo("localhost")),
+                () -> assertThat(options.get("port"), equalTo("8563")),
+                () -> assertThat(options.containsKey("fingerprint"), equalTo(false)));
+    }
+
+    @Test
     void testParsesJdbcUrlWithJdbcOptions() {
         final Map<String, String> options = parser.parse("jdbc:exa:localhost/fingerp:8563;k1=v1;k2=v2;");
         assertAll(() -> assertThat(options.get("host"), equalTo("localhost")),

@@ -34,10 +34,10 @@ public final class ExasolJdbcUrlParser {
         final String options = getOptionalGroup(matcher, "options");
         result.put("host", host);
         result.put("port", port);
-        if (fingerprint != null && !fingerprint.isEmpty() && !fingerprint.isBlank()) {
+        if (fingerprint != null && !fingerprint.isEmpty() && !isBlank(fingerprint)) {
             result.put("fingerprint", fingerprint);
         }
-        if (options != null && !options.isEmpty() && !options.isBlank()) {
+        if (options != null && !options.isEmpty() && !isBlank(options)) {
             result.put("jdbc_options", options);
         }
         return result;
@@ -49,6 +49,10 @@ public final class ExasolJdbcUrlParser {
         } catch (final IllegalStateException exception) {
             return null;
         }
+    }
+
+    private boolean isBlank(final String string) {
+        return string.trim().isEmpty();
     }
 
 }
