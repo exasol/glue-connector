@@ -6,7 +6,7 @@ Code name:
 
 ## Features
 
-* ISSUE_NUMBER: description
+* #77: Added `spark-connector-common-java` common library
 
 ## Dependency Updates
 
