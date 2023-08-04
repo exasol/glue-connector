@@ -55,7 +55,7 @@ public final class ExasolWriteBuilderProvider {
         return new DelegatingWriteBuilder(updatedOptions, csvTable.newWriteBuilder(info));
     }
 
-    private ExasolOptions getUpdatedOptions(final Map<String, String> map) {
+    private ExasolOptions getUpdatedOptions(final CaseInsensitiveStringMap sparkWriteOptions) {
         final ExasolOptions.Builder builder = ExasolOptions.builder() //
                 .host(this.options.getHost()) //
                 .port(this.options.getPort()) //
@@ -68,7 +68,10 @@ public final class ExasolWriteBuilderProvider {
         } else {
             builder.query(this.options.getQuery());
         }
-        builder.withOptionsMap(map);
+        final Map<String, String> newKVPairs = new HashMap<>();
+        newKVPairs.putAll(sparkWriteOptions);
+        this.options.getOptionsMap().forEach((k, v) -> newKVPairs.putIfAbsent(k, v));
+        builder.withOptionsMap(newKVPairs);
         return builder.build();
     }
 

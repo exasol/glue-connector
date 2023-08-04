@@ -21,6 +21,7 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.glue.filesystem.S3FileSystem;
 import com.exasol.glue.reader.ExasolScanBuilder;
 import com.exasol.glue.writer.ExasolWriteBuilderProvider;
+import com.exasol.spark.common.ExasolOptions;
 import com.exasol.spark.common.ExasolValidationException;
 
 /**
@@ -46,7 +47,7 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
     @Override
     // [impl->dsn~sourcescanbuilder-prunes-columns-and-pushes-filters~1]
     public ScanBuilder newScanBuilder(final CaseInsensitiveStringMap map) {
-        final ExasolOptions options = getExasolOptions(map);
+        final ExasolOptions options = new ExasolOptionsProvider().fromJdbcUrl(map);
         validate(options);
         updateSparkConfigurationForS3(options);
         return new ExasolScanBuilder(options, this.schema, map);
@@ -54,9 +55,9 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
 
     @Override
     public WriteBuilder newWriteBuilder(final LogicalWriteInfo defaultInfo) {
-        final ExasolOptions options = getExasolOptions(defaultInfo.options());
+        final ExasolOptions options = new ExasolOptionsProvider().fromJdbcUrl(defaultInfo.options());
         validate(options);
-        validateHasTable(options);
+        validateHasTableForWrite(options);
         updateSparkConfigurationForS3(options);
         return new ExasolWriteBuilderProvider(options).createWriteBuilder(this.schema, defaultInfo);
     }
@@ -76,26 +77,12 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
         return capabilities;
     }
 
-    private ExasolOptions getExasolOptions(final CaseInsensitiveStringMap options) {
-        final ExasolOptions.Builder builder = ExasolOptions.builder() //
-                .jdbcUrl(options.get(JDBC_URL)) //
-                .username(options.get(USERNAME)) //
-                .password(options.get(PASSWORD)) //
-                .s3Bucket(options.get(S3_BUCKET));
-        if (options.containsKey(TABLE)) {
-            builder.table(options.get(TABLE));
-        } else if (options.containsKey(QUERY)) {
-            builder.query(options.get(QUERY));
-        }
-        return builder.withOptionsMap(options.asCaseSensitiveMap()).build();
-    }
-
     private void validate(final ExasolOptions options) {
         validateS3BucketExists(options);
         validateNumberOfPartitions(options);
     }
 
-    private void validateHasTable(final ExasolOptions options) {
+    private void validateHasTableForWrite(final ExasolOptions options) {
         if (!options.hasTable()) {
             throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-21")
                     .message("Missing 'table' option when writing into Exasol database.")

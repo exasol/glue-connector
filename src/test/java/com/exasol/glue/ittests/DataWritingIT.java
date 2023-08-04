@@ -45,6 +45,7 @@ class DataWritingIT extends BaseIntegrationTestSetup {
                 .write() //
                 .mode("append") //
                 .format("exasol") //
+                .option("query", "dummy")
                 .options(getDefaultOptions());
         final ExasolValidationException exception = assertThrows(ExasolValidationException.class, () -> df.save());
         assertThat(exception.getMessage(), startsWith("E-EGC-21"));

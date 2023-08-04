@@ -18,6 +18,7 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.glue.connection.ExasolConnectionException;
 import com.exasol.glue.connection.ExasolConnectionFactory;
 import com.exasol.spark.common.ColumnDescription;
+import com.exasol.spark.common.ExasolOptions;
 import com.exasol.spark.common.SchemaConverter;
 import com.exasol.sql.StatementFactory;
 import com.exasol.sql.dql.select.Select;
@@ -36,7 +37,7 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
     public StructType inferSchema(final CaseInsensitiveStringMap options) {
         LOGGER.fine(() -> "Running schema inference of the default source.");
         validateOptions(options);
-        return getSchema(getExasolOptions(options));
+        return getSchema(new ExasolOptionsProvider().fromJdbcUrl(options));
     }
 
     @Override
@@ -77,19 +78,6 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
                         .mitigation("Please provide a value for the {{key}} option.").parameter("key", key).toString());
             }
         }
-    }
-
-    private ExasolOptions getExasolOptions(final CaseInsensitiveStringMap options) {
-        final ExasolOptions.Builder builder = ExasolOptions.builder() //
-                .jdbcUrl(options.get(JDBC_URL)) //
-                .username(options.get(USERNAME)) //
-                .password(options.get(PASSWORD));
-        if (options.containsKey(TABLE)) {
-            builder.table(options.get(TABLE));
-        } else if (options.containsKey(QUERY)) {
-            builder.query(options.get(QUERY));
-        }
-        return builder.build();
     }
 
     private StructType getSchema(final ExasolOptions options) {

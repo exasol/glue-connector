@@ -14,6 +14,7 @@ Code name:
 
 * Updated `com.exasol:error-reporting-java8:0.4.1` to `1.0.1`
 * Updated `com.exasol:exasol-jdbc:7.1.17` to `7.1.20`
+* Added `com.exasol:spark-connector-common-java:2.0.1`
 * Updated `com.exasol:sql-statement-builder-java8:4.5.0` to `4.5.4`
 * Removed `com.fasterxml.woodstox:woodstox-core:6.5.0`
 * Updated `org.apache.hadoop:hadoop-aws:3.3.4` to `3.3.6`
