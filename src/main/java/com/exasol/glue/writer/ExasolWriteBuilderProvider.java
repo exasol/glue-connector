@@ -67,7 +67,7 @@ public final class ExasolWriteBuilderProvider {
         }
         final Map<String, String> newKVPairs = new HashMap<>();
         newKVPairs.putAll(sparkWriteOptions);
-        this.options.getOptionsMap().forEach((k, v) -> newKVPairs.putIfAbsent(k, v));
+        this.options.getOptionsMap().forEach(newKVPairs::putIfAbsent);
         builder.withOptionsMap(newKVPairs);
         return builder.build();
     }

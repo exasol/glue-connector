@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.spark.common.Option;
 
 /**
  * A helper class to extract Exasol {@code JDBC} URL components.
@@ -25,20 +26,21 @@ public final class ExasolJdbcUrlParser {
         if (!matcher.matches()) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-EGC-29")
                     .message("Unable to extract JDBC URL {{jdbcUrl}} components.", jdbcUrl)
-                    .mitigation("Please check that Exasol JDBC URL is constructed properly.").toString());
+                    .mitigation("Please check that Exasol JDBC URL is constructed properly.")
+                    .mitigation(
+                            "JDBC URL should be in 'jdbc:exa:<host>[/<fingerprint>]:<port>[;<prop_1>=<value_1>]...[;<prop_n>=<value_n>]' format.")
+                    .toString());
         }
         final Map<String, String> result = new HashMap<>();
-        final String host = matcher.group("host");
-        final String port = matcher.group("port");
+        result.put(Option.HOST.key(), matcher.group("host"));
+        result.put(Option.PORT.key(), matcher.group("port"));
         final String fingerprint = getOptionalGroup(matcher, "fingerprint");
         final String options = getOptionalGroup(matcher, "options");
-        result.put("host", host);
-        result.put("port", port);
         if (fingerprint != null && !fingerprint.isEmpty() && !isBlank(fingerprint)) {
-            result.put("fingerprint", fingerprint);
+            result.put(Option.FINGERPRINT.key(), fingerprint);
         }
         if (options != null && !options.isEmpty() && !isBlank(options)) {
-            result.put("jdbc_options", options);
+            result.put(Option.JDBC_OPTIONS.key(), options);
         }
         return result;
     }
