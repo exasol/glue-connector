@@ -9,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import com.exasol.spark.common.Option;
 
@@ -70,24 +72,12 @@ class ExasolJdbcUrlParserTest {
                 () -> assertThat(options.get(Option.JDBC_OPTIONS.key()), equalTo("k1=v1;fingerprint=DA7A;")));
     }
 
-    @Test
-    void testThrowsIfHostDoesNotMatch() {
+    @ParameterizedTest
+    @ValueSource(strings = { "jdbc:exa:8566;k1=v1", "jdbc:exa:127.0.0.1/certificate;k1=v1",
+            "jdbc:exa:127.0.0.1/certificate:13e7;k1=v1" })
+    void testThrowsOnNonParseableJdbcUrl(final String nonParseableJdbcUrl) {
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> parser.parse("jdbc:exa:8566;k1=v1"));
-        assertThat(exception.getMessage(), startsWith("E-EGC-29"));
-    }
-
-    @Test
-    void testThrowsIfPortDoesNotMatch() {
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> parser.parse("jdbc:exa:127.0.0.1/certificate;k1=v1"));
-        assertThat(exception.getMessage(), startsWith("E-EGC-29"));
-    }
-
-    @Test
-    void testThrowsIfPortIsNotDigits() {
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> parser.parse("jdbc:exa:127.0.0.1/certificate:13e7;k1=v1"));
+                () -> parser.parse(nonParseableJdbcUrl));
         assertThat(exception.getMessage(), startsWith("E-EGC-29"));
     }
 
