@@ -125,12 +125,20 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
                 conf.set("fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider");
             }
             if (options.containsKey(Option.S3_ENDPOINT_OVERRIDE.key())) {
-                conf.set("fs.s3a.endpoint", "http://" + options.get(Option.S3_ENDPOINT_OVERRIDE.key()));
+                conf.set("fs.s3a.endpoint", getEndpointOverride(options));
             }
             if (options.hasEnabled(Option.S3_PATH_STYLE_ACCESS.key())) {
                 conf.set("fs.s3a.path.style.access", "true");
             }
         }
+    }
+
+    private String getEndpointOverride(final ExasolOptions options) {
+        String scheme = "https";
+        if (options.containsKey(Option.AWS_USE_SSL.key()) && !options.hasEnabled(Option.AWS_USE_SSL.key())) {
+            scheme = "http";
+        }
+        return scheme + "://" + options.get(Option.S3_ENDPOINT_OVERRIDE.key());
     }
 
 }
