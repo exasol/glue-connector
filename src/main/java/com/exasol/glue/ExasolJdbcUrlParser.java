@@ -24,7 +24,7 @@ public final class ExasolJdbcUrlParser {
         final Matcher matcher = EXASOL_JDBC_URL_PATTERN.matcher(jdbcUrl);
         if (!matcher.matches()) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-EGC-29")
-                    .message("Unable to extract JDBC URL '{{jdbcUrl}}' components.", jdbcUrl)
+                    .message("Unable to extract JDBC URL {{jdbcUrl}} components.", jdbcUrl)
                     .mitigation("Please check that Exasol JDBC URL is constructed properly.").toString());
         }
         final Map<String, String> result = new HashMap<>();
