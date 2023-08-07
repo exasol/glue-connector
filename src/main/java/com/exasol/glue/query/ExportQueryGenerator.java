@@ -1,9 +1,7 @@
 package com.exasol.glue.query;
 
-import java.util.Collections;
-import java.util.Optional;
-
-import com.exasol.glue.ExasolOptions;
+import com.exasol.spark.common.ExasolOptions;
+import com.exasol.spark.common.StatementGeneratorFactory;
 
 /**
  * A class that generates an Exasol {@code EXPORT} query.
@@ -65,8 +63,7 @@ public final class ExportQueryGenerator extends AbstractQueryGenerator {
     }
 
     private String getSelectQuery() {
-        return new SelectStatementGenerator().getSelectStatement(getSelectFromTableOrQuery(), Collections.emptyList(),
-                Optional.empty());
+        return StatementGeneratorFactory.selectFrom(getSelectFromTableOrQuery()).render();
     }
 
     private String getSelectFromTableOrQuery() {

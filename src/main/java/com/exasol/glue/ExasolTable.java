@@ -1,15 +1,8 @@
 package com.exasol.glue;
 
-import static com.exasol.glue.Constants.*;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.exasol.errorreporting.ExaError;
-import com.exasol.glue.filesystem.S3FileSystem;
-import com.exasol.glue.reader.ExasolScanBuilder;
-import com.exasol.glue.writer.ExasolWriteBuilderProvider;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.spark.sql.SparkSession;
@@ -21,6 +14,14 @@ import org.apache.spark.sql.connector.write.LogicalWriteInfo;
 import org.apache.spark.sql.connector.write.WriteBuilder;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.sql.util.CaseInsensitiveStringMap;
+
+import com.exasol.errorreporting.ExaError;
+import com.exasol.glue.filesystem.S3FileSystem;
+import com.exasol.glue.reader.ExasolScanBuilder;
+import com.exasol.glue.writer.ExasolWriteBuilderProvider;
+import com.exasol.spark.common.ExasolOptions;
+import com.exasol.spark.common.ExasolValidationException;
+import com.exasol.spark.common.Option;
 
 /**
  * Represents an instance of {@link ExasolTable}.
@@ -45,7 +46,7 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
     @Override
     // [impl->dsn~sourcescanbuilder-prunes-columns-and-pushes-filters~1]
     public ScanBuilder newScanBuilder(final CaseInsensitiveStringMap map) {
-        final ExasolOptions options = getExasolOptions(map);
+        final ExasolOptions options = new ExasolOptionsProvider().fromJdbcUrl(map);
         validate(options);
         updateSparkConfigurationForS3(options);
         return new ExasolScanBuilder(options, this.schema, map);
@@ -53,9 +54,9 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
 
     @Override
     public WriteBuilder newWriteBuilder(final LogicalWriteInfo defaultInfo) {
-        final ExasolOptions options = getExasolOptions(defaultInfo.options());
+        final ExasolOptions options = new ExasolOptionsProvider().fromJdbcUrl(defaultInfo.options());
         validate(options);
-        validateHasTable(options);
+        validateHasTableForWrite(options);
         updateSparkConfigurationForS3(options);
         return new ExasolWriteBuilderProvider(options).createWriteBuilder(this.schema, defaultInfo);
     }
@@ -75,26 +76,12 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
         return capabilities;
     }
 
-    private ExasolOptions getExasolOptions(final CaseInsensitiveStringMap options) {
-        final ExasolOptions.Builder builder = ExasolOptions.builder() //
-                .jdbcUrl(options.get(JDBC_URL)) //
-                .username(options.get(USERNAME)) //
-                .password(options.get(PASSWORD)) //
-                .s3Bucket(options.get(S3_BUCKET));
-        if (options.containsKey(TABLE)) {
-            builder.table(options.get(TABLE));
-        } else if (options.containsKey(QUERY)) {
-            builder.query(options.get(QUERY));
-        }
-        return builder.withOptionsMap(options.asCaseSensitiveMap()).build();
-    }
-
     private void validate(final ExasolOptions options) {
         validateS3BucketExists(options);
         validateNumberOfPartitions(options);
     }
 
-    private void validateHasTable(final ExasolOptions options) {
+    private void validateHasTableForWrite(final ExasolOptions options) {
         if (!options.hasTable()) {
             throw new ExasolValidationException(ExaError.messageBuilder("E-EGC-21")
                     .message("Missing 'table' option when writing into Exasol database.")
@@ -130,18 +117,28 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
         final SparkSession sparkSession = SparkSession.active();
         synchronized (sparkSession.sparkContext().hadoopConfiguration()) {
             final Configuration conf = sparkSession.sparkContext().hadoopConfiguration();
-            if (options.hasEnabled(CI_ENABLED)) {
+            conf.set("fs.s3a.access.key", options.get(Option.AWS_ACCESS_KEY_ID.key()));
+            conf.set("fs.s3a.secret.key", options.get(Option.AWS_SECRET_ACCESS_KEY.key()));
+            if (options.containsKey(Option.AWS_CREDENTIALS_PROVIDER.key())) {
+                conf.set("fs.s3a.aws.credentials.provider", options.get(Option.AWS_CREDENTIALS_PROVIDER.key()));
+            } else {
                 conf.set("fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider");
-                conf.set("fs.s3a.access.key", options.get(AWS_ACCESS_KEY_ID));
-                conf.set("fs.s3a.secret.key", options.get(AWS_SECRET_ACCESS_KEY));
             }
-            if (options.containsKey(S3_ENDPOINT_OVERRIDE)) {
-                conf.set("fs.s3a.endpoint", "http://" + options.get(S3_ENDPOINT_OVERRIDE));
+            if (options.containsKey(Option.S3_ENDPOINT_OVERRIDE.key())) {
+                conf.set("fs.s3a.endpoint", getEndpointOverride(options));
             }
-            if (options.hasEnabled(S3_PATH_STYLE_ACCESS)) {
+            if (options.hasEnabled(Option.S3_PATH_STYLE_ACCESS.key())) {
                 conf.set("fs.s3a.path.style.access", "true");
             }
         }
+    }
+
+    private String getEndpointOverride(final ExasolOptions options) {
+        String scheme = "https";
+        if (options.containsKey(Option.AWS_USE_SSL.key()) && !options.hasEnabled(Option.AWS_USE_SSL.key())) {
+            scheme = "http";
+        }
+        return scheme + "://" + options.get(Option.S3_ENDPOINT_OVERRIDE.key());
     }
 
 }

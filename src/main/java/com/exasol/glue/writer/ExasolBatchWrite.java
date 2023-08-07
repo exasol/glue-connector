@@ -1,22 +1,20 @@
 package com.exasol.glue.writer;
 
-import static com.exasol.glue.Constants.INTERMEDIATE_DATA_PATH;
-import static com.exasol.glue.Constants.WRITE_S3_BUCKET_KEY;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
 
+import org.apache.spark.sql.connector.write.*;
+
 import com.exasol.errorreporting.ExaError;
-import com.exasol.glue.ExasolOptions;
 import com.exasol.glue.connection.ExasolConnectionException;
 import com.exasol.glue.connection.ExasolConnectionFactory;
 import com.exasol.glue.filesystem.S3FileSystem;
 import com.exasol.glue.query.AbstractQueryGenerator;
 import com.exasol.glue.query.ImportQueryGenerator;
-
-import org.apache.spark.sql.connector.write.*;
+import com.exasol.spark.common.ExasolOptions;
+import com.exasol.spark.common.Option;
 
 /**
  * An Exasol {@link BatchWrite} class.
@@ -92,9 +90,9 @@ public class ExasolBatchWrite implements BatchWrite {
     }
 
     private void cleanup() {
-        LOGGER.info(() -> "Running cleanup process for directory '" + this.options.get(INTERMEDIATE_DATA_PATH) + "'.");
+        LOGGER.info(() -> "Running cleanup process for directory '" + this.options.get(Option.INTERMEDIATE_DATA_PATH.key()) + "'.");
         try (final S3FileSystem s3FileSystem = new S3FileSystem(this.options)) {
-            s3FileSystem.deleteKeys(this.options.getS3Bucket(), this.options.get(WRITE_S3_BUCKET_KEY));
+            s3FileSystem.deleteKeys(this.options.getS3Bucket(), this.options.get(Option.WRITE_S3_BUCKET_KEY.key()));
         }
     }
 

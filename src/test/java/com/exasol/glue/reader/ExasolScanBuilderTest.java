@@ -1,8 +1,7 @@
 package com.exasol.glue.reader;
 
-import static com.exasol.glue.Constants.AWS_ACCESS_KEY_ID;
-import static com.exasol.glue.Constants.AWS_SECRET_ACCESS_KEY;
-import static org.apache.spark.sql.types.DataTypes.*;
+import static org.apache.spark.sql.types.DataTypes.DoubleType;
+import static org.apache.spark.sql.types.DataTypes.LongType;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -10,18 +9,19 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Map;
 
-import com.exasol.glue.ExasolOptions;
-
 import org.apache.spark.sql.sources.*;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.sql.util.CaseInsensitiveStringMap;
 import org.junit.jupiter.api.Test;
 
+import com.exasol.spark.common.ExasolOptions;
+import com.exasol.spark.common.Option;
+
 class ExasolScanBuilderTest {
     private final ExasolOptions options = ExasolOptions.builder() //
             .s3Bucket("bucket") //
             .table("t1") //
-            .withOptionsMap(Map.of(AWS_ACCESS_KEY_ID, "user", AWS_SECRET_ACCESS_KEY, "pass")) //
+            .withOptionsMap(Map.of(Option.AWS_ACCESS_KEY_ID.key(), "user", Option.AWS_SECRET_ACCESS_KEY.key(), "pass")) //
             .build();
     private final ExasolScanBuilder scanBuilder = new ExasolScanBuilder(options,
             new StructType().add("column", LongType, false), new CaseInsensitiveStringMap(Collections.emptyMap()));
@@ -84,7 +84,8 @@ class ExasolScanBuilderTest {
     void testWithPushedFiltersAndPrunedColumnsForQuery() {
         final ExasolOptions options = ExasolOptions.builder().s3Bucket("bucket") //
                 .query("SELECT a,b FROM t3 WHERE c = 1") //
-                .withOptionsMap(Map.of(AWS_ACCESS_KEY_ID, "user", AWS_SECRET_ACCESS_KEY, "pass")) //
+                .withOptionsMap(
+                        Map.of(Option.AWS_ACCESS_KEY_ID.key(), "user", Option.AWS_SECRET_ACCESS_KEY.key(), "pass")) //
                 .build();
         final ExasolScanBuilder scanBuilder = new ExasolScanBuilder(options,
                 new StructType().add("column", LongType, false), new CaseInsensitiveStringMap(Collections.emptyMap()));

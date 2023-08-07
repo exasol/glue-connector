@@ -1,13 +1,8 @@
 package com.exasol.glue.writer;
 
-import static com.exasol.glue.Constants.INTERMEDIATE_DATA_PATH;
-import static com.exasol.glue.Constants.WRITE_S3_BUCKET_KEY;
-
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Logger;
-
-import com.exasol.glue.ExasolOptions;
 
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.connector.write.LogicalWriteInfo;
@@ -16,7 +11,9 @@ import org.apache.spark.sql.execution.datasources.v2.csv.CSVTable;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.sql.util.CaseInsensitiveStringMap;
 
-import scala.Option;
+import com.exasol.spark.common.ExasolOptions;
+import com.exasol.spark.common.Option;
+
 import scala.collection.JavaConverters;
 import scala.collection.Seq;
 
@@ -48,25 +45,30 @@ public final class ExasolWriteBuilderProvider {
         final SparkSession sparkSession = SparkSession.active();
         final LogicalWriteInfo info = getUpdatedLogicalWriteInfo(defaultInfo, sparkSession);
         final ExasolOptions updatedOptions = getUpdatedOptions(info.options());
-        final String intermediateDataPath = updatedOptions.get(INTERMEDIATE_DATA_PATH);
+        final String intermediateDataPath = updatedOptions.get(Option.INTERMEDIATE_DATA_PATH.key());
         LOGGER.info(() -> "Writing intermediate data to the '" + intermediateDataPath + "' path for write job.");
         final CSVTable csvTable = new CSVTable("", sparkSession, info.options(), getS3WritePath(intermediateDataPath),
-                Option.apply(schema), null);
+                scala.Option.apply(schema), null);
         return new DelegatingWriteBuilder(updatedOptions, csvTable.newWriteBuilder(info));
     }
 
-    private ExasolOptions getUpdatedOptions(final Map<String, String> map) {
+    private ExasolOptions getUpdatedOptions(final CaseInsensitiveStringMap sparkWriteOptions) {
         final ExasolOptions.Builder builder = ExasolOptions.builder() //
-                .jdbcUrl(this.options.getJdbcUrl()) //
+                .host(this.options.getHost()) //
+                .port(this.options.getPort()) //
                 .username(this.options.getUsername()) //
                 .password(this.options.getPassword()) //
+                .fingerprint(this.options.getFingerprint()) //
                 .s3Bucket(this.options.getS3Bucket());
         if (this.options.hasTable()) {
             builder.table(this.options.getTable());
         } else {
             builder.query(this.options.getQuery());
         }
-        builder.withOptionsMap(map);
+        final Map<String, String> newKVPairs = new HashMap<>();
+        newKVPairs.putAll(sparkWriteOptions);
+        this.options.getOptionsMap().forEach(newKVPairs::putIfAbsent);
+        builder.withOptionsMap(newKVPairs);
         return builder.build();
     }
 
@@ -78,8 +80,8 @@ public final class ExasolWriteBuilderProvider {
         map.put("mapreduce.fileoutputcommitter.marksuccessfuljobs", "false");
         final String s3Bucket = this.options.getS3Bucket();
         final String s3BucketKey = getS3BucketKeyForWriteLocation(defaultInfo, sparkSession);
-        map.put(INTERMEDIATE_DATA_PATH, "s3a://" + Paths.get(s3Bucket, s3BucketKey).toString());
-        map.put(WRITE_S3_BUCKET_KEY, s3BucketKey);
+        map.put(Option.INTERMEDIATE_DATA_PATH.key(), "s3a://" + Paths.get(s3Bucket, s3BucketKey).toString());
+        map.put(Option.WRITE_S3_BUCKET_KEY.key(), s3BucketKey);
 
         return new LogicalWriteInfo() {
             @Override

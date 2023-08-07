@@ -25,10 +25,6 @@ This section introduces the building blocks of the software. Together those buil
 
 The `DefaultSource` is an entry class that controls interaction with AWS Glue Studio. It creates Spark dataframe and infers its schema.
 
-### `SchemaConverter`
-
-The `SchemaConverter` is a building block that converts data types from Exasol JDBC into Spark data types.
-
 ## Runtime View
 
 This section describes the runtime behavior of the software.
@@ -39,17 +35,13 @@ This section describes the runtime behavior of the software.
 Covers:
 
 * `req~inferring-schema-of-table-or-query~1`
-
-Needs: impl, utest, itest
-
-### `SchemaConverter` converts data types
-`dsn~schameconverter-converts-data-types~1`
-
-Covers:
-
 * `req~converting-exasol-datatype-to-spark-datatype~1`
 
-Needs: impl, utest
+Needs: impl
+
+Comment:
+
+The schema inference unit and integration tests are performed in the common library.
 
 ### `ExasolTable` reads and writes data
 `dsn~exasoltable-reads-and-writes~1`

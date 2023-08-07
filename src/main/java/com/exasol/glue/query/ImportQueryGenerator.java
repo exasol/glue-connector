@@ -1,16 +1,15 @@
 package com.exasol.glue.query;
 
-import static com.exasol.glue.Constants.INTERMEDIATE_DATA_PATH;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.glue.ExasolOptions;
-import com.exasol.glue.ExasolValidationException;
 import com.exasol.glue.S3ClientFactory;
+import com.exasol.spark.common.ExasolOptions;
+import com.exasol.spark.common.ExasolValidationException;
+import com.exasol.spark.common.Option;
 
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
@@ -42,7 +41,7 @@ public final class ImportQueryGenerator extends AbstractQueryGenerator {
 
     @Override
     public String getFiles() {
-        final String path = this.options.get(INTERMEDIATE_DATA_PATH);
+        final String path = this.options.get(Option.INTERMEDIATE_DATA_PATH.key());
         final URI pathURI = getPathURI(path);
         final String bucketName = pathURI.getHost();
         final String bucketKey = pathURI.getPath().substring(1);

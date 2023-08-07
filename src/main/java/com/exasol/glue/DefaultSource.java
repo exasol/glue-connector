@@ -1,19 +1,10 @@
 package com.exasol.glue;
 
-import static com.exasol.glue.Constants.*;
 import static java.sql.ResultSetMetaData.columnNoNulls;
 
 import java.sql.*;
 import java.util.*;
 import java.util.logging.Logger;
-
-import com.exasol.errorreporting.ExaError;
-import com.exasol.glue.connection.ExasolConnectionException;
-import com.exasol.glue.connection.ExasolConnectionFactory;
-import com.exasol.sql.StatementFactory;
-import com.exasol.sql.dql.select.Select;
-import com.exasol.sql.dql.select.rendering.SelectRenderer;
-import com.exasol.sql.rendering.StringRendererConfig;
 
 import org.apache.spark.sql.connector.catalog.Table;
 import org.apache.spark.sql.connector.catalog.TableProvider;
@@ -22,19 +13,28 @@ import org.apache.spark.sql.sources.DataSourceRegister;
 import org.apache.spark.sql.types.StructType;
 import org.apache.spark.sql.util.CaseInsensitiveStringMap;
 
+import com.exasol.errorreporting.ExaError;
+import com.exasol.glue.connection.ExasolConnectionException;
+import com.exasol.glue.connection.ExasolConnectionFactory;
+import com.exasol.spark.common.*;
+import com.exasol.sql.StatementFactory;
+import com.exasol.sql.dql.select.Select;
+import com.exasol.sql.dql.select.rendering.SelectRenderer;
+import com.exasol.sql.rendering.StringRendererConfig;
+
 /**
  * An entry class for the connector.
  */
 public class DefaultSource implements TableProvider, DataSourceRegister {
     private static final Logger LOGGER = Logger.getLogger(DefaultSource.class.getName());
-    private static final List<String> REQUIRED_OPTIONS = Arrays.asList(JDBC_URL, USERNAME, PASSWORD);
+    private static final List<String> REQUIRED_OPTIONS = Arrays.asList(Option.JDBC_URL.key(), Option.USERNAME.key(), Option.PASSWORD.key());
 
     @Override
     // [impl->dsn~default-source-infers-schema~1]
     public StructType inferSchema(final CaseInsensitiveStringMap options) {
         LOGGER.fine(() -> "Running schema inference of the default source.");
         validateOptions(options);
-        return getSchema(getExasolOptions(options));
+        return getSchema(new ExasolOptionsProvider().fromJdbcUrl(options));
     }
 
     @Override
@@ -54,12 +54,12 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
 
     private void validateOptions(final CaseInsensitiveStringMap options) {
         LOGGER.finest(() -> "Validating options of the default source.");
-        if (!options.containsKey(TABLE) && !options.containsKey(QUERY)) {
+        if (!options.containsKey(Option.TABLE.key()) && !options.containsKey(Option.QUERY.key())) {
             throw new IllegalArgumentException(
                     ExaError.messageBuilder("E-EGC-1").message("Missing 'query' or 'table' option.")
                             .mitigation("Please provide either one of 'query' or 'table' options.").toString());
         }
-        if (options.containsKey(TABLE) && options.containsKey(QUERY)) {
+        if (options.containsKey(Option.TABLE.key()) && options.containsKey(Option.QUERY.key())) {
             throw new IllegalArgumentException(
                     ExaError.messageBuilder("E-EGC-2").message("Both 'query' and 'table' options are provided.")
                             .mitigation("Please use only either one of the options.").toString());
@@ -75,19 +75,6 @@ public class DefaultSource implements TableProvider, DataSourceRegister {
                         .mitigation("Please provide a value for the {{key}} option.").parameter("key", key).toString());
             }
         }
-    }
-
-    private ExasolOptions getExasolOptions(final CaseInsensitiveStringMap options) {
-        final ExasolOptions.Builder builder = ExasolOptions.builder() //
-                .jdbcUrl(options.get(JDBC_URL)) //
-                .username(options.get(USERNAME)) //
-                .password(options.get(PASSWORD));
-        if (options.containsKey(TABLE)) {
-            builder.table(options.get(TABLE));
-        } else if (options.containsKey(QUERY)) {
-            builder.query(options.get(QUERY));
-        }
-        return builder.build();
     }
 
     private StructType getSchema(final ExasolOptions options) {

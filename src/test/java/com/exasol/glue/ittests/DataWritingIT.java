@@ -12,14 +12,14 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.util.List;
 
-import com.exasol.dbbuilder.dialects.Table;
-import com.exasol.glue.ExasolValidationException;
-
 import org.apache.spark.sql.*;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import com.exasol.dbbuilder.dialects.Table;
+import com.exasol.spark.common.ExasolValidationException;
 
 @Tag("integration")
 @Testcontainers
@@ -45,6 +45,7 @@ class DataWritingIT extends BaseIntegrationTestSetup {
                 .write() //
                 .mode("append") //
                 .format("exasol") //
+                .option("query", "dummy")
                 .options(getDefaultOptions());
         final ExasolValidationException exception = assertThrows(ExasolValidationException.class, () -> df.save());
         assertThat(exception.getMessage(), startsWith("E-EGC-21"));

@@ -2,11 +2,11 @@ package com.exasol.glue.listener;
 
 import java.util.logging.Logger;
 
-import com.exasol.glue.ExasolOptions;
-import com.exasol.glue.filesystem.S3FileSystem;
-
 import org.apache.spark.scheduler.SparkListener;
 import org.apache.spark.scheduler.SparkListenerJobEnd;
+
+import com.exasol.glue.filesystem.S3FileSystem;
+import com.exasol.spark.common.ExasolOptions;
 
 /**
  * A {@link SparkListener} class that cleans up intermediate data at the end of job run.
