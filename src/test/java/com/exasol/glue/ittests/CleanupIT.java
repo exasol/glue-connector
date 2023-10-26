@@ -7,31 +7,26 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-
-import com.exasol.dbbuilder.dialects.Table;
+import java.util.*;
+import java.util.stream.*;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.SparkException;
-import org.apache.spark.api.java.function.FilterFunction;
-import org.apache.spark.api.java.function.MapFunction;
-import org.apache.spark.api.java.function.MapGroupsFunction;
+import org.apache.spark.api.java.function.*;
 import org.apache.spark.sql.*;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
 import org.junit.jupiter.api.*;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import com.exasol.dbbuilder.dialects.Table;
+import com.exasol.glue.connection.ExasolConnectionException;
+
 @Tag("integration")
 @Testcontainers
 class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we start Spark session for each test unit to
                                                    // force the job end call.
-    private int MAX_ALLOWED_SPARK_TASK_FAILURES = 3;
+    private final int MAX_ALLOWED_SPARK_TASK_FAILURES = 3;
 
     private static Table table;
 
@@ -40,7 +35,7 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
     }
 
     private final SparkConf conf = new SparkConf() //
-            .setMaster("local[*," + MAX_ALLOWED_SPARK_TASK_FAILURES + "]") //
+            .setMaster("local[*," + this.MAX_ALLOWED_SPARK_TASK_FAILURES + "]") //
             .setAppName("CleanupTests") //
             .set("spark.ui.enabled", "false") //
             .set("spark.driver.host", "localhost");
@@ -56,7 +51,7 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
 
     @BeforeEach
     void beforeEach() {
-        spark = SparkSessionProvider.getSparkSession(conf);
+        spark = SparkSessionProvider.getSparkSession(this.conf);
     }
 
     @AfterEach
@@ -83,7 +78,7 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
                 .map((MapFunction<Row, Integer>) row -> {
                     final int value = Integer.valueOf(row.getString(0));
                     synchronized (TaskFailureStateCounter.class) {
-                        if (value == 1 && TaskFailureStateCounter.totalTaskFailures == 0) {
+                        if ((value == 1) && (TaskFailureStateCounter.totalTaskFailures == 0)) {
                             TaskFailureStateCounter.totalTaskFailures += 1;
                             throw new RuntimeException("Intentionally fails current task.");
                         }
@@ -101,7 +96,7 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
                 .filter((FilterFunction<Row>) row -> {
                     final int value = Integer.valueOf(row.getString(0));
                     synchronized (TaskFailureStateCounter.class) {
-                        if ((value == 1 || value == 3) && TaskFailureStateCounter.totalTaskFailures < 2) {
+                        if (((value == 1) || (value == 3)) && (TaskFailureStateCounter.totalTaskFailures < 2)) {
                             TaskFailureStateCounter.totalTaskFailures += 1;
                             throw new RuntimeException("Intentionally fails currect task for value '" + value + "'.");
                         }
@@ -128,12 +123,12 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
                 .groupByKey((MapFunction<Long, String>) v -> (v % 2) == 0 ? "even" : "odd", Encoders.STRING()) //
                 .mapGroups((MapGroupsFunction<String, Long, String>) (key, values) -> {
                     synchronized (TaskFailureStateCounter.class) {
-                        if (key.equals("even") && TaskFailureStateCounter.totalTaskFailures == 0) {
+                        if (key.equals("even") && (TaskFailureStateCounter.totalTaskFailures == 0)) {
                             TaskFailureStateCounter.totalTaskFailures += 1;
                             throw new RuntimeException("Intentionally fails reduce task with 'even' key.");
                         }
                     }
-                    List<Long> longs = StreamSupport
+                    final List<Long> longs = StreamSupport
                             .stream(Spliterators.spliteratorUnknownSize(values, Spliterator.ORDERED), false)
                             .collect(Collectors.toList());
                     return key + ": " + longs.toString();
@@ -185,8 +180,8 @@ class CleanupIT extends BaseIntegrationTestSetup { // For this test suite, we st
                 .format("exasol") //
                 .options(getDefaultOptions()) //
                 .option("table", "non_existent_table");
-        final SparkException exception = assertThrows(SparkException.class, () -> df.save());
-        assertThat(exception.getMessage(), containsString("Writing job aborted"));
+        final Exception exception = assertThrows(ExasolConnectionException.class, () -> df.save());
+        assertThat(exception.getMessage(), startsWith("E-EGC-24: Failure running the import"));
         assertThatBucketIsEmpty();
     }
 
