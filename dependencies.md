@@ -74,11 +74,11 @@
 [5]: https://commons.apache.org/proper/commons-compress/
 [6]: https://github.com/xerial/snappy-java
 [7]: https://www.apache.org/licenses/LICENSE-2.0.html
-[8]: https://github.com/paul-hammant/paranamer
-[9]: LICENSE
+[8]: https://github.com/paul-hammant/paranamer/paranamer
+[9]: LICENSE.txt
 [10]: https://github.com/google/guava
 [11]: http://www.apache.org/licenses/LICENSE-2.0.txt
-[12]: https://netty.io
+[12]: https://netty.io/netty-all/
 [13]: https://www.apache.org/licenses/LICENSE-2.0
 [14]: https://github.com/FasterXML/jackson
 [15]: https://aws.amazon.com/sdkforjava
