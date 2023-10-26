@@ -4,13 +4,9 @@ sources:
     modules:
       - jar_artifact
       - integration_tests
+linkReplacements:
 excludes:
   - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
   - "E-PK-CORE-18: Outdated content: '.settings/org.eclipse.jdt.core.prefs'"
-  - regex: "(?s)E-PK-CORE-53: The dependencies.md file has outdated content.*"
-linkReplacements:
-  - "LICENSE-exasol-jdbc.txt|https://docs.exasol.com/connect_exasol/drivers/jdbc.htm"
-  - "https://github.com/paul-hammant/paranamer/paranamer|https://github.com/paul-hammant/paranamer"
-  - "https://netty.io/netty-all/|https://netty.io"
-  - "https://www.mojohaus.org/flatten-maven-plugin/flatten-maven-plugin|https://www.mojohaus.org/flatten-maven-plugin"
-  - "LICENSE.txt|LICENSE"
+  - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build.yml'"
+  - "E-PK-CORE-18: Outdated content: '.github/workflows/release_droid_prepare_original_checksum.yml'"
