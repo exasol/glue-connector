@@ -517,6 +517,23 @@
                         <ignoredResourcePattern>mime.types</ignoredResourcePattern>
                         <ignoredResourcePattern>.*\.proto$</ignoredResourcePattern>
                     </ignoredResourcePatterns>
+                    <ignoredDependencies>
+                        <dependency>
+                            <groupId>org.apache.arrow</groupId>
+                            <artifactId>arrow-memory-core</artifactId>
+                            <version>12.0.1</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.arrow</groupId>
+                            <artifactId>arrow-vector</artifactId>
+                            <version>0.15.1</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.arrow</groupId>
+                            <artifactId>arrow-memory-netty</artifactId>
+                            <version>12.0.1</version>
+                        </dependency>
+                    </ignoredDependencies>
                 </configuration>
             </plugin>
             <plugin>
