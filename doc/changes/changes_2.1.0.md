@@ -1,6 +1,6 @@
 # Exasol AWS Glue Connector 2.1.0, released 2023-10-27
 
-Code name:
+Code name: Fix vulnerabilities CVE-2023-43642, CVE-2023-39410 and CVE-2023-44981
 
 ## Summary
 
