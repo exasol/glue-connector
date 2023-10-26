@@ -14,6 +14,9 @@ Vulnerability CVE-2023-4586 is ignored for overriden transitive dependency `io.n
 ## Features
 
 * #77: Added `spark-connector-common-java` common library
+
+## Security
+
 * #80: Fixed vulnerabilities CVE-2023-43642, CVE-2023-39410, CVE-2023-44981
 
 ## Dependency Updates
@@ -26,7 +29,6 @@ Vulnerability CVE-2023-4586 is ignored for overriden transitive dependency `io.n
 * Updated `com.exasol:sql-statement-builder-java8:4.5.0` to `4.5.4`
 * Removed `com.fasterxml.woodstox:woodstox-core:6.5.0`
 * Updated `org.apache.hadoop:hadoop-aws:3.3.4` to `3.3.6`
-* Added `org.apache.zookeeper:zookeeper:3.9.1`
 * Added `org.xerial.snappy:snappy-java:1.1.10.5`
 * Updated `software.amazon.awssdk:s3:2.20.19` to `2.21.8`
 
