@@ -3,15 +3,11 @@ package com.exasol.glue.ittests;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 import org.apache.spark.SparkConf;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.DockerClientFactory;
@@ -33,7 +29,7 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 
 public class BaseIntegrationTestSetup {
     private static final Logger LOGGER = Logger.getLogger(BaseIntegrationTestSetup.class.getName());
-    private static final String DEFAULT_DOCKER_IMAGE = "7.1.22";
+    private static final String DEFAULT_DOCKER_IMAGE = "7.1.24";
     protected static final String DEFAULT_BUCKET_NAME = "csvtest";
 
     @Container
@@ -41,7 +37,7 @@ public class BaseIntegrationTestSetup {
             getExasolDockerImage()).withReuse(true);
     @Container
     private static final S3LocalStackContainerWithReuse S3 = new S3LocalStackContainerWithReuse(
-            DockerImageName.parse("localstack/localstack:1.4"));
+            DockerImageName.parse("localstack/localstack:2.2"));
 
     protected static Connection connection;
     protected static ExasolObjectFactory factory;
