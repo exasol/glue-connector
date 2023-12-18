@@ -27,6 +27,7 @@ This release fixes CVE-2023-6378 in dependencies `ch.qos.logback/logback-core@1.
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.15.3` to `3.15.4`
 * Updated `org.mockito:mockito-core:5.7.0` to `5.8.0`
 * Updated `org.mockito:mockito-junit-jupiter:5.7.0` to `5.8.0`
+* Added `org.slf4j:slf4j-jdk14:2.0.9`
 * Updated `org.testcontainers:junit-jupiter:1.19.2` to `1.19.3`
 * Updated `org.testcontainers:localstack:1.19.2` to `1.19.3`
 
