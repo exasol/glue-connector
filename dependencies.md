@@ -59,7 +59,7 @@
 | [duplicate-finder-maven-plugin Maven Mojo][55]          | [Apache License 2.0][1]               |
 | [Apache Maven Assembly Plugin][56]                      | [Apache-2.0][3]                       |
 | [Apache Maven JAR Plugin][57]                           | [Apache License, Version 2.0][3]      |
-| [Project keeper maven plugin][58]                       | [The MIT License][59]                 |
+| [Project Keeper Maven plugin][58]                       | [The MIT License][59]                 |
 | [Artifact reference checker and unifier][60]            | [MIT License][61]                     |
 | [Maven Failsafe Plugin][62]                             | [Apache-2.0][3]                       |
 | [JaCoCo :: Maven Plugin][63]                            | [Eclipse Public License 2.0][64]      |
