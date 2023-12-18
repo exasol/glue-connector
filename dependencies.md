@@ -14,34 +14,34 @@
 | Apache Hadoop Amazon Web Services support   | [Apache License, Version 2.0][3]              |
 | [ParaNamer Core][8]                         | [BSD][9]                                      |
 | [Guava: Google Core Libraries for Java][10] | [Apache License, Version 2.0][11]             |
-| [Netty/All-in-One][12]                      | [Apache License, Version 2.0][13]             |
-| [jackson-databind][14]                      | [The Apache Software License, Version 2.0][3] |
-| [AWS Java SDK :: Services :: Amazon S3][15] | [Apache License, Version 2.0][16]             |
-| [EXASolution JDBC Driver][17]               | [EXAClient License][18]                       |
-| [Exasol SQL Statement Builder][19]          | [MIT License][20]                             |
-| [spark-connector-common-java][21]           | [MIT License][22]                             |
-| [error-reporting-java8][23]                 | [MIT License][24]                             |
+| [jackson-databind][12]                      | [The Apache Software License, Version 2.0][3] |
+| [AWS Java SDK :: Services :: Amazon S3][13] | [Apache License, Version 2.0][14]             |
+| [EXASolution JDBC Driver][15]               | [EXAClient License][16]                       |
+| [Exasol SQL Statement Builder][17]          | [MIT License][18]                             |
+| [spark-connector-common-java][19]           | [MIT License][20]                             |
+| [error-reporting-java8][21]                 | [MIT License][22]                             |
 
 ## Test Dependencies
 
 | Dependency                                      | License                           |
 | ----------------------------------------------- | --------------------------------- |
-| [mockito-core][25]                              | [MIT][26]                         |
-| [mockito-junit-jupiter][25]                     | [MIT][26]                         |
-| [JUnit Jupiter (Aggregator)][27]                | [Eclipse Public License v2.0][28] |
-| [JUnit Jupiter API][27]                         | [Eclipse Public License v2.0][28] |
-| [Hamcrest][29]                                  | [BSD License 3][30]               |
-| [Testcontainers :: JUnit Jupiter Extension][31] | [MIT][32]                         |
-| [Testcontainers :: Localstack][31]              | [MIT][32]                         |
-| [AWS Java SDK for Amazon S3][15]                | [Apache License, Version 2.0][16] |
-| AWSGlueETL                                      | [Amazon Software License][33]     |
-| [Test containers for Exasol on Docker][34]      | [MIT License][35]                 |
-| [Test Database Builder for Java][36]            | [MIT License][37]                 |
-| [Test utilities for `java.util.logging`][38]    | [MIT][26]                         |
-| [Matcher for SQL Result Sets][39]               | [MIT License][40]                 |
-| [EqualsVerifier \| release normal jar][41]      | [Apache License, Version 2.0][3]  |
-| [Apache Log4j API][42]                          | [Apache-2.0][3]                   |
-| [Apache Log4j Core][43]                         | [Apache-2.0][3]                   |
+| [mockito-core][23]                              | [MIT][24]                         |
+| [mockito-junit-jupiter][23]                     | [MIT][24]                         |
+| [JUnit Jupiter (Aggregator)][25]                | [Eclipse Public License v2.0][26] |
+| [JUnit Jupiter API][25]                         | [Eclipse Public License v2.0][26] |
+| [Hamcrest][27]                                  | [BSD License 3][28]               |
+| [Testcontainers :: JUnit Jupiter Extension][29] | [MIT][30]                         |
+| [Testcontainers :: Localstack][29]              | [MIT][30]                         |
+| [AWS Java SDK for Amazon S3][13]                | [Apache License, Version 2.0][14] |
+| AWSGlueETL                                      | [Amazon Software License][31]     |
+| [Test containers for Exasol on Docker][32]      | [MIT License][33]                 |
+| [Test Database Builder for Java][34]            | [MIT License][35]                 |
+| [Test utilities for `java.util.logging`][36]    | [MIT][24]                         |
+| [Matcher for SQL Result Sets][37]               | [MIT License][38]                 |
+| [EqualsVerifier \| release normal jar][39]      | [Apache License, Version 2.0][3]  |
+| [Apache Log4j API][40]                          | [Apache-2.0][3]                   |
+| [Apache Log4j Core][41]                         | [Apache-2.0][3]                   |
+| [SLF4J JDK14 Provider][42]                      | [MIT License][43]                 |
 
 ## Plugin Dependencies
 
@@ -59,7 +59,7 @@
 | [duplicate-finder-maven-plugin Maven Mojo][55]          | [Apache License 2.0][1]               |
 | [Apache Maven Assembly Plugin][56]                      | [Apache-2.0][3]                       |
 | [Apache Maven JAR Plugin][57]                           | [Apache License, Version 2.0][3]      |
-| [Project keeper maven plugin][58]                       | [The MIT License][59]                 |
+| [Project Keeper Maven plugin][58]                       | [The MIT License][59]                 |
 | [Artifact reference checker and unifier][60]            | [MIT License][61]                     |
 | [Maven Failsafe Plugin][62]                             | [Apache-2.0][3]                       |
 | [JaCoCo :: Maven Plugin][63]                            | [Eclipse Public License 2.0][64]      |
@@ -78,38 +78,38 @@
 [9]: LICENSE.txt
 [10]: https://github.com/google/guava
 [11]: http://www.apache.org/licenses/LICENSE-2.0.txt
-[12]: https://netty.io/netty-all/
-[13]: https://www.apache.org/licenses/LICENSE-2.0
-[14]: https://github.com/FasterXML/jackson
-[15]: https://aws.amazon.com/sdkforjava
-[16]: https://aws.amazon.com/apache2.0
-[17]: http://www.exasol.com
-[18]: https://repo1.maven.org/maven2/com/exasol/exasol-jdbc/7.1.20/exasol-jdbc-7.1.20-license.txt
-[19]: https://github.com/exasol/sql-statement-builder/
-[20]: https://github.com/exasol/sql-statement-builder/blob/main/LICENSE
-[21]: https://github.com/exasol/spark-connector-common-java/
-[22]: https://github.com/exasol/spark-connector-common-java/blob/main/LICENSE
-[23]: https://github.com/exasol/error-reporting-java/
-[24]: https://github.com/exasol/error-reporting-java/blob/main/LICENSE
-[25]: https://github.com/mockito/mockito
-[26]: https://opensource.org/licenses/MIT
-[27]: https://junit.org/junit5/
-[28]: https://www.eclipse.org/legal/epl-v20.html
-[29]: http://hamcrest.org/JavaHamcrest/
-[30]: http://opensource.org/licenses/BSD-3-Clause
-[31]: https://java.testcontainers.org
-[32]: http://opensource.org/licenses/MIT
-[33]: http://aws.amazon.com/asl/
-[34]: https://github.com/exasol/exasol-testcontainers/
-[35]: https://github.com/exasol/exasol-testcontainers/blob/main/LICENSE
-[36]: https://github.com/exasol/test-db-builder-java/
-[37]: https://github.com/exasol/test-db-builder-java/blob/main/LICENSE
-[38]: https://github.com/exasol/java-util-logging-testing/
-[39]: https://github.com/exasol/hamcrest-resultset-matcher/
-[40]: https://github.com/exasol/hamcrest-resultset-matcher/blob/main/LICENSE
-[41]: https://www.jqno.nl/equalsverifier
-[42]: https://logging.apache.org/log4j/2.x/log4j/log4j-api/
-[43]: https://logging.apache.org/log4j/2.x/log4j/log4j-core/
+[12]: https://github.com/FasterXML/jackson
+[13]: https://aws.amazon.com/sdkforjava
+[14]: https://aws.amazon.com/apache2.0
+[15]: http://www.exasol.com
+[16]: https://repo1.maven.org/maven2/com/exasol/exasol-jdbc/7.1.20/exasol-jdbc-7.1.20-license.txt
+[17]: https://github.com/exasol/sql-statement-builder/
+[18]: https://github.com/exasol/sql-statement-builder/blob/main/LICENSE
+[19]: https://github.com/exasol/spark-connector-common-java/
+[20]: https://github.com/exasol/spark-connector-common-java/blob/main/LICENSE
+[21]: https://github.com/exasol/error-reporting-java/
+[22]: https://github.com/exasol/error-reporting-java/blob/main/LICENSE
+[23]: https://github.com/mockito/mockito
+[24]: https://opensource.org/licenses/MIT
+[25]: https://junit.org/junit5/
+[26]: https://www.eclipse.org/legal/epl-v20.html
+[27]: http://hamcrest.org/JavaHamcrest/
+[28]: http://opensource.org/licenses/BSD-3-Clause
+[29]: https://java.testcontainers.org
+[30]: http://opensource.org/licenses/MIT
+[31]: http://aws.amazon.com/asl/
+[32]: https://github.com/exasol/exasol-testcontainers/
+[33]: https://github.com/exasol/exasol-testcontainers/blob/main/LICENSE
+[34]: https://github.com/exasol/test-db-builder-java/
+[35]: https://github.com/exasol/test-db-builder-java/blob/main/LICENSE
+[36]: https://github.com/exasol/java-util-logging-testing/
+[37]: https://github.com/exasol/hamcrest-resultset-matcher/
+[38]: https://github.com/exasol/hamcrest-resultset-matcher/blob/main/LICENSE
+[39]: https://www.jqno.nl/equalsverifier
+[40]: https://logging.apache.org/log4j/2.x/log4j/log4j-api/
+[41]: https://logging.apache.org/log4j/2.x/log4j/log4j-core/
+[42]: http://www.slf4j.org
+[43]: http://www.opensource.org/licenses/mit-license.php
 [44]: http://sonarsource.github.io/sonar-scanner-maven/
 [45]: http://www.gnu.org/licenses/lgpl.txt
 [46]: https://maven.apache.org/plugins/maven-compiler-plugin/
