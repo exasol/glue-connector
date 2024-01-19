@@ -42,7 +42,7 @@
 | [EqualsVerifier \| release normal jar][40]      | [Apache License, Version 2.0][3]     |
 | [Apache Log4j API][41]                          | [Apache-2.0][3]                      |
 | [Apache Log4j Core][42]                         | [Apache-2.0][3]                      |
-| [SLF4J JDK14 Provider][43]                      | [MIT License][44]                    |
+| [SLF4J JDK14 Binding][43]                       | [MIT License][44]                    |
 
 ## Plugin Dependencies
 
