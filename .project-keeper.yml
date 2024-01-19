@@ -12,7 +12,7 @@ build:
     - "7.1.25"
     - "8.24.0"
 excludes:
-#  - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
+  - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
 #  - "E-PK-CORE-18: Outdated content: '.settings/org.eclipse.jdt.core.prefs'"
 #  - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build.yml'"
 #  - "E-PK-CORE-18: Outdated content: '.github/workflows/release_droid_prepare_original_checksum.yml'"
