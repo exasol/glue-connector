@@ -26,7 +26,7 @@ This release fixes vulnerability CVE-2024-21634 in transitive test dependencies 
 * Updated `org.apache.logging.log4j:log4j-core:2.22.0` to `2.22.1`
 * Updated `org.mockito:mockito-core:5.8.0` to `5.9.0`
 * Updated `org.mockito:mockito-junit-jupiter:5.8.0` to `5.9.0`
-* Updated `org.slf4j:slf4j-jdk14:2.0.9` to `1.7.36`
+* Removed `org.slf4j:slf4j-jdk14:2.0.9`
 
 ### Plugin Dependency Updates
 

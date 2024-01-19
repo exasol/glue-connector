@@ -464,14 +464,6 @@
             <version>${log4j.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <!-- Enable logging for integration tests. -->
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-jdk14</artifactId>
-            <!-- Old version required as other dependencies use slf4j-api 1.x -->
-            <version>1.7.36</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
