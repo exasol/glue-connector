@@ -1,12 +1,14 @@
-# Exasol AWS Glue Connector 2.1.3, released 2024-??-??
+# Exasol AWS Glue Connector 2.1.3, released 2024-01-19
 
-Code name:
+Code name: Fix CVE-2024-21634 in `ion-java`
 
 ## Summary
 
-## Features
+This release fixes vulnerability CVE-2024-21634 in transitive test dependencies `com.amazon.ion:ion-java` and `software.amazon.ion:ion-java`.
 
-* ISSUE_NUMBER: description
+## Security
+
+* #88: Fixed CVE-2024-21634 in `ion-java`
 
 ## Dependency Updates
 
