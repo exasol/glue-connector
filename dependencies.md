@@ -23,31 +23,32 @@
 
 ## Test Dependencies
 
-| Dependency                                      | License                           |
-| ----------------------------------------------- | --------------------------------- |
-| [mockito-core][23]                              | [MIT][24]                         |
-| [mockito-junit-jupiter][23]                     | [MIT][24]                         |
-| [JUnit Jupiter (Aggregator)][25]                | [Eclipse Public License v2.0][26] |
-| [JUnit Jupiter API][25]                         | [Eclipse Public License v2.0][26] |
-| [Hamcrest][27]                                  | [BSD License 3][28]               |
-| [Testcontainers :: JUnit Jupiter Extension][29] | [MIT][30]                         |
-| [Testcontainers :: Localstack][29]              | [MIT][30]                         |
-| [AWS Java SDK for Amazon S3][13]                | [Apache License, Version 2.0][14] |
-| AWSGlueETL                                      | [Amazon Software License][31]     |
-| [Test containers for Exasol on Docker][32]      | [MIT License][33]                 |
-| [Test Database Builder for Java][34]            | [MIT License][35]                 |
-| [Test utilities for `java.util.logging`][36]    | [MIT][24]                         |
-| [Matcher for SQL Result Sets][37]               | [MIT License][38]                 |
-| [EqualsVerifier \| release normal jar][39]      | [Apache License, Version 2.0][3]  |
-| [Apache Log4j API][40]                          | [Apache-2.0][3]                   |
-| [Apache Log4j Core][41]                         | [Apache-2.0][3]                   |
-| [SLF4J JDK14 Provider][42]                      | [MIT License][43]                 |
+| Dependency                                      | License                              |
+| ----------------------------------------------- | ------------------------------------ |
+| [mockito-core][23]                              | [MIT][24]                            |
+| [mockito-junit-jupiter][23]                     | [MIT][24]                            |
+| [JUnit Jupiter (Aggregator)][25]                | [Eclipse Public License v2.0][26]    |
+| [JUnit Jupiter API][25]                         | [Eclipse Public License v2.0][26]    |
+| [Hamcrest][27]                                  | [BSD License 3][28]                  |
+| [Testcontainers :: JUnit Jupiter Extension][29] | [MIT][30]                            |
+| [Testcontainers :: Localstack][29]              | [MIT][30]                            |
+| [AWS Java SDK for Amazon S3][13]                | [Apache License, Version 2.0][14]    |
+| AWSGlueETL                                      | [Amazon Software License][31]        |
+| [Ion Java][32]                                  | [The Apache License, Version 2.0][3] |
+| [Test containers for Exasol on Docker][33]      | [MIT License][34]                    |
+| [Test Database Builder for Java][35]            | [MIT License][36]                    |
+| [Test utilities for `java.util.logging`][37]    | [MIT][24]                            |
+| [Matcher for SQL Result Sets][38]               | [MIT License][39]                    |
+| [EqualsVerifier \| release normal jar][40]      | [Apache License, Version 2.0][3]     |
+| [Apache Log4j API][41]                          | [Apache-2.0][3]                      |
+| [Apache Log4j Core][42]                         | [Apache-2.0][3]                      |
 
 ## Plugin Dependencies
 
 | Dependency                                              | License                               |
 | ------------------------------------------------------- | ------------------------------------- |
-| [SonarQube Scanner for Maven][44]                       | [GNU LGPL 3][45]                      |
+| [SonarQube Scanner for Maven][43]                       | [GNU LGPL 3][44]                      |
+| [Apache Maven Toolchains Plugin][45]                    | [Apache License, Version 2.0][3]      |
 | [Apache Maven Compiler Plugin][46]                      | [Apache-2.0][3]                       |
 | [Apache Maven Enforcer Plugin][47]                      | [Apache-2.0][3]                       |
 | [Maven Flatten Plugin][48]                              | [Apache Software Licenese][3]         |
@@ -98,20 +99,20 @@
 [29]: https://java.testcontainers.org
 [30]: http://opensource.org/licenses/MIT
 [31]: http://aws.amazon.com/asl/
-[32]: https://github.com/exasol/exasol-testcontainers/
-[33]: https://github.com/exasol/exasol-testcontainers/blob/main/LICENSE
-[34]: https://github.com/exasol/test-db-builder-java/
-[35]: https://github.com/exasol/test-db-builder-java/blob/main/LICENSE
-[36]: https://github.com/exasol/java-util-logging-testing/
-[37]: https://github.com/exasol/hamcrest-resultset-matcher/
-[38]: https://github.com/exasol/hamcrest-resultset-matcher/blob/main/LICENSE
-[39]: https://www.jqno.nl/equalsverifier
-[40]: https://logging.apache.org/log4j/2.x/log4j/log4j-api/
-[41]: https://logging.apache.org/log4j/2.x/log4j/log4j-core/
-[42]: http://www.slf4j.org
-[43]: http://www.opensource.org/licenses/mit-license.php
-[44]: http://sonarsource.github.io/sonar-scanner-maven/
-[45]: http://www.gnu.org/licenses/lgpl.txt
+[32]: https://github.com/amazon-ion/ion-java/
+[33]: https://github.com/exasol/exasol-testcontainers/
+[34]: https://github.com/exasol/exasol-testcontainers/blob/main/LICENSE
+[35]: https://github.com/exasol/test-db-builder-java/
+[36]: https://github.com/exasol/test-db-builder-java/blob/main/LICENSE
+[37]: https://github.com/exasol/java-util-logging-testing/
+[38]: https://github.com/exasol/hamcrest-resultset-matcher/
+[39]: https://github.com/exasol/hamcrest-resultset-matcher/blob/main/LICENSE
+[40]: https://www.jqno.nl/equalsverifier
+[41]: https://logging.apache.org/log4j/2.x/log4j/log4j-api/
+[42]: https://logging.apache.org/log4j/2.x/log4j/log4j-core/
+[43]: http://sonarsource.github.io/sonar-scanner-maven/
+[44]: http://www.gnu.org/licenses/lgpl.txt
+[45]: https://maven.apache.org/plugins/maven-toolchains-plugin/
 [46]: https://maven.apache.org/plugins/maven-compiler-plugin/
 [47]: https://maven.apache.org/enforcer/maven-enforcer-plugin/
 [48]: https://www.mojohaus.org/flatten-maven-plugin/
