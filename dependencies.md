@@ -16,7 +16,7 @@
 | [Guava: Google Core Libraries for Java][10] | [Apache License, Version 2.0][11]             |
 | [jackson-databind][12]                      | [The Apache Software License, Version 2.0][3] |
 | [AWS Java SDK :: Services :: Amazon S3][13] | [Apache License, Version 2.0][14]             |
-| [Exasol JDBC Driver][15]                    | [EXAClient License][16]                       |
+| [EXASolution JDBC Driver][15]               | [EXAClient License][16]                       |
 | [Exasol SQL Statement Builder][17]          | [MIT License][18]                             |
 | [spark-connector-common-java][19]           | [MIT License][20]                             |
 | [error-reporting-java8][21]                 | [MIT License][22]                             |
@@ -82,8 +82,8 @@
 [12]: https://github.com/FasterXML/jackson
 [13]: https://aws.amazon.com/sdkforjava
 [14]: https://aws.amazon.com/apache2.0
-[15]: http://www.exasol.com/
-[16]: https://repo1.maven.org/maven2/com/exasol/exasol-jdbc/24.0.0/exasol-jdbc-24.0.0-license.txt
+[15]: http://www.exasol.com
+[16]: https://repo1.maven.org/maven2/com/exasol/exasol-jdbc/7.1.20/exasol-jdbc-7.1.20-license.txt
 [17]: https://github.com/exasol/sql-statement-builder/
 [18]: https://github.com/exasol/sql-statement-builder/blob/main/LICENSE
 [19]: https://github.com/exasol/spark-connector-common-java/

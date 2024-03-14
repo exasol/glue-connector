@@ -18,7 +18,6 @@ Vulnerability CVE-2023-52428 reported for transitive dependency `com.nimbusds:ni
 
 ### Compile Dependency Updates
 
-* Updated `com.exasol:exasol-jdbc:7.1.20` to `24.0.0`
 * Updated `software.amazon.awssdk:s3:2.23.6` to `2.25.9`
 
 ### Test Dependency Updates
