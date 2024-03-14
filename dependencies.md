@@ -5,7 +5,7 @@
 
 | Dependency                                  | License                                       |
 | ------------------------------------------- | --------------------------------------------- |
-| [Spark Project SQL][0]                      | [Apache 2.0 License][1]                       |
+| [Spark Project SQL][0]                      | [Apache-2.0][1]                               |
 | [Apache ZooKeeper - Server][2]              | [Apache License, Version 2.0][3]              |
 | [Apache Avro][4]                            | [Apache-2.0][3]                               |
 | [Apache Commons Compress][5]                | [Apache-2.0][3]                               |
@@ -58,9 +58,9 @@
 | [Maven Surefire Plugin][53]                             | [Apache-2.0][3]                       |
 | [Versions Maven Plugin][54]                             | [Apache License, Version 2.0][3]      |
 | [duplicate-finder-maven-plugin Maven Mojo][55]          | [Apache License 2.0][1]               |
-| [Apache Maven Assembly Plugin][56]                      | [Apache-2.0][3]                       |
-| [Apache Maven JAR Plugin][57]                           | [Apache License, Version 2.0][3]      |
-| [Project Keeper Maven plugin][58]                       | [The MIT License][59]                 |
+| [Project Keeper Maven plugin][56]                       | [The MIT License][57]                 |
+| [Apache Maven Assembly Plugin][58]                      | [Apache-2.0][3]                       |
+| [Apache Maven JAR Plugin][59]                           | [Apache License, Version 2.0][3]      |
 | [Artifact reference checker and unifier][60]            | [MIT License][61]                     |
 | [Maven Failsafe Plugin][62]                             | [Apache-2.0][3]                       |
 | [JaCoCo :: Maven Plugin][63]                            | [Eclipse Public License 2.0][64]      |
@@ -123,10 +123,10 @@
 [53]: https://maven.apache.org/surefire/maven-surefire-plugin/
 [54]: https://www.mojohaus.org/versions/versions-maven-plugin/
 [55]: https://basepom.github.io/duplicate-finder-maven-plugin
-[56]: https://maven.apache.org/plugins/maven-assembly-plugin/
-[57]: https://maven.apache.org/plugins/maven-jar-plugin/
-[58]: https://github.com/exasol/project-keeper/
-[59]: https://github.com/exasol/project-keeper/blob/main/LICENSE
+[56]: https://github.com/exasol/project-keeper/
+[57]: https://github.com/exasol/project-keeper/blob/main/LICENSE
+[58]: https://maven.apache.org/plugins/maven-assembly-plugin/
+[59]: https://maven.apache.org/plugins/maven-jar-plugin/
 [60]: https://github.com/exasol/artifact-reference-checker-maven-plugin/
 [61]: https://github.com/exasol/artifact-reference-checker-maven-plugin/blob/main/LICENSE
 [62]: https://maven.apache.org/surefire/maven-failsafe-plugin/

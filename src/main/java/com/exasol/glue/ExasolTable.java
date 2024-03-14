@@ -1,14 +1,10 @@
 package com.exasol.glue;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.connector.catalog.SupportsRead;
-import org.apache.spark.sql.connector.catalog.SupportsWrite;
-import org.apache.spark.sql.connector.catalog.TableCapability;
+import org.apache.spark.sql.connector.catalog.*;
 import org.apache.spark.sql.connector.read.ScanBuilder;
 import org.apache.spark.sql.connector.write.LogicalWriteInfo;
 import org.apache.spark.sql.connector.write.WriteBuilder;
@@ -19,9 +15,7 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.glue.filesystem.S3FileSystem;
 import com.exasol.glue.reader.ExasolScanBuilder;
 import com.exasol.glue.writer.ExasolWriteBuilderProvider;
-import com.exasol.spark.common.ExasolOptions;
-import com.exasol.spark.common.ExasolValidationException;
-import com.exasol.spark.common.Option;
+import com.exasol.spark.common.*;
 
 /**
  * Represents an instance of {@link ExasolTable}.
@@ -66,14 +60,20 @@ public class ExasolTable implements SupportsRead, SupportsWrite {
         return "ExasolTable";
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public StructType schema() {
-        return schema;
+        return this.schema;
+    }
+
+    @Override
+    public Column[] columns() {
+        return CatalogV2Util.structTypeToV2Columns(this.schema);
     }
 
     @Override
     public Set<TableCapability> capabilities() {
-        return capabilities;
+        return this.capabilities;
     }
 
     private void validate(final ExasolOptions options) {

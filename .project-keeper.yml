@@ -12,4 +12,5 @@ build:
     - "7.1.25"
     - "8.24.0"
 excludes:
+  # Only run javadoc as glue-connector cannot be built with java version > 11 currently
   - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
