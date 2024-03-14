@@ -480,7 +480,11 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <compilerArgs>
-                        <arg>-Xlint:all,-path,-options,-deprecation</arg>
+                        <!-- warning "options" is excluded as glue-connector
+                             uses java 8 as compiler setting but for tests
+                             uses libraries requiring java 11 -->
+                        <arg>-Xlint:all,-path,-options,-processing</arg>
+                        <arg>-Werror</arg>
                     </compilerArgs>
                 </configuration>
             </plugin>
