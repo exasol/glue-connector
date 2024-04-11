@@ -1,4 +1,4 @@
-# Exasol AWS Glue Connector 2.1.5, released 2024-04-10
+# Exasol AWS Glue Connector 2.1.5, released 2024-04-11
 
 Code name: Fixed vulnerabilities CVE-2024-29025, CVE-2024-29133 & CVE-2024-29133
 
