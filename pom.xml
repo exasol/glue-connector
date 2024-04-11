@@ -3,20 +3,20 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>glue-connector</artifactId>
-    <version>2.1.4</version>
+    <version>2.1.5</version>
     <name>Exasol AWS Glue Connector</name>
     <description>An AWS Glue connector for accessing Exasol database</description>
     <url>https://github.com/exasol/glue-connector/</url>
     <parent>
         <artifactId>glue-connector-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>2.1.4</version>
+        <version>2.1.5</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
         <java.version>8</java.version>
         <toolchain.version>11</toolchain.version>
-        <hadoop.version>3.3.6</hadoop.version>
+        <hadoop.version>3.4.0</hadoop.version>
         <junit.version>5.10.2</junit.version>
         <mockito.version>5.11.0</mockito.version>
         <log4j.version>2.23.1</log4j.version>
@@ -198,6 +198,13 @@
             </exclusions>
         </dependency>
         <dependency>
+            <!-- Fix CVE-2024-29131 & CVE-2024-29133 in transitive dependency of hadoop-client -->
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-configuration2</artifactId>
+            <version>2.10.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-aws</artifactId>
             <version>${hadoop.version}</version>
@@ -222,12 +229,12 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
-            <version>2.25.9</version>
+            <version>2.25.29</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-jdbc</artifactId>
-            <version>7.1.20</version>
+            <version>24.1.0</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -237,7 +244,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>spark-connector-common-java</artifactId>
-            <version>2.0.3</version>
+            <version>2.0.4</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -294,7 +301,7 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.12.679</version>
+            <version>1.12.699</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -443,7 +450,7 @@
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
-            <version>3.15.8</version>
+            <version>3.16.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -491,7 +498,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>4.2.0</version>
+                <version>4.3.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -528,19 +535,24 @@
                     </ignoredResourcePatterns>
                     <ignoredDependencies>
                         <dependency>
+                            <!-- Scope: provided -->
                             <groupId>org.apache.arrow</groupId>
                             <artifactId>arrow-memory-core</artifactId>
-                            <version>12.0.1</version>
                         </dependency>
                         <dependency>
+                            <!-- Scope: provided -->
                             <groupId>org.apache.arrow</groupId>
                             <artifactId>arrow-vector</artifactId>
-                            <version>0.15.1</version>
                         </dependency>
                         <dependency>
+                            <!-- Scope: provided -->
                             <groupId>org.apache.arrow</groupId>
                             <artifactId>arrow-memory-netty</artifactId>
-                            <version>12.0.1</version>
+                        </dependency>
+                        <dependency>
+                            <!-- Contains too many bundled classes -->
+                            <groupId>software.amazon.awssdk</groupId>
+                            <artifactId>bundle</artifactId>
                         </dependency>
                     </ignoredDependencies>
                 </configuration>
@@ -578,7 +590,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>3.5.2</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -611,7 +623,7 @@
             <plugin>
                 <groupId>org.itsallcode</groupId>
                 <artifactId>openfasttrace-maven-plugin</artifactId>
-                <version>1.6.2</version>
+                <version>1.8.0</version>
                 <executions>
                     <execution>
                         <id>trace-requirements</id>
@@ -642,6 +654,14 @@
                              runtime Spark cluster.
                         -->
                         <exclude>CVE-2023-52428</exclude>
+
+                        <!-- Ignore vulnerabilities from org.bouncycastle:bcprov-jdk15on:jar:1.70:provided via org.apache.hadoop:hadoop-client.
+                             This is a "provided" library that is not included in the built JAR and must be fixed in the runtime environment. -->
+                        <exclude>CVE-2023-33201</exclude>
+                        <exclude>CVE-2023-33202</exclude>
+                        <exclude>CVE-2024-29857</exclude>
+                        <exclude>CVE-2024-30171</exclude>
+                        <exclude>CVE-2024-30172</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>

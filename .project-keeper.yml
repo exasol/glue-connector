@@ -9,7 +9,7 @@ build:
   runnerOs: ubuntu-20.04
   freeDiskSpace: false
   exasolDbVersions:
-    - "7.1.25"
+    - "7.1.26"
     - "8.24.0"
 excludes:
   # Only run javadoc as glue-connector cannot be built with java version > 11 currently
