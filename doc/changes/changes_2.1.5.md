@@ -6,7 +6,14 @@ Code name: Fixed vulnerabilities CVE-2024-29025, CVE-2024-29133 & CVE-2024-29133
 
 This release fixes vulnerabilities CVE-2024-29025, CVE-2024-29133 & CVE-2024-29133 in dependencies.
 
-**Excluded vulnerabilities:** This release uses transitive dependency `org.bouncycastle:bcprov-jdk15on:jar:1.70:provided` via `org.apache.hadoop:hadoop-client` which contains vulnerabilities CVE-2023-33201 and CVE-2023-33202. The dependency is a "provided" library that is not included in the built JAR and must be fixed in the runtime environment
+**Excluded vulnerabilities:** This release uses transitive dependency `org.bouncycastle:bcprov-jdk15on:jar:1.70:provided` via `org.apache.hadoop:hadoop-client` which contains the following vulnerabilities:
+* CVE-2023-33201 
+* CVE-2023-33202
+* CVE-2024-29857
+* CVE-2024-30171
+* CVE-2024-30172
+
+The dependency is a "provided" library that is not included in the built JAR and must be fixed in the runtime environment
 
 ## Security
 

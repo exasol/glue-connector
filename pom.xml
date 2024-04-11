@@ -654,6 +654,9 @@
                              This is a "provided" library that is not included in the built JAR and must be fixed in the runtime environment. -->
                         <exclude>CVE-2023-33201</exclude>
                         <exclude>CVE-2023-33202</exclude>
+                        <exclude>CVE-2024-29857</exclude>
+                        <exclude>CVE-2024-30171</exclude>
+                        <exclude>CVE-2024-30172</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
