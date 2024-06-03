@@ -207,6 +207,10 @@
                     <groupId>org.codehaus.janino</groupId>
                     <artifactId>commons-compiler</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.nimbusds</groupId>
+                    <artifactId>nimbus-jose-jwt</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -221,6 +225,13 @@
             <groupId>io.airlift</groupId>
             <artifactId>aircompressor</artifactId>
             <version>0.27</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <!-- Fix CVE-2023-52428 in transitive dependency of hadoop-client -->
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <version>9.39.3</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -525,7 +536,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>4.3.1</version>
+                <version>4.3.2</version>
                 <executions>
                     <execution>
                         <goals>
@@ -666,21 +677,6 @@
                 <configuration>
                     <skip>${ossindex.skip}</skip>
                     <excludeVulnerabilityIds>
-                        <!-- Ignore vulnerability reported for transitive
-                             dependency org.codehaus.janino:janino:jar:3.1.9
-                             via org.apache.spark:spark-sql_2.12 Please note:
-                             janino is not included in the released artifact,
-                             but 'provided' by the runtime Spark cluster.
-                        -->
-<!--                        <exclude>CVE-2023-33546</exclude>-->
-                        <!-- Ignore vulnerability reported for transitive
-                             dependency com.nimbusds:nimbus-jose-jwt:jar:9.8.1
-                             via org.apache.hadoop:hadoop-client:jar:3.3.6
-                             Please note: nimbus-jose-jwt is not included in
-                             the released artifact, but 'provided' by the
-                             runtime Spark cluster.
-                        -->
-                        <exclude>CVE-2023-52428</exclude>
                         <!-- Ignore vulnerabilities from org.bouncycastle:bcprov-jdk15on:jar:1.70:provided via org.apache.hadoop:hadoop-client.
                              This is a "provided" library that is not included in the built JAR and must be fixed in the runtime environment. -->
                         <exclude>CVE-2023-33201</exclude>
