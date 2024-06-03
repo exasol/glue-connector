@@ -199,6 +199,14 @@
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-reload4j</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.janino</groupId>
+                    <artifactId>janino</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.janino</groupId>
+                    <artifactId>commons-compiler</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -213,6 +221,18 @@
             <groupId>io.airlift</groupId>
             <artifactId>aircompressor</artifactId>
             <version>0.27</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.janino</groupId>
+            <artifactId>janino</artifactId>
+            <version>3.1.12</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.janino</groupId>
+            <artifactId>commons-compiler</artifactId>
+            <version>3.1.12</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -384,10 +404,6 @@
                 <exclusion>
                     <groupId>org.bouncycastle</groupId>
                     <artifactId>bcprov-ext-jdk15on</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.bouncycastle</groupId>
-                    <artifactId>bcprov-jdk15on</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.codehaus.jackson</groupId>
@@ -656,7 +672,7 @@
                              janino is not included in the released artifact,
                              but 'provided' by the runtime Spark cluster.
                         -->
-                        <exclude>CVE-2023-33546</exclude>
+<!--                        <exclude>CVE-2023-33546</exclude>-->
                         <!-- Ignore vulnerability reported for transitive
                              dependency com.nimbusds:nimbus-jose-jwt:jar:9.8.1
                              via org.apache.hadoop:hadoop-client:jar:3.3.6
@@ -672,6 +688,11 @@
                         <exclude>CVE-2024-29857</exclude>
                         <exclude>CVE-2024-30171</exclude>
                         <exclude>CVE-2024-30172</exclude>
+                        <exclude>CVE-2023-33201</exclude>
+                        <exclude>CVE-2023-33202</exclude>
+                        <exclude>CVE-2024-29857</exclude>
+                        <exclude>CVE-2024-30171</exclude>
+                        <exclude>CVE-2024-34447</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
