@@ -3,22 +3,22 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>glue-connector</artifactId>
-    <version>2.1.6</version>
+    <version>2.1.7</version>
     <name>Exasol AWS Glue Connector</name>
     <description>An AWS Glue connector for accessing Exasol database</description>
     <url>https://github.com/exasol/glue-connector/</url>
     <parent>
         <artifactId>glue-connector-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>2.1.6</version>
+        <version>2.1.7</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
         <java.version>8</java.version>
         <toolchain.version>11</toolchain.version>
         <hadoop.version>3.4.0</hadoop.version>
-        <junit.version>5.10.2</junit.version>
-        <mockito.version>5.11.0</mockito.version>
+        <junit.version>5.10.3</junit.version>
+        <mockito.version>5.12.0</mockito.version>
         <log4j.version>2.23.1</log4j.version>
     </properties>
     <repositories>
@@ -142,7 +142,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.26.1</version>
+            <version>1.26.2</version>
             <scope>provided</scope>
         </dependency>
         <!-- override dependency of com.amazonaws:AWSGlueETL
@@ -214,10 +214,17 @@
             </exclusions>
         </dependency>
         <dependency>
+            <!-- Override version 3.4.0 from org.apache.hadoop:hadoop-client to fix CVE-2023-33546-->
+            <artifactId>dnsjava</artifactId>
+            <groupId>dnsjava</groupId>
+            <version>3.6.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <!-- Fix CVE-2024-29131 & CVE-2024-29133 in transitive dependency of hadoop-client -->
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-configuration2</artifactId>
-            <version>2.10.1</version>
+            <version>2.11.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -231,7 +238,7 @@
             <!-- Fix CVE-2023-52428 in transitive dependency of hadoop-client -->
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
-            <version>9.39.3</version>
+            <version>9.40</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -259,7 +266,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>33.1.0-jre</version>
+            <version>33.2.1-jre</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -271,12 +278,12 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
-            <version>2.25.29</version>
+            <version>2.26.25</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-jdbc</artifactId>
-            <version>24.1.0</version>
+            <version>24.1.1</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -286,7 +293,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>spark-connector-common-java</artifactId>
-            <version>2.0.4</version>
+            <version>2.0.7</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -327,13 +334,13 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>1.19.7</version>
+            <version>1.20.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>1.19.7</version>
+            <version>1.20.0</version>
             <scope>test</scope>
         </dependency>
         <!--
@@ -343,7 +350,7 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.12.699</version>
+            <version>1.12.765</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -455,16 +462,23 @@
             </exclusions>
         </dependency>
         <dependency>
-            <!-- Upgrade transtivie dependency of AWSGlueETL to fix CVE-2024-21634 -->
+             <!-- Upgrade transitive dependency of AWSGlueETL to fix CVE-2024-36124 -->
+             <groupId>org.iq80.snappy</groupId>
+             <artifactId>snappy</artifactId>
+             <version>0.5</version>
+             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- Upgrade transitive dependency of AWSGlueETL to fix CVE-2024-21634 -->
             <groupId>com.amazon.ion</groupId>
             <artifactId>ion-java</artifactId>
-            <version>1.11.4</version>
+            <version>1.11.9</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-testcontainers</artifactId>
-            <version>7.0.1</version>
+            <version>7.1.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -536,7 +550,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>4.3.2</version>
+                <version>4.3.3</version>
                 <executions>
                     <execution>
                         <goals>
