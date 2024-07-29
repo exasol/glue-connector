@@ -462,11 +462,11 @@
             </exclusions>
         </dependency>
         <dependency>
-             <!-- Upgrade transitive dependency of AWSGlueETL to fix CVE-2024-36124 -->
-             <groupId>org.iq80.snappy</groupId>
-             <artifactId>snappy</artifactId>
-             <version>0.5</version>
-             <scope>test</scope>
+            <!-- Upgrade transitive dependency of AWSGlueETL to fix CVE-2024-36124 -->
+            <groupId>org.iq80.snappy</groupId>
+            <artifactId>snappy</artifactId>
+            <version>0.5</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <!-- Upgrade transitive dependency of AWSGlueETL to fix CVE-2024-21634 -->
