@@ -9,8 +9,8 @@ build:
   runnerOs: ubuntu-20.04
   freeDiskSpace: false
   exasolDbVersions:
-    - "8.26.0"
-    - "7.1.26"
+    - "8.26.0" # 8.29.1 not yet supported by exasol-testcontainers
+    - "7.1.29"
 excludes:
   # Only run javadoc as glue-connector cannot be built with java version > 11 currently
   - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
