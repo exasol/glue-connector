@@ -35,7 +35,7 @@
 | [mockito-junit-jupiter][31]                     | [MIT][32]                            |
 | [JUnit Jupiter (Aggregator)][33]                | [Eclipse Public License v2.0][34]    |
 | [JUnit Jupiter API][33]                         | [Eclipse Public License v2.0][34]    |
-| [Hamcrest][35]                                  | [BSD License 3][36]                  |
+| [Hamcrest][35]                                  | [BSD-3-Clause][36]                   |
 | [Testcontainers :: JUnit Jupiter Extension][37] | [MIT][38]                            |
 | [Testcontainers :: Localstack][37]              | [MIT][38]                            |
 | [AWS Java SDK for Amazon S3][21]                | [Apache License, Version 2.0][22]    |
@@ -98,7 +98,7 @@
 [21]: https://aws.amazon.com/sdkforjava
 [22]: https://aws.amazon.com/apache2.0
 [23]: http://www.exasol.com/
-[24]: https://repo1.maven.org/maven2/com/exasol/exasol-jdbc/24.1.1/exasol-jdbc-24.1.1-license.txt
+[24]: https://repo1.maven.org/maven2/com/exasol/exasol-jdbc/24.1.2/exasol-jdbc-24.1.2-license.txt
 [25]: https://github.com/exasol/sql-statement-builder/
 [26]: https://github.com/exasol/sql-statement-builder/blob/main/LICENSE
 [27]: https://github.com/exasol/spark-connector-common-java/
@@ -110,7 +110,7 @@
 [33]: https://junit.org/junit5/
 [34]: https://www.eclipse.org/legal/epl-v20.html
 [35]: http://hamcrest.org/JavaHamcrest/
-[36]: http://opensource.org/licenses/BSD-3-Clause
+[36]: https://raw.githubusercontent.com/hamcrest/JavaHamcrest/master/LICENSE
 [37]: https://java.testcontainers.org
 [38]: http://opensource.org/licenses/MIT
 [39]: http://aws.amazon.com/asl/
