@@ -3,23 +3,21 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>glue-connector</artifactId>
-    <version>2.1.7</version>
+    <version>2.1.8</version>
     <name>Exasol AWS Glue Connector</name>
     <description>An AWS Glue connector for accessing Exasol database</description>
     <url>https://github.com/exasol/glue-connector/</url>
     <parent>
         <artifactId>glue-connector-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>2.1.7</version>
+        <version>2.1.8</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
     <properties>
-        <java.version>8</java.version>
-        <toolchain.version>11</toolchain.version>
-        <hadoop.version>3.4.0</hadoop.version>
-        <junit.version>5.10.3</junit.version>
-        <mockito.version>5.12.0</mockito.version>
-        <log4j.version>2.23.1</log4j.version>
+        <hadoop.version>3.4.1</hadoop.version>
+        <junit.version>5.11.3</junit.version>
+        <mockito.version>5.14.2</mockito.version>
+        <log4j.version>2.24.1</log4j.version>
     </properties>
     <repositories>
         <repository>
@@ -35,7 +33,7 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.12</artifactId>
-            <version>3.5.1</version>
+            <version>3.5.3</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -114,7 +112,7 @@
         <dependency>
             <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
-            <version>3.9.2</version>
+            <version>3.9.3</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -129,12 +127,19 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <!-- Override version 4.1.113 of transitive dependency via org.apache.zookeeper:zookeeper to fix CVE-2024-47535 in io.netty:netty-common -->
+             <groupId>io.netty</groupId>
+             <artifactId>netty-handler</artifactId>
+             <version>4.1.115.Final</version>
+             <scope>provided</scope>
+        </dependency>
         <!-- Override version 1.11.2 of transitive dependency via org.apache.spark:spark-sql_2.12
              to fix vulnerability CVE-2023-39410 -->
         <dependency>
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
-            <version>1.11.3</version>
+            <version>1.12.0</version>
             <scope>provided</scope>
         </dependency>
         <!-- Override version 1.22 of transitive dependency via org.apache.avro:avro
@@ -142,7 +147,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.26.2</version>
+            <version>1.27.1</version>
             <scope>provided</scope>
         </dependency>
         <!-- override dependency of com.amazonaws:AWSGlueETL
@@ -151,7 +156,7 @@
         <dependency>
             <groupId>org.xerial.snappy</groupId>
             <artifactId>snappy-java</artifactId>
-            <version>1.1.10.5</version>
+            <version>1.1.10.7</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
@@ -217,7 +222,7 @@
             <!-- Override version 3.4.0 from org.apache.hadoop:hadoop-client to fix CVE-2023-33546-->
             <artifactId>dnsjava</artifactId>
             <groupId>dnsjava</groupId>
-            <version>3.6.1</version>
+            <version>3.6.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -231,14 +236,14 @@
             <!-- Fix CVE-2024-36114 in transitive dependency of spark-sql -->
             <groupId>io.airlift</groupId>
             <artifactId>aircompressor</artifactId>
-            <version>0.27</version>
+            <version>2.0.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <!-- Fix CVE-2023-52428 in transitive dependency of hadoop-client -->
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
-            <version>9.40</version>
+            <version>9.47</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -266,7 +271,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>33.2.1-jre</version>
+            <version>33.3.1-jre</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -278,12 +283,12 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
-            <version>2.26.25</version>
+            <version>2.29.18</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-jdbc</artifactId>
-            <version>24.1.1</version>
+            <version>24.2.0</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -293,7 +298,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>spark-connector-common-java</artifactId>
-            <version>2.0.7</version>
+            <version>2.0.10</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -328,19 +333,19 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
-            <version>2.2</version>
+            <version>3.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>1.20.0</version>
+            <version>1.20.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>1.20.0</version>
+            <version>1.20.4</version>
             <scope>test</scope>
         </dependency>
         <!--
@@ -350,7 +355,7 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.12.765</version>
+            <version>1.12.778</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -424,6 +429,11 @@
                     <artifactId>bcprov-ext-jdk15on</artifactId>
                 </exclusion>
                 <exclusion>
+                    <!-- Fix CVE-2020-0187 -->
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15on</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>org.codehaus.jackson</groupId>
                     <artifactId>*</artifactId>
                 </exclusion>
@@ -478,13 +488,13 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-testcontainers</artifactId>
-            <version>7.1.0</version>
+            <version>7.1.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>test-db-builder-java</artifactId>
-            <version>3.5.4</version>
+            <version>3.6.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -496,13 +506,13 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>hamcrest-resultset-matcher</artifactId>
-            <version>1.6.5</version>
+            <version>1.7.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
-            <version>3.16.1</version>
+            <version>3.17.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -522,22 +532,10 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-toolchains-plugin</artifactId>
-                <configuration>
-                    <toolchains>
-                        <jdk>
-                            <!-- Override toolchain to allow running tests -->
-                            <version>${toolchain.version}</version>
-                        </jdk>
-                    </toolchains>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>8</source>
+                    <target>8</target>
                     <compilerArgs>
                         <!-- warning "options" is excluded as glue-connector
                              uses java 8 as compiler setting but for tests
@@ -550,7 +548,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>4.3.3</version>
+                <version>4.4.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -642,7 +640,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.2</version>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -673,9 +671,28 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>8</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.itsallcode</groupId>
                 <artifactId>openfasttrace-maven-plugin</artifactId>
-                <version>1.8.0</version>
+                <version>2.3.0</version>
                 <executions>
                     <execution>
                         <id>trace-requirements</id>
@@ -691,18 +708,6 @@
                 <configuration>
                     <skip>${ossindex.skip}</skip>
                     <excludeVulnerabilityIds>
-                        <!-- Ignore vulnerabilities from org.bouncycastle:bcprov-jdk15on:jar:1.70:provided via org.apache.hadoop:hadoop-client.
-                             This is a "provided" library that is not included in the built JAR and must be fixed in the runtime environment. -->
-                        <exclude>CVE-2023-33201</exclude>
-                        <exclude>CVE-2023-33202</exclude>
-                        <exclude>CVE-2024-29857</exclude>
-                        <exclude>CVE-2024-30171</exclude>
-                        <exclude>CVE-2024-30172</exclude>
-                        <exclude>CVE-2023-33201</exclude>
-                        <exclude>CVE-2023-33202</exclude>
-                        <exclude>CVE-2024-29857</exclude>
-                        <exclude>CVE-2024-30171</exclude>
-                        <exclude>CVE-2024-34447</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>

@@ -9,6 +9,8 @@ on:
 jobs:
   java-8-compatibility:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -22,15 +24,5 @@ jobs:
             8
             17
           cache: "maven"
-      - name: Cache local Maven repository
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
       - name: Run maven compile with Java 8
-        run: |
-          mvn --batch-mode --update-snapshots -Dtoolchain.version=8 clean compile \
-              -DtrimStackTrace=false \
-              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+        run: mvn --batch-mode -Djava.version=8 clean compile
