@@ -29,15 +29,16 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 
 public class BaseIntegrationTestSetup {
     private static final Logger LOGGER = Logger.getLogger(BaseIntegrationTestSetup.class.getName());
-    private static final String DEFAULT_DOCKER_IMAGE = "7.1.25";
+    private static final String DEFAULT_DOCKER_IMAGE = "8.32.0";
     protected static final String DEFAULT_BUCKET_NAME = "csvtest";
 
     @Container
+    @SuppressWarnings("resource") // Will be closed by @Testcontainers
     private static final ExasolContainer<? extends ExasolContainer<?>> EXASOL = new ExasolContainer<>(
             getExasolDockerImage()).withReuse(true);
     @Container
     private static final S3LocalStackContainerWithReuse S3 = new S3LocalStackContainerWithReuse(
-            DockerImageName.parse("localstack/localstack:2.2"));
+            DockerImageName.parse("localstack/localstack:3.8"));
 
     protected static Connection connection;
     protected static ExasolObjectFactory factory;

@@ -25,12 +25,12 @@ jobs:
       fail-fast: false
       matrix:
         exasol_db_version: [
-          8.26.0,
-          7.1.29
+          8.32.0,
+          7.1.30
         ]
         
     env: {
-      DEFAULT_EXASOL_DB_VERSION: 8.26.0
+      DEFAULT_EXASOL_DB_VERSION: 8.32.0
     }
     steps:
       - name: Free Disk Space
@@ -50,8 +50,8 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: |
-            11
+          java-version: |-
+            8
             17
           cache: maven
       - name: Cache SonarCloud packages
@@ -127,8 +127,8 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: |
-            11
+          java-version: |-
+            8
             17
           cache: maven
       - name: Check if release is needed

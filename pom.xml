@@ -129,6 +129,13 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <!-- Override version 4.1.113 of transitive dependency via org.apache.zookeeper:zookeeper to fix CVE-2024-47535 in io.netty:netty-common -->
+             <groupId>io.netty</groupId>
+             <artifactId>netty-handler</artifactId>
+             <version>4.1.115.Final</version>
+             <scope>provided</scope>
+        </dependency>
         <!-- Override version 1.11.2 of transitive dependency via org.apache.spark:spark-sql_2.12
              to fix vulnerability CVE-2023-39410 -->
         <dependency>
@@ -238,7 +245,7 @@
             <!-- Fix CVE-2023-52428 in transitive dependency of hadoop-client -->
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
-            <version>9.46</version>
+            <version>9.47</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -278,7 +285,7 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
-            <version>2.29.12</version>
+            <version>2.29.18</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -293,7 +300,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>spark-connector-common-java</artifactId>
-            <version>2.0.9</version>
+            <version>2.0.10</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -334,13 +341,13 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>1.20.3</version>
+            <version>1.20.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>1.20.3</version>
+            <version>1.20.4</version>
             <scope>test</scope>
         </dependency>
         <!--
@@ -422,6 +429,11 @@
                 <exclusion>
                     <groupId>org.bouncycastle</groupId>
                     <artifactId>bcprov-ext-jdk15on</artifactId>
+                </exclusion>
+                <exclusion>
+                    <!-- Fix CVE-2020-0187 -->
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15on</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.codehaus.jackson</groupId>
@@ -536,8 +548,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
                     <compilerArgs>
                         <!-- warning "options" is excluded as glue-connector
                              uses java 8 as compiler setting but for tests
@@ -642,7 +652,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.2</version>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -675,7 +685,7 @@
             <plugin>
                 <groupId>org.itsallcode</groupId>
                 <artifactId>openfasttrace-maven-plugin</artifactId>
-                <version>1.8.0</version>
+                <version>2.3.0</version>
                 <executions>
                     <execution>
                         <id>trace-requirements</id>
@@ -691,18 +701,6 @@
                 <configuration>
                     <skip>${ossindex.skip}</skip>
                     <excludeVulnerabilityIds>
-                        <!-- Ignore vulnerabilities from org.bouncycastle:bcprov-jdk15on:jar:1.70:provided via org.apache.hadoop:hadoop-client.
-                             This is a "provided" library that is not included in the built JAR and must be fixed in the runtime environment. -->
-                        <exclude>CVE-2023-33201</exclude>
-                        <exclude>CVE-2023-33202</exclude>
-                        <exclude>CVE-2024-29857</exclude>
-                        <exclude>CVE-2024-30171</exclude>
-                        <exclude>CVE-2024-30172</exclude>
-                        <exclude>CVE-2023-33201</exclude>
-                        <exclude>CVE-2023-33202</exclude>
-                        <exclude>CVE-2024-29857</exclude>
-                        <exclude>CVE-2024-30171</exclude>
-                        <exclude>CVE-2024-34447</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>

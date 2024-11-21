@@ -22,10 +22,10 @@ Netty is an asynchronous event-driven network application framework for rapid de
 ### Compile Dependency Updates
 
 * Updated `com.exasol:exasol-jdbc:24.1.1` to `24.2.0`
-* Updated `com.exasol:spark-connector-common-java:2.0.7` to `2.0.9`
+* Updated `com.exasol:spark-connector-common-java:2.0.7` to `2.0.10`
 * Updated `org.apache.hadoop:hadoop-aws:3.4.0` to `3.4.1`
 * Updated `org.xerial.snappy:snappy-java:1.1.10.5` to `1.1.10.7`
-* Updated `software.amazon.awssdk:s3:2.26.25` to `2.29.12`
+* Updated `software.amazon.awssdk:s3:2.26.25` to `2.29.18`
 
 ### Test Dependency Updates
 
@@ -41,9 +41,21 @@ Netty is an asynchronous event-driven network application framework for rapid de
 * Updated `org.junit.jupiter:junit-jupiter:5.10.3` to `5.11.3`
 * Updated `org.mockito:mockito-core:5.12.0` to `5.14.2`
 * Updated `org.mockito:mockito-junit-jupiter:5.12.0` to `5.14.2`
-* Updated `org.testcontainers:junit-jupiter:1.20.0` to `1.20.3`
-* Updated `org.testcontainers:localstack:1.20.0` to `1.20.3`
+* Updated `org.testcontainers:junit-jupiter:1.20.0` to `1.20.4`
+* Updated `org.testcontainers:localstack:1.20.0` to `1.20.4`
 
 ### Plugin Dependency Updates
 
 * Updated `com.exasol:project-keeper-maven-plugin:4.3.3` to `4.4.0`
+* Added `com.exasol:quality-summarizer-maven-plugin:0.2.0`
+* Updated `io.github.zlika:reproducible-build-maven-plugin:0.16` to `0.17`
+* Updated `org.apache.maven.plugins:maven-clean-plugin:2.5` to `3.4.0`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.2.5` to `3.5.1`
+* Updated `org.apache.maven.plugins:maven-install-plugin:2.4` to `3.1.3`
+* Updated `org.apache.maven.plugins:maven-jar-plugin:3.4.1` to `3.4.2`
+* Updated `org.apache.maven.plugins:maven-resources-plugin:2.6` to `3.3.1`
+* Updated `org.apache.maven.plugins:maven-shade-plugin:3.5.2` to `3.6.0`
+* Updated `org.apache.maven.plugins:maven-site-plugin:3.3` to `3.9.1`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.2.5` to `3.5.1`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.16.2` to `2.17.1`
+* Updated `org.itsallcode:openfasttrace-maven-plugin:1.8.0` to `2.3.0`
