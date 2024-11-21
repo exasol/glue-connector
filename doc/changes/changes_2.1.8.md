@@ -41,6 +41,7 @@ This release fixes the following vulnerabilities:
 * Updated `org.junit.jupiter:junit-jupiter:5.10.3` to `5.11.3`
 * Updated `org.mockito:mockito-core:5.12.0` to `5.14.2`
 * Updated `org.mockito:mockito-junit-jupiter:5.12.0` to `5.14.2`
+* Added `org.slf4j:slf4j-jdk14:1.7.36`
 * Updated `org.testcontainers:junit-jupiter:1.20.0` to `1.20.4`
 * Updated `org.testcontainers:localstack:1.20.0` to `1.20.4`
 
