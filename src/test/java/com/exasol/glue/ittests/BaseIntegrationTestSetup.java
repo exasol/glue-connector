@@ -152,15 +152,21 @@ public class BaseIntegrationTestSetup {
     }
 
     private static void updateExasolContainerHostsFile() {
+        // Workaround for sed failing on 8.32.0 with error message
+        // "sed: cannot rename /etc/sedipVlut: Device or resource busy"
         final List<String> commands = List.of( //
-                "sed -i '/amazonaws/d' /etc/hosts", //
-                "echo '" + getS3ContainerInternalIp() + " csvtest.s3.amazonaws.com' >> /etc/hosts");
+                "cp /etc/hosts /tmp/hosts", //
+                "sed -i '/amazonaws/d' /tmp/hosts", //
+                "echo '" + getS3ContainerInternalIp() + " csvtest.s3.amazonaws.com' >> /tmp/hosts", //
+                "cp /tmp/hosts /etc/hosts");
         commands.forEach(command -> {
             try {
-                final ExecResult exitCode = EXASOL.execInContainer("/bin/sh", "-c", command);
-                if (exitCode.getExitCode() != 0) {
-                    throw new RuntimeException(
-                            "Command to update Exasol container `/etc/hosts` file returned non-zero result.");
+                final ExecResult result = EXASOL.execInContainer("/bin/sh", "-c", command);
+                if (result.getExitCode() != 0) {
+                    throw new RuntimeException("Command '" + command
+                            + "' to update Exasol container `/etc/hosts` file returned non-zero result "
+                            + result.getExitCode() + ", stdout: '" + result.getStdout() + "', stderr: '"
+                            + result.getStderr() + "'.");
                 }
             } catch (final InterruptedException | IOException exception) {
                 throw new RuntimeException("Failed to update Exasol container `/etc/hosts`.", exception);
