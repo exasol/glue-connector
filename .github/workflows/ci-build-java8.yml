@@ -23,4 +23,4 @@ jobs:
             17
           cache: "maven"
       - name: Run maven compile with Java 8
-        run: mvn --batch-mode -Dtoolchain.version=8 clean compile
+        run: mvn --batch-mode -Djava.version=8 clean compile

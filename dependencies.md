@@ -62,9 +62,9 @@
 | [SonarQube Scanner for Maven][58]                       | [GNU LGPL 3][59]                      |
 | [Apache Maven Toolchains Plugin][60]                    | [Apache-2.0][3]                       |
 | [Apache Maven Compiler Plugin][61]                      | [Apache-2.0][3]                       |
-| [Apache Maven Enforcer Plugin][62]                      | [Apache-2.0][3]                       |
-| [Maven Flatten Plugin][63]                              | [Apache Software Licenese][3]         |
-| [Apache Maven Shade Plugin][64]                         | [Apache-2.0][3]                       |
+| [Apache Maven Shade Plugin][62]                         | [Apache-2.0][3]                       |
+| [Apache Maven Enforcer Plugin][63]                      | [Apache-2.0][3]                       |
+| [Maven Flatten Plugin][64]                              | [Apache Software Licenese][3]         |
 | [OpenFastTrace Maven Plugin][65]                        | [GNU General Public License v3.0][66] |
 | [org.sonatype.ossindex.maven:ossindex-maven-plugin][67] | [ASL2][21]                            |
 | [Maven Surefire Plugin][68]                             | [Apache-2.0][3]                       |
@@ -142,9 +142,9 @@
 [59]: http://www.gnu.org/licenses/lgpl.txt
 [60]: https://maven.apache.org/plugins/maven-toolchains-plugin/
 [61]: https://maven.apache.org/plugins/maven-compiler-plugin/
-[62]: https://maven.apache.org/enforcer/maven-enforcer-plugin/
-[63]: https://www.mojohaus.org/flatten-maven-plugin/
-[64]: https://maven.apache.org/plugins/maven-shade-plugin/
+[62]: https://maven.apache.org/plugins/maven-shade-plugin/
+[63]: https://maven.apache.org/enforcer/maven-enforcer-plugin/
+[64]: https://www.mojohaus.org/flatten-maven-plugin/
 [65]: https://github.com/itsallcode/openfasttrace-maven-plugin
 [66]: https://www.gnu.org/licenses/gpl-3.0.html
 [67]: https://sonatype.github.io/ossindex-maven/maven-plugin/
