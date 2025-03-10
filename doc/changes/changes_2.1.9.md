@@ -1,12 +1,17 @@
-# Exasol AWS Glue Connector 2.1.9, released 2025-??-??
+# Exasol AWS Glue Connector 2.1.9, released 2025-03-10
 
-Code name:
+Code name: Fixed CVE-2025-24970 and CVE-2025-25193
 
 ## Summary
 
-## Features
+This update fixes CVE-2025-24970 and CVE-2025-25193 in transitive `netty` dependency.
 
-* ISSUE_NUMBER: description
+It also sets up the `SECURITY.md` file for the repository.
+
+## Security
+
+* #120: CVE-2025-24970
+* #121: CVE-2025-25193
 
 ## Dependency Updates
 
