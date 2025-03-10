@@ -11,6 +11,13 @@ build:
   exasolDbVersions:
     - "8.32.0"
     - "7.1.30"
-excludes:
-  # Only run javadoc as glue-connector cannot be built with java version > 11 currently
-  - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
+  workflows:
+    - name: ci-build.yml
+      stepCustomizations:
+        - action: INSERT_AFTER
+          job: matrix-build
+          stepId: enable-testcontainer-reuse
+          content:
+            name: Fix Exasol Crash
+            id: fix-vm-crash
+            run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
