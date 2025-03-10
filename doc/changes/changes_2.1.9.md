@@ -22,6 +22,7 @@ It also sets up the `SECURITY.md` file for the repository.
 ### Test Dependency Updates
 
 * Updated `com.exasol:exasol-testcontainers:7.1.1` to `7.1.3`
+* Added `org.slf4j:slf4j-jdk14:1.7.36`
 
 ### Plugin Dependency Updates
 
