@@ -70,7 +70,6 @@ jobs:
       - name: Run tests and build with Maven
         id: build-pk-verify
         run: |
-          tail -f /var/log/syslog &
           mvn --batch-mode clean verify \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
               -DtrimStackTrace=false \
