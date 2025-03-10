@@ -103,7 +103,7 @@
 [21]: https://aws.amazon.com/sdkforjava
 [22]: https://aws.amazon.com/apache2.0
 [23]: http://www.exasol.com/
-[24]: https://repo1.maven.org/maven2/com/exasol/exasol-jdbc/24.2.0/exasol-jdbc-24.2.0-license.txt
+[24]: https://repo1.maven.org/maven2/com/exasol/exasol-jdbc/25.2.2/exasol-jdbc-25.2.2-license.txt
 [25]: https://github.com/exasol/sql-statement-builder/
 [26]: https://github.com/exasol/sql-statement-builder/blob/main/LICENSE
 [27]: https://github.com/exasol/spark-connector-common-java/

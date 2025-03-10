@@ -15,6 +15,14 @@ It also sets up the `SECURITY.md` file for the repository.
 
 ## Dependency Updates
 
+### Compile Dependency Updates
+
+* Updated `com.exasol:exasol-jdbc:24.2.0` to `25.2.2`
+
+### Test Dependency Updates
+
+* Updated `com.exasol:exasol-testcontainers:7.1.1` to `7.1.3`
+
 ### Plugin Dependency Updates
 
 * Updated `com.exasol:project-keeper-maven-plugin:4.4.0` to `4.5.0`

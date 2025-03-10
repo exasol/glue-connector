@@ -35,7 +35,9 @@ public class BaseIntegrationTestSetup {
     @Container
     @SuppressWarnings("resource") // Will be closed by @Testcontainers
     private static final ExasolContainer<? extends ExasolContainer<?>> EXASOL = new ExasolContainer<>(
-            getExasolDockerImage()).withReuse(true);
+            getExasolDockerImage())
+            .withExposedPorts(8563)
+            .withReuse(true);
     @Container
     private static final S3LocalStackContainerWithReuse S3 = new S3LocalStackContainerWithReuse(
             DockerImageName.parse("localstack/localstack:3.8"));
