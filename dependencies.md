@@ -47,7 +47,7 @@
 | [Test utilities for `java.util.logging`][46]    | [MIT][32]                            |
 | [Matcher for SQL Result Sets][47]               | [MIT License][48]                    |
 | [EqualsVerifier \| release normal jar][49]      | [Apache License, Version 2.0][3]     |
-| [SLF4J JDK14 Binding][50]                       | [MIT License][51]                    |
+| [SLF4J JDK14 Provider][50]                      | [MIT][51]                            |
 | [Apache Log4j API][52]                          | [Apache-2.0][3]                      |
 | [Apache Log4j Core][53]                         | [Apache-2.0][3]                      |
 
@@ -97,7 +97,7 @@
 [14]: https://spdx.org/licenses/BSD-3-Clause.html
 [15]: http://janino-compiler.github.io/commons-compiler/
 [16]: https://github.com/paul-hammant/paranamer/paranamer
-[17]: LICENSE.txt
+[17]: https://opensource.org/license/bsd-3-clause
 [18]: https://github.com/google/guava
 [19]: http://www.apache.org/licenses/LICENSE-2.0.txt
 [20]: https://github.com/FasterXML/jackson
@@ -131,7 +131,7 @@
 [48]: https://github.com/exasol/hamcrest-resultset-matcher/blob/main/LICENSE
 [49]: https://www.jqno.nl/equalsverifier
 [50]: http://www.slf4j.org
-[51]: http://www.opensource.org/licenses/mit-license.php
+[51]: https://opensource.org/license/mit
 [52]: https://logging.apache.org/log4j/2.x/log4j/log4j-api/
 [53]: https://logging.apache.org/log4j/2.x/log4j/log4j-core/
 [54]: https://maven.apache.org/plugins/maven-clean-plugin/
