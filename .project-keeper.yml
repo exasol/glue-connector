@@ -6,7 +6,7 @@ sources:
       - integration_tests
 linkReplacements:
 build:
-  runnerOs: ubuntu-latest
+  runnerOs: ubuntu-24.04
   freeDiskSpace: true
   exasolDbVersions:
     - "8.34.0"
