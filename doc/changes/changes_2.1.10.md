@@ -4,7 +4,7 @@ Code name: Fixed vulnerabilities
 
 ## Summary
 
-This release fixes the following vulnerability:
+This release fixes the following vulnerabilities:
 
 ### CVE-2025-48734 (CWE-284) in dependency `commons-beanutils:commons-beanutils:jar:1.9.4:provided`
 commons-beanutils - Improper Access Control
@@ -17,7 +17,7 @@ commons-beanutils - Improper Access Control
 ### CVE-2025-47436 (CWE-122) in dependency `org.apache.orc:orc-core:jar:shaded-protobuf:1.9.4:provided`
 Heap-based Buffer Overflow vulnerability in Apache ORC.
 
-A vulnerability has been identified in the ORC C++ LZO decompression logic, where specially crafted malformed ORC files can cause the decompressor toÂ allocate a 250-byte buffer but then attempts to copy 295 bytes into it. It causes memory corruption.
+A vulnerability has been identified in the ORC C++ LZO decompression logic, where specially crafted malformed ORC files can cause the decompressor to allocate a 250-byte buffer but then attempts to copy 295 bytes into it. It causes memory corruption.
 
 This issue affects Apache ORC C++ library: through 1.8.8, from 1.9.0 through 1.9.5, from 2.0.0 through 2.0.4, from 2.1.0 through 2.1.1.
 
