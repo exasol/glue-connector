@@ -1,3 +1,7 @@
+> [!IMPORTANT]
+> This project was archived due to little user demand on September 8th, 2025.
+> If you are interested in this project, please contact Exasol (e.g., via a support request or in the [Exasol Community](https://community.exasol.com/)).
+
 # Exasol AWS Glue Connector
 
 [![Build Status](https://github.com/exasol/glue-connector/actions/workflows/ci-build.yml/badge.svg)](https://github.com/exasol/glue-connector/actions/workflows/ci-build.yml)
