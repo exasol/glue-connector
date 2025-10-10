@@ -1,6 +1,7 @@
 > [!IMPORTANT]
-> This project was archived due to little user demand on September 8th, 2025.
-> If you are interested in this project, please contact Exasol (e.g., via a support request or in the [Exasol Community](https://community.exasol.com/)).
+> This project has been archived as of September 8th, 2025 and is no longer supported.
+>
+> If you are interested in the project please contact Exasol via our [Community Forum](https://community.exasol.com/), submit a [support request](https://exasol.my.site.com/s/create-new-case) or engage directly with your account team.
 
 # Exasol AWS Glue Connector
 
